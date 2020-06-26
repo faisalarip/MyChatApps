@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A051B8F24A5725C005FF371 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A051B8E24A5725C005FF371 /* ChatViewController.swift */; };
 		1A8F0949249DC57E00BC2A5D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F0948249DC57E00BC2A5D /* AppDelegate.swift */; };
 		1A8F094B249DC57E00BC2A5D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F094A249DC57E00BC2A5D /* SceneDelegate.swift */; };
 		1A8F094D249DC57E00BC2A5D /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F094C249DC57E00BC2A5D /* ConversationViewController.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A051B8E24A5725C005FF371 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		1A8F0945249DC57E00BC2A5D /* ChatApps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApps.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A8F0948249DC57E00BC2A5D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A8F094A249DC57E00BC2A5D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				1A8F0966249DC90500BC2A5D /* PhotoViewController.swift */,
 				1A8F0969249DC91B00BC2A5D /* VideosViewController.swift */,
 				1A8F096B249DD07F00BC2A5D /* NewConversationViewController.swift */,
+				1A051B8E24A5725C005FF371 /* ChatViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				1A8F0949249DC57E00BC2A5D /* AppDelegate.swift in Sources */,
 				1A8F096E249DD08B00BC2A5D /* ProfileViewController.swift in Sources */,
 				1A8F094B249DC57E00BC2A5D /* SceneDelegate.swift in Sources */,
+				1A051B8F24A5725C005FF371 /* ChatViewController.swift in Sources */,
 				1A8F0967249DC90500BC2A5D /* PhotoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
