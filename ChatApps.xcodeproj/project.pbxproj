@@ -98,9 +98,9 @@
 		1A8F095C249DC83F00BC2A5D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				1A8F0975249F0EBE00BC2A5D /* LoginRegisterController */,
 				1A8F094C249DC57E00BC2A5D /* ConversationViewController.swift */,
 				1A8F096D249DD08B00BC2A5D /* ProfileViewController.swift */,
-				1A8F0975249F0EBE00BC2A5D /* LoginRegisterController */,
 				1A8F0966249DC90500BC2A5D /* PhotoViewController.swift */,
 				1A8F0969249DC91B00BC2A5D /* VideosViewController.swift */,
 				1A8F096B249DD07F00BC2A5D /* NewConversationViewController.swift */,
