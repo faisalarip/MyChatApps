@@ -132,7 +132,6 @@ class RegisterViewController: UIViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapChangeProfile))
         //        gesture.numberOfTouches =
         gesture.numberOfTapsRequired = 1
-        
         imageView.addGestureRecognizer(gesture)
     }
     
@@ -186,8 +185,7 @@ class RegisterViewController: UIViewController {
             DispatchQueue.main.async {
                 strongSelf.spinner.dismiss()
             }
-            
-            
+                        
             guard !newUser else {
                 // Email already exist
                 strongSelf.alertUserLoginError(message: "Looks like a user account for that email address already exist. ")
@@ -197,11 +195,34 @@ class RegisterViewController: UIViewController {
             /// Adding new account from register to database
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
                 
-                guard authResult != nil, error == nil else {
+                guard authResult != nil,
+                    error == nil else {
                     fatalError("Oppss.. Failed creating account")
                 }
                 
-                DatabaseModel.shared.insertUser(with: ChatAppsUser(firstName: firstName, lastName: lastName, emailAddress: email))
+                let chatUser = ChatAppsUser(firstName: firstName,
+                                            lastName: lastName,
+                                            emailAddress: email)
+                DatabaseModel.shared.insertUser(with: chatUser, completion: { success in
+                    if success {
+                        // Upload Image
+                        guard let image = strongSelf.imageView.image, let data = image.pngData() else {
+                            return
+                        }
+                        
+                        let fileName = chatUser.profilePictureFileName
+                        StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                            switch result {
+                                case .success(let downloadURL):
+                                    UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                print("\(downloadURL)")
+                                
+                                case .failure(let errorDownloadURL):
+                                print("Storage manager \(errorDownloadURL)")
+                            }
+                        }
+                    }
+                    })
                 
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             }

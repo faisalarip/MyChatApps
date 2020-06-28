@@ -205,31 +205,69 @@ extension LoginViewController: LoginButtonDelegate {
     
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
         guard let token = result?.token?.tokenString else {
-            fatalError("Failed log in with facebook ")
+            print("Failed to login with facebook")
+            return
         }
         
-        let fbRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email, name"], tokenString: token, version: nil, httpMethod: .get)
-        fbRequest.start { (connection, result, error) in
-            guard let result = result as? [String: Any ], error == nil else {
-                fatalError("Failed to make facebook graph request")
+        let fbRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email, first_name, last_name, picture.type(large)"], tokenString: token, version: nil, httpMethod: .get)
+        fbRequest.start(completionHandler: { _, result, error in
+            // [String: Any] is a Dictionary data
+            guard let result = result as? [String: Any],
+                error == nil
+                else {
+                    print("Failed to make facebook graph request")
+                    return
             }
             print(result)
-            guard let userName = result["name"] as? String, let email = result["email"] as? String else {
-                fatalError("Failed to get email and name from fb result")
+            
+            guard let firstName = result["first_name"] as? String,
+                let lastName = result["last_name"] as? String,
+                let email = result["email"] as? String,
+                let picture = result["picture"] as? [String: Any],
+                let data = picture["data"] as? [String: Any],
+                let pictureUrl = data["url"] as? String else {
+                    print("Faield to get email and name from fb result")
+                    return
             }
             
-            // get the firstname and lastname from user facebook
-            let componentUserName = userName.components(separatedBy: " ")
-            guard componentUserName.count == 2 else {
-                return
-            }
-            
-            let firstNameFB = componentUserName[0]
-            let lastNameFB = componentUserName[1]
+            UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
             
             DatabaseModel.shared.validationNewUser(with: email) { (exist) in
                 if !exist {
-                    DatabaseModel.shared.insertUser(with: ChatAppsUser(firstName: firstNameFB, lastName: lastNameFB, emailAddress: email))
+                    
+                    let chatUser = ChatAppsUser(firstName: firstName, lastName: lastName, emailAddress: email)
+                    
+                    DatabaseModel.shared.insertUser(with: chatUser, completion: { success in
+                        if success {
+                            // Upload image
+                            guard let url = URL(string: pictureUrl) else {
+                                return
+                            }
+                            print("Downloading data from facebook image")
+                            
+                            URLSession.shared.dataTask(with: url) { (data, _, error) in
+                                guard let data = data else {
+                                    fatalError("Failed to downloading data")
+                                }
+                                
+                                print("got data from fb, uploading...")
+                                
+                                // Upload image
+                                let fileName = chatUser.profilePictureFileName
+                                StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                                    switch result {
+                                        case .success(let downloadURL):
+                                            UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                            print("download picture url returned \(downloadURL)")
+                                        case .failure(let errorDownloadURL):
+                                            print("Storage manager \(errorDownloadURL)")
+                                    }
+                                }
+                            }.resume()
+                            
+                        }
+                    })
                 }
             }
             
@@ -247,7 +285,7 @@ extension LoginViewController: LoginButtonDelegate {
                 
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             }
-        }
+        })
         
     }
     

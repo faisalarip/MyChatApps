@@ -41,11 +41,18 @@ extension DatabaseModel {
     }
     
     /// insert new user to database realtime
-    public func insertUser(with user: ChatAppsUser) {
+    public func insertUser(with user: ChatAppsUser, completion: @escaping (Bool) -> Void) {
         database.child(user.safeEmail).setValue([
             "first_name" : user.firstName,
             "last_name" : user.lastName
-        ])
+        ], withCompletionBlock: { error, _ in
+            guard error == nil else {
+                print("failed write to database")
+                completion(false)
+                return
+            }
+            completion(true)
+        })
     }
 }
 
@@ -59,5 +66,12 @@ struct ChatAppsUser {
         var safeEmail = emailAddress.replacingOccurrences(of: "@", with: "-")
         safeEmail = safeEmail.replacingOccurrences(of: ".", with: "-")
         return safeEmail
+    }
+    
+    var profilePictureFileName: String {
+        /*
+        /image/faisal-arip10-gmail-com_profile_picture.png
+        */
+        return "\(safeEmail)_profile_picture.png"
     }
 }

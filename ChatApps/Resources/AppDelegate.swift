@@ -37,9 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         guard error == nil else {
-            if let error = error {
-                fatalError("Failed to log in with Google Account \(error)")
-            }
+            print("Failed to log in with Google Account")
             return
         }
         
@@ -49,7 +47,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         DatabaseModel.shared.validationNewUser(with: email) { (exist) in
             if !exist {
-                DatabaseModel.shared.insertUser(with: ChatAppsUser(firstName: firstName, lastName: lastName, emailAddress: email))
+                let chatUser = ChatAppsUser(firstName: firstName, lastName: lastName, emailAddress: email)
+                DatabaseModel.shared.insertUser(with: chatUser, completion: { success in
+                    if success {
+                        // Upload Image
+                        if user.profile.hasImage {
+                            guard let url = user.profile.imageURL(withDimension: 200) else {
+                                return
+                            }
+                            
+                            URLSession.shared.dataTask(with: url) { ( data, _, _ ) in
+                                guard let data = data else {
+                                    fatalError("Failed to get data url image from the profile a  google accpunt")
+                                }
+                                
+                                let fileName = chatUser.profilePictureFileName
+                                StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                                    switch result {
+                                        case .success(let downloadURL):
+                                            UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                            print("download picture url returned \(downloadURL)")
+                                        case .failure(let errorDownloadURL):
+                                            print("Storage manager \(errorDownloadURL)")
+                                    }
+                                }
+                            }.resume()
+                            
+                        }
+                    }
+                    
+                })
             }
         }
         
