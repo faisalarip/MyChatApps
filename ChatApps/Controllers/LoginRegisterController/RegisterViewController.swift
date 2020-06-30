@@ -116,10 +116,12 @@ class RegisterViewController: UIViewController {
         imageView.isUserInteractionEnabled = true
         scrollView.isUserInteractionEnabled = true
         
-        firstNameField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
-        lastNameField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
-        emailfield.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
-        passwordField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
+//        DispatchQueue.main.async {
+//            self.firstNameField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
+//            self.lastNameField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
+//            self.emailfield.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
+//            self.passwordField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
+//        }
         
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
@@ -197,7 +199,8 @@ class RegisterViewController: UIViewController {
                 
                 guard authResult != nil,
                     error == nil else {
-                    fatalError("Oppss.. Failed creating account")
+                    print("Oppss.. Failed creating account")
+                    return
                 }
                 
                 let chatUser = ChatAppsUser(firstName: firstName,
@@ -227,7 +230,6 @@ class RegisterViewController: UIViewController {
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             }
         }
-        
     }
     
     private func alertUserLoginError(message: String) {
@@ -242,11 +244,16 @@ class RegisterViewController: UIViewController {
 extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        if textField == emailfield {
+        if textField == firstNameField {
+            lastNameField.becomeFirstResponder()
+        } else if textField == lastNameField {
+            lastNameField.resignFirstResponder()
+            emailfield.becomeFirstResponder()
+        } else if textField == emailfield {
+            emailfield.resignFirstResponder()
             passwordField.becomeFirstResponder()
         } else if textField == passwordField {
-            registerButtonTapped()
+            passwordField.resignFirstResponder()
         }
         
         return true

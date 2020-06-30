@@ -89,7 +89,6 @@ class LoginViewController: UIViewController {
             guard let strongSelf = self else {
                 return
             }
-            
             strongSelf.navigationController?.dismiss(animated: true, completion: nil )
         })
         
@@ -117,7 +116,7 @@ class LoginViewController: UIViewController {
     }
     
     deinit {
-        if let observer = loginObserved{
+        if let observer = loginObserved {
             NotificationCenter.default.removeObserver(observer)
         }
     }
@@ -157,7 +156,8 @@ class LoginViewController: UIViewController {
             }
             
             guard let result = authResult, error == nil else {
-                fatalError("Failed to log in \(email) your email not correct")
+                print("Failed to log in \(email) your email not correct")
+                return
             }
             
             _ = result.user

@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FBSDKCoreKit
 import GoogleSignIn
+import JGProgressHUD
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -36,6 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     // MARK: - Google Sign Delegate
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+//        let spinner = JGProgressHUD(style: .dark)
         guard error == nil else {
             print("Failed to log in with Google Account")
             return
@@ -44,6 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         guard let email = user.profile.email, let firstName = user.profile.givenName, let lastName = user.profile.familyName else {
             return
         }
+        
+        UserDefaults.standard.set(email, forKey: "email")
         
         DatabaseModel.shared.validationNewUser(with: email) { (exist) in
             if !exist {
