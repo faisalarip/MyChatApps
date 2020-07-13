@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import JGProgressHUD
 
+
 class ConversationViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
@@ -45,9 +46,24 @@ class ConversationViewController: UIViewController {
     
     @objc private func didTapComposeButton() {
         let vc = NewConversationViewController()
+        vc.completion = { [weak self] result in
+            print("\(result)")
+            self?.createNewConversation(with: result)
+        }
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .popover
         present(nav, animated: true)
+    }
+    
+    private func createNewConversation(with result: [String: String]) {
+        guard let name = result["name"], let email = result["email"] else {
+            return
+        }
+        let vc = ChatViewController(with: email)
+        vc.isNewConversation = true
+        vc.title = name
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -69,7 +85,6 @@ class ConversationViewController: UIViewController {
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: true)
         }
-        
     }
     
     private func setupTableView() {
@@ -98,7 +113,7 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let vc = ChatViewController()
+        let vc = ChatViewController(with: "aaa")
         vc.title = "Fisal Arif"
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)

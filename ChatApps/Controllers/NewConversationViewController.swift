@@ -11,7 +11,9 @@ import JGProgressHUD
 
 class NewConversationViewController: UIViewController {
     
-    private let spinner = JGProgressHUD()
+    public var completion: (([String: String]) -> Void)?
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     private var users = [[String: String]]()
     
@@ -21,6 +23,7 @@ class NewConversationViewController: UIViewController {
     
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
+        searchBar.searchBarStyle = .prominent
         searchBar.placeholder = "Search for user.."
         return searchBar
     }()
@@ -34,11 +37,11 @@ class NewConversationViewController: UIViewController {
     
     private let noResultLabel: UILabel = {
        let label = UILabel()
+        label.isHidden = true
         label.text = "No Result"
         label.textAlignment = .center
         label.textColor = .green
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.isHidden = true
         return label
     }()
     
@@ -51,26 +54,26 @@ class NewConversationViewController: UIViewController {
         tableView.dataSource = self
         searchBar.delegate = self
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         navigationController?.navigationBar.topItem?.titleView = searchBar
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(didTapCancelButton))
-        
-        searchBar.becomeFirstResponder()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(dismissSelf))
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        
         noResultLabel.frame = CGRect(x: view.width/4, y: (view.height-20), width: view.width/2, height: 200)
     }
     
-    @objc private func didTapCancelButton() {
+    @objc private func dismissSelf() {
         dismiss(animated: true, completion: nil)
     }
     
 }
 
 extension NewConversationViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return result.count
     }
@@ -83,22 +86,28 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let targetUserData = result[indexPath.row]
+//        print("\(targetUserData)")
+        dismiss(animated: true, completion: { [weak self] in
+            self?.completion?(targetUserData)
+        })
+        
     }
 }
 
 extension NewConversationViewController: UISearchBarDelegate {
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        searchBar.becomeFirstResponder()
+        
+        guard !searchText.replacingOccurrences(of: " ", with: "").isEmpty else {
             return
         }
-        searchBar.resignFirstResponder()
-        
         result.removeAll()
         spinner.show(in: view)
-        
-        self.searchUser(query: text)
-        
+        self.searchUser(query: searchText)
     }
     
     func searchUser(query: String) {
@@ -126,19 +135,24 @@ extension NewConversationViewController: UISearchBarDelegate {
         guard hasFetched else {
             return
         }
-        self.spinner.dismiss()
         
         let results: [[String: String]] = self.users.filter({
             guard let name = $0["name"]?.lowercased() else {
                 return false
             }
-            return name.hasPrefix(term.lowercased())
+            return name.contains(term.lowercased())
+        }).sorted(by: {
+            guard let first: String = ($0["name"] as AnyObject).title else { return false }
+            guard let second: String = ($1["name"] as AnyObject).title else { return true }
+            return first < second
         })
+        
         self.result = results
         updateUI()
     }
     
     func updateUI() {
+        self.spinner.dismiss()
         if result.isEmpty {
             self.noResultLabel.isHidden = false
             self.tableView.isHidden = true
@@ -147,5 +161,9 @@ extension NewConversationViewController: UISearchBarDelegate {
             self.tableView.isHidden = false
             self.tableView.reloadData()
         }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }

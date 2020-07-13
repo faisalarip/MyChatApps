@@ -28,23 +28,22 @@ class ProfileViewController: UIViewController {
     }
     
     func createTableHeader() -> UIView? {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-            return nil
-        }
-        
-        let safeEmail = DatabaseModel.shared.safeEmail(with: email)
-        let fileName = "\(safeEmail)_profile_picture.png"
-        let path = "image/\(fileName)"
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.width, height: 150))
         headerView.backgroundColor = .systemBackground
         let imageView = UIImageView(frame: CGRect(x: (headerView.width-75) / 2, y: 25, width: 75   , height: 75))
-        
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = imageView.frame.height / 2
         imageView.backgroundColor = .white
         imageView.layer.masksToBounds = true
         headerView.addSubview(imageView)
+        
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return nil
+        }        
+        let safeEmail = DatabaseModel.shared.safeEmail(with: email)
+        let fileName = "\(safeEmail)_profile_picture.png"
+        let path = "image/\(fileName)"
         
         StorageManager.shared.downloadURL(for: path) { [weak self] (result) in
             guard let strongSelf = self else {

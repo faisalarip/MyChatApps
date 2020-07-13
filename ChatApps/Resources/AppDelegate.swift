@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     // MARK: - Google Sign Delegate
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-//        let spinner = JGProgressHUD(style: .dark)
+        //        let spinner = JGProgressHUD(style: .dark)
         guard error == nil else {
             print("Failed to log in with Google Account")
             return
