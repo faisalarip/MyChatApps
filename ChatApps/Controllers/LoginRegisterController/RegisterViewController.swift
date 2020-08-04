@@ -179,7 +179,7 @@ class RegisterViewController: UIViewController {
         spinner.show(in: view)
         
         /// Firebase Register Management
-        DatabaseModel.shared.validationNewUser(with: email) { [weak self] (newUser) in
+        DatabaseManager.shared.validationNewUser(with: email) { [weak self] (newUser) in
             guard let strongSelf = self else {
                 return
             }
@@ -206,7 +206,7 @@ class RegisterViewController: UIViewController {
                 let chatUser = ChatAppsUser(firstName: firstName,
                                             lastName: lastName,
                                             emailAddress: email)
-                DatabaseModel.shared.insertUser(with: chatUser, completion: { success in
+                DatabaseManager.shared.insertUser(with: chatUser, completion: { success in
                     if success {
                         // Upload Image
                         guard let image = strongSelf.imageView.image, let data = image.pngData() else {

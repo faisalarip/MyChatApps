@@ -115,7 +115,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         if hasFetched {
             self.filterUsers(with: query)
         } else {
-            DatabaseModel.shared.getAllUsers { [weak self] (result) in
+            DatabaseManager.shared.getAllUsers { [weak self] (result) in
                 guard let self = self else {
                     return
                 }

@@ -49,10 +49,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         UserDefaults.standard.set(email, forKey: "email")
         
-        DatabaseModel.shared.validationNewUser(with: email) { (exist) in
+        DatabaseManager.shared.validationNewUser(with: email) { (exist) in
             if !exist {
                 let chatUser = ChatAppsUser(firstName: firstName, lastName: lastName, emailAddress: email)
-                DatabaseModel.shared.insertUser(with: chatUser, completion: { success in
+                DatabaseManager.shared.insertUser(with: chatUser, completion: { success in
                     if success {
                         // Upload Image
                         if user.profile.hasImage {
