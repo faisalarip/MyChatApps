@@ -23,6 +23,10 @@
  */
 
 import Foundation
+<<<<<<< HEAD
+=======
+import UIKit
+>>>>>>> origin/develop12
 import MapKit
 
 /// A protocol used by the `MessagesViewController` to customize the appearance of a `MessageContentCell`.
@@ -164,7 +168,11 @@ public protocol MessagesDisplayDelegate: AnyObject {
 
     // MARK: - Media Messages
 
+<<<<<<< HEAD
     /// Used to configure the `UIImageView` of a `MediaMessageCell.
+=======
+    /// Used to configure the `UIImageView` of a `MediaMessageCell`.
+>>>>>>> origin/develop12
     ///
     /// - Parameters:
     ///   - imageView: The `UIImageView` of the cell.
@@ -213,6 +221,16 @@ public protocol MessagesDisplayDelegate: AnyObject {
     ///     3. return the time as h:mm:ss for anything longer that 3600 seconds                (e.g. 1:19:08  means 1 hour 19 minutes and 8 seconds)
     func audioProgressTextFormat(_ duration: Float, for audioCell: AudioMessageCell, in messageCollectionView: MessagesCollectionView) -> String
 
+<<<<<<< HEAD
+=======
+    /// Used to configure the `UIImageView` of a `LinkPreviewMessageCell`.
+    /// - Parameters:
+    ///   - imageView: The `UIImageView` of the cell.
+    ///   - message: The `MessageType` that will be displayed by this cell.
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    func configureLinkPreviewImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView)
+>>>>>>> origin/develop12
 }
 
 public extension MessagesDisplayDelegate {
@@ -229,8 +247,15 @@ public extension MessagesDisplayDelegate {
         case .emoji:
             return .clear
         default:
+<<<<<<< HEAD
             guard let dataSource = messagesCollectionView.messagesDataSource else { return .backgroundColor }
             return dataSource.isFromCurrentSender(message: message) ? .outgoingGreen : .incomingGray
+=======
+            guard let dataSource = messagesCollectionView.messagesDataSource else {
+                return .white
+            }
+            return dataSource.isFromCurrentSender(message: message) ? .outgoingMessageBackground : .incomingMessageBackground
+>>>>>>> origin/develop12
         }
     }
     
@@ -254,7 +279,11 @@ public extension MessagesDisplayDelegate {
         guard let dataSource = messagesCollectionView.messagesDataSource else {
             fatalError(MessageKitError.nilMessagesDataSource)
         }
+<<<<<<< HEAD
         return dataSource.isFromCurrentSender(message: message) ? .backgroundColor : .labelColor
+=======
+        return dataSource.isFromCurrentSender(message: message) ? .outgoingMessageLabel : .incomingMessageLabel
+>>>>>>> origin/develop12
     }
 
     func enabledDetectors(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> [DetectorType] {
@@ -291,7 +320,14 @@ public extension MessagesDisplayDelegate {
     }
 
     func audioTintColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+<<<<<<< HEAD
         return UIColor.sendButtonBlue
+=======
+        guard let dataSource = messagesCollectionView.messagesDataSource else {
+            fatalError(MessageKitError.nilMessagesDataSource)
+        }
+        return dataSource.isFromCurrentSender(message: message) ? .outgoingAudioMessageTint : .incomingAudioMessageTint
+>>>>>>> origin/develop12
     }
 
     func audioProgressTextFormat(_ duration: Float, for audioCell: AudioMessageCell, in messageCollectionView: MessagesCollectionView) -> String {
@@ -311,4 +347,11 @@ public extension MessagesDisplayDelegate {
         return retunValue
     }
 
+<<<<<<< HEAD
+=======
+    // MARK: - LinkPreview Message Defaults
+
+    func configureLinkPreviewImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+    }
+>>>>>>> origin/develop12
 }

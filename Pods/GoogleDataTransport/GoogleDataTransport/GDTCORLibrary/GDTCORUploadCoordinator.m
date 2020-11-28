@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "GDTCORLibrary/Private/GDTCORUploadCoordinator.h"
 
 #import <GoogleDataTransport/GDTCORAssert.h>
@@ -22,6 +23,16 @@
 #import <GoogleDataTransport/GDTCORReachability.h>
 
 #import "GDTCORLibrary/Private/GDTCORRegistrar_Private.h"
+=======
+#import "GoogleDataTransport/GDTCORLibrary/Private/GDTCORUploadCoordinator.h"
+
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORAssert.h"
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORClock.h"
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORConsoleLogger.h"
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORReachability.h"
+
+#import "GoogleDataTransport/GDTCORLibrary/Private/GDTCORRegistrar_Private.h"
+>>>>>>> origin/develop12
 
 @implementation GDTCORUploadCoordinator
 
@@ -43,7 +54,10 @@
     _registrar = [GDTCORRegistrar sharedInstance];
     _timerInterval = 30 * NSEC_PER_SEC;
     _timerLeeway = 5 * NSEC_PER_SEC;
+<<<<<<< HEAD
     _targetToInFlightPackages = [[NSMutableDictionary alloc] init];
+=======
+>>>>>>> origin/develop12
   }
   return self;
 }
@@ -63,11 +77,24 @@
  * check the next-upload clocks of all targets to determine if an upload attempt can be made.
  */
 - (void)startTimer {
+<<<<<<< HEAD
   dispatch_sync(_coordinationQueue, ^{
+=======
+  dispatch_async(_coordinationQueue, ^{
+    if (self->_timer) {
+      // The timer has been already started.
+      return;
+    }
+
+>>>>>>> origin/develop12
     self->_timer =
         dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self->_coordinationQueue);
     dispatch_source_set_timer(self->_timer, DISPATCH_TIME_NOW, self->_timerInterval,
                               self->_timerLeeway);
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
     dispatch_source_set_event_handler(self->_timer, ^{
       if (![[GDTCORApplication sharedApplication] isRunningInBackground]) {
         GDTCORUploadConditions conditions = [self uploadConditions];
@@ -84,6 +111,10 @@
 - (void)stopTimer {
   if (_timer) {
     dispatch_source_cancel(_timer);
+<<<<<<< HEAD
+=======
+    _timer = nil;
+>>>>>>> origin/develop12
   }
 }
 
@@ -94,10 +125,16 @@
  */
 - (void)uploadTargets:(NSArray<NSNumber *> *)targets conditions:(GDTCORUploadConditions)conditions {
   dispatch_async(_coordinationQueue, ^{
+<<<<<<< HEAD
+=======
+    // TODO: The reachability signal may be not reliable enough to prevent an upload attempt.
+    // See https://developer.apple.com/videos/play/wwdc2019/712/ (49:40) for more details.
+>>>>>>> origin/develop12
     if ((conditions & GDTCORUploadConditionNoNetwork) == GDTCORUploadConditionNoNetwork) {
       return;
     }
     for (NSNumber *target in targets) {
+<<<<<<< HEAD
       // Don't trigger uploads for targets that have an in-flight package already.
       if (self->_targetToInFlightPackages[target]) {
         GDTCORLogDebug(@"Target %@ will not upload, there's an upload in flight", target);
@@ -119,10 +156,23 @@
         }
       }
       GDTCORLogDebug(@"Target %@ is not ready to upload", target);
+=======
+      id<GDTCORUploader> uploader = self->_registrar.targetToUploader[target];
+      [uploader uploadTarget:target.intValue withConditions:conditions];
+>>>>>>> origin/develop12
     }
   });
 }
 
+<<<<<<< HEAD
+=======
+- (void)signalToStoragesToCheckExpirations {
+  for (id<GDTCORStorageProtocol> storage in [_registrar.targetToStorage allValues]) {
+    [storage checkForExpirations];
+  }
+}
+
+>>>>>>> origin/develop12
 /** Returns the registered storage for the given NSNumber wrapped GDTCORTarget.
  *
  * @param target The NSNumber wrapping of a GDTCORTarget to find the storage instance of.
@@ -139,6 +189,7 @@
  * @return The current upload conditions.
  */
 - (GDTCORUploadConditions)uploadConditions {
+<<<<<<< HEAD
 #if TARGET_OS_WATCH
   return GDTCORUploadConditionNoNetwork;
 #else
@@ -153,12 +204,20 @@
     return GDTCORUploadConditionNoNetwork;
   }
 
+=======
+  GDTCORNetworkReachabilityFlags currentFlags = [GDTCORReachability currentFlags];
+  BOOL networkConnected = GDTCORReachabilityFlagsReachable(currentFlags);
+  if (!networkConnected) {
+    return GDTCORUploadConditionNoNetwork;
+  }
+>>>>>>> origin/develop12
   BOOL isWWAN = GDTCORReachabilityFlagsContainWWAN(currentFlags);
   if (isWWAN) {
     return GDTCORUploadConditionMobileData;
   } else {
     return GDTCORUploadConditionWifiData;
   }
+<<<<<<< HEAD
 #endif
 }
 
@@ -196,6 +255,8 @@ static NSString *const ktargetToInFlightPackagesKey =
       [aCoder encodeObject:self->_targetToInFlightPackages forKey:ktargetToInFlightPackagesKey];
     }
   });
+=======
+>>>>>>> origin/develop12
 }
 
 #pragma mark - GDTCORLifecycleProtocol
@@ -203,10 +264,18 @@ static NSString *const ktargetToInFlightPackagesKey =
 - (void)appWillForeground:(GDTCORApplication *)app {
   // -startTimer is thread-safe.
   [self startTimer];
+<<<<<<< HEAD
 }
 
 - (void)appWillBackground:(GDTCORApplication *)app {
   dispatch_sync(_coordinationQueue, ^{
+=======
+  [self signalToStoragesToCheckExpirations];
+}
+
+- (void)appWillBackground:(GDTCORApplication *)app {
+  dispatch_async(_coordinationQueue, ^{
+>>>>>>> origin/develop12
     [self stopTimer];
   });
 }
@@ -217,6 +286,7 @@ static NSString *const ktargetToInFlightPackagesKey =
   });
 }
 
+<<<<<<< HEAD
 #pragma mark - GDTCORUploadPackageProtocol
 
 - (void)packageDelivered:(GDTCORUploadPackage *)package successful:(BOOL)successful {
@@ -282,4 +352,6 @@ static NSString *const ktargetToInFlightPackagesKey =
   });
 }
 
+=======
+>>>>>>> origin/develop12
 @end

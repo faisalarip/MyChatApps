@@ -20,14 +20,19 @@
 #define REALM_TABLE_REF_HPP
 
 #include <cstddef>
+<<<<<<< HEAD
 #include <algorithm>
 
 #include <realm/util/bind_ptr.hpp>
 
+=======
+#include <ostream>
+>>>>>>> origin/develop12
 namespace realm {
 
 
 class Table;
+<<<<<<< HEAD
 
 
 /// A reference-counting "smart pointer" for referring to table
@@ -476,6 +481,119 @@ bool operator>=(T* a, const BasicTableRef<U>& b) noexcept
 }
 
 
+=======
+class TableRef;
+
+class ConstTableRef {
+public:
+    ConstTableRef() noexcept {}
+    ConstTableRef(std::nullptr_t) noexcept {}
+    ConstTableRef(const TableRef& other) noexcept;
+
+    const Table* operator->() const;
+    const Table& operator*() const;
+    operator bool() const noexcept;
+    const Table* unchecked_ptr() const
+    {
+        return m_table;
+    }
+
+    bool operator==(const ConstTableRef& other) const
+    {
+        return m_table == other.m_table && m_instance_version == other.m_instance_version;
+    }
+
+    bool operator!=(const ConstTableRef& other) const
+    {
+        return !(*this == other);
+    }
+
+    bool operator<(const ConstTableRef& other) const
+    {
+        if (m_table == other.m_table)
+            return m_instance_version < other.m_instance_version;
+        else
+            return m_table < other.m_table;
+    }
+
+    bool operator>(const ConstTableRef& other) const
+    {
+        if (m_table == other.m_table)
+            return m_instance_version > other.m_instance_version;
+        else
+            return m_table > other.m_table;
+    }
+
+    std::ostream& print(std::ostream& o) const
+    {
+        return o << "TableRef(" << m_table << ", " << m_instance_version << ")";
+    }
+    TableRef cast_away_const() const;
+    static ConstTableRef unsafe_create(const Table* t_ptr);
+    void check() const;
+
+protected:
+    explicit ConstTableRef(const Table* t_ptr, uint64_t instance_version)
+        : m_table(const_cast<Table*>(t_ptr))
+        , m_instance_version(instance_version)
+    {
+    }
+    friend class Group;
+    friend class Table;
+    friend class ClusterTree;
+
+    Table* m_table = nullptr;
+    uint64_t m_instance_version = 0;
+};
+
+class TableRef : public ConstTableRef {
+public:
+    TableRef() noexcept
+        : ConstTableRef()
+    {
+    }
+    TableRef(std::nullptr_t) noexcept
+        : ConstTableRef()
+    {
+    }
+
+    Table* operator->() const;
+    Table& operator*() const;
+    Table* unchecked_ptr() const
+    {
+        return m_table;
+    }
+    static TableRef unsafe_create(Table* t_ptr);
+
+private:
+    explicit TableRef(Table* t_ptr, uint64_t instance_version)
+        : ConstTableRef(t_ptr, instance_version)
+    {
+    }
+    friend class Group;
+    friend class Table;
+    friend class ClusterTree;
+    friend class ConstTableRef;
+};
+
+
+inline ConstTableRef::ConstTableRef(const TableRef& other) noexcept
+    : m_table(other.m_table)
+    , m_instance_version(other.m_instance_version)
+{
+}
+
+inline TableRef ConstTableRef::cast_away_const() const
+{
+    return TableRef(m_table, m_instance_version);
+}
+
+inline std::ostream& operator<<(std::ostream& o, const ConstTableRef& tr)
+{
+    return tr.print(o);
+}
+
+>>>>>>> origin/develop12
 } // namespace realm
 
 #endif // REALM_TABLE_REF_HPP

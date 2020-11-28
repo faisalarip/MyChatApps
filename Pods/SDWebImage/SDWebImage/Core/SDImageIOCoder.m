@@ -11,7 +11,10 @@
 #import "NSImage+Compatibility.h"
 #import <ImageIO/ImageIO.h>
 #import "UIImage+Metadata.h"
+<<<<<<< HEAD
 #import "SDImageHEICCoderInternal.h"
+=======
+>>>>>>> origin/develop12
 #import "SDImageIOAnimatedCoderInternal.h"
 
 // Specify File Size for lossy format encoding, like JPEG
@@ -55,6 +58,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
 
 #pragma mark - Decode
 - (BOOL)canDecodeFromData:(nullable NSData *)data {
+<<<<<<< HEAD
     switch ([NSData sd_imageFormatForImageData:data]) {
         case SDImageFormatWebP:
             // Do not support WebP decoding
@@ -68,6 +72,9 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         default:
             return YES;
     }
+=======
+    return YES;
+>>>>>>> origin/develop12
 }
 
 - (UIImage *)decodedImageWithData:(NSData *)data options:(nullable SDImageCoderOptions *)options {
@@ -205,6 +212,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
 
 #pragma mark - Encode
 - (BOOL)canEncodeToFormat:(SDImageFormat)format {
+<<<<<<< HEAD
     switch (format) {
         case SDImageFormatWebP:
             // Do not support WebP encoding
@@ -218,6 +226,9 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         default:
             return YES;
     }
+=======
+    return YES;
+>>>>>>> origin/develop12
 }
 
 - (NSData *)encodedDataWithImage:(UIImage *)image format:(SDImageFormat)format options:(nullable SDImageCoderOptions *)options {
@@ -277,7 +288,11 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     }
     NSUInteger pixelWidth = CGImageGetWidth(imageRef);
     NSUInteger pixelHeight = CGImageGetHeight(imageRef);
+<<<<<<< HEAD
     if (maxPixelSize.width > 0 && maxPixelSize.height > 0 && pixelWidth > 0 && pixelHeight > 0) {
+=======
+    if (maxPixelSize.width > 0 && maxPixelSize.height > 0 && pixelWidth > maxPixelSize.width && pixelHeight > maxPixelSize.height) {
+>>>>>>> origin/develop12
         CGFloat pixelRatio = pixelWidth / pixelHeight;
         CGFloat maxPixelSizeRatio = maxPixelSize.width / maxPixelSize.height;
         CGFloat finalPixelSize;

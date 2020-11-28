@@ -3,6 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
+<<<<<<< HEAD
 	<string>797435623956-avpat8a3u8mh01fsk1o0gtmbm14eil9j.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.797435623956-avpat8a3u8mh01fsk1o0gtmbm14eil9j</string>
@@ -10,14 +11,29 @@
 	<string>AIzaSyByNyDI8UHpFLCKvF0E2zVnZJ3zvk6nPBE</string>
 	<key>GCM_SENDER_ID</key>
 	<string>797435623956</string>
+=======
+	<string>401233957403-4sfta04qcf49ctqstkpsk260fduh69pe.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.401233957403-4sfta04qcf49ctqstkpsk260fduh69pe</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBI_bAd1DFTLfhQbQGGLxvL-jkwqGLAg4Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>401233957403</string>
+>>>>>>> origin/develop12
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.appbrewery.ChatApps</string>
 	<key>PROJECT_ID</key>
+<<<<<<< HEAD
 	<string>chatapps1-c3848</string>
 	<key>STORAGE_BUCKET</key>
 	<string>chatapps1-c3848.appspot.com</string>
+=======
+	<string>chats2nov</string>
+	<key>STORAGE_BUCKET</key>
+	<string>chats2nov.appspot.com</string>
+>>>>>>> origin/develop12
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +45,14 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
+<<<<<<< HEAD
 	<string>1:797435623956:ios:998ac510176be702dfc501</string>
 	<key>DATABASE_URL</key>
 	<string>https://chatapps1-c3848.firebaseio.com</string>
+=======
+	<string>1:401233957403:ios:06907482acc9d6e5e79ebe</string>
+	<key>DATABASE_URL</key>
+	<string>https://chats2nov.firebaseio.com</string>
+>>>>>>> origin/develop12
 </dict>
 </plist>

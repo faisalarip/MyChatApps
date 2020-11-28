@@ -18,6 +18,7 @@
 
 static NSString *const kFinalizeMFASignInEndPoint = @"accounts/mfaSignIn:finalize";
 
+<<<<<<< HEAD
 @implementation FIRFinalizeMFASignInRequest
 
 - (nullable instancetype)initWithMFAProvider:(NSString *)MFAProvider
@@ -25,12 +26,28 @@ static NSString *const kFinalizeMFASignInEndPoint = @"accounts/mfaSignIn:finaliz
                             verificationInfo:
                                 (FIRAuthProtoFinalizeMFAPhoneRequestInfo *)verificationInfo
                         requestConfiguration:(FIRAuthRequestConfiguration *)requestConfiguration {
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+@implementation FIRFinalizeMFASignInRequest
+
+- (nullable instancetype)
+    initWithMFAPendingCredential:(NSString *)MFAPendingCredential
+                verificationInfo:(FIRAuthProtoFinalizeMFAPhoneRequestInfo *)verificationInfo
+            requestConfiguration:(FIRAuthRequestConfiguration *)requestConfiguration {
+>>>>>>> origin/develop12
   self = [super initWithEndpoint:kFinalizeMFASignInEndPoint
             requestConfiguration:requestConfiguration
              useIdentityPlatform:YES
                       useStaging:NO];
   if (self) {
+<<<<<<< HEAD
     _MFAProvider = MFAProvider;
+=======
+>>>>>>> origin/develop12
     _MFAPendingCredential = MFAPendingCredential;
     _verificationInfo = verificationInfo;
   }
@@ -39,9 +56,12 @@ static NSString *const kFinalizeMFASignInEndPoint = @"accounts/mfaSignIn:finaliz
 
 - (nullable id)unencodedHTTPRequestBodyWithError:(NSError *__autoreleasing _Nullable *)error {
   NSMutableDictionary *postBody = [NSMutableDictionary dictionary];
+<<<<<<< HEAD
   if (_MFAProvider) {
     postBody[@"mfaProvider"] = _MFAProvider;
   }
+=======
+>>>>>>> origin/develop12
   if (_MFAPendingCredential) {
     postBody[@"mfaPendingCredential"] = _MFAPendingCredential;
   }
@@ -50,6 +70,12 @@ static NSString *const kFinalizeMFASignInEndPoint = @"accounts/mfaSignIn:finaliz
       postBody[@"phoneVerificationInfo"] = [_verificationInfo dictionary];
     }
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    postBody[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
   return [postBody copy];
 }
 

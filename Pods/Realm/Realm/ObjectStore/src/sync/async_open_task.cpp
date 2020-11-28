@@ -31,7 +31,11 @@ AsyncOpenTask::AsyncOpenTask(std::shared_ptr<_impl::RealmCoordinator> coordinato
 {
 }
 
+<<<<<<< HEAD
 void AsyncOpenTask::start(std::function<void(ThreadSafeReference<Realm>, std::exception_ptr)> callback)
+=======
+void AsyncOpenTask::start(std::function<void(ThreadSafeReference, std::exception_ptr)> callback)
+>>>>>>> origin/develop12
 {
     auto session = m_session.load();
     if (!session)
@@ -50,7 +54,11 @@ void AsyncOpenTask::start(std::function<void(ThreadSafeReference<Realm>, std::ex
         if (ec)
             return callback({}, std::make_exception_ptr(std::system_error(ec)));
 
+<<<<<<< HEAD
         ThreadSafeReference<Realm> realm;
+=======
+        ThreadSafeReference realm;
+>>>>>>> origin/develop12
         try {
             realm = coordinator->get_unbound_realm();
         }

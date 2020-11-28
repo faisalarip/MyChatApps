@@ -53,7 +53,11 @@
 //
 // Require Linux kernel version >= 2.6.27 such that we have epoll_create1(),
 // `O_CLOEXEC`, and `EPOLLRDHUP`.
+<<<<<<< HEAD
 #if defined(__linux__)
+=======
+#if defined(__linux__) && !REALM_ANDROID
+>>>>>>> origin/develop12
 #  include <linux/version.h>
 #  if !defined(REALM_HAVE_EPOLL)
 #    if !defined(REALM_DISABLE_UTIL_NETWORK_EPOLL)
@@ -1258,9 +1262,15 @@ public:
     /// will have become connected to the remote socket. It must be in the
     /// closed state (Socket::is_open()) when async_accept() is called.
     ///
+<<<<<<< HEAD
     /// \param ep Upon completion, the remote peer endpoint will have been
     /// assigned to this variable.
     template<class H> void async_accept(Socket& sock, H handler);
+=======
+    template<class H> void async_accept(Socket& sock, H handler);
+    /// \param ep Upon completion, the remote peer endpoint will have been
+    /// assigned to this variable.
+>>>>>>> origin/develop12
     template<class H> void async_accept(Socket& sock, Endpoint& ep, H handler);
     /// @}
 

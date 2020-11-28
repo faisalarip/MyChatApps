@@ -84,6 +84,14 @@ using namespace realm::util;
 
 namespace realm {
 
+<<<<<<< HEAD
+=======
+/// Takes a 64-bit value and returns the minimum number of bits needed
+/// to fit the value. For alignment this is rounded up to nearest
+/// log2. Posssible results {0, 1, 2, 4, 8, 16, 32, 64}
+size_t bit_width(int64_t value);
+
+>>>>>>> origin/develop12
 // Direct access methods
 
 template <size_t width>
@@ -142,6 +150,14 @@ void set_direct(char* data, size_t ndx, int_fast64_t value) noexcept
     }
 }
 
+<<<<<<< HEAD
+=======
+inline void set_direct(char* data, size_t width, size_t ndx, int_fast64_t value) noexcept
+{
+    REALM_TEMPEX(set_direct, width, (data, ndx, value));
+}
+
+>>>>>>> origin/develop12
 template <size_t width>
 void fill_direct(char* data, size_t begin, size_t end, int_fast64_t value) noexcept
 {

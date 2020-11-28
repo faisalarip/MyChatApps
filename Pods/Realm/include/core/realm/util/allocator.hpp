@@ -77,9 +77,13 @@ struct DefaultAllocator final : AllocatorBase {
 
 private:
     static DefaultAllocator g_instance;
+<<<<<<< HEAD
     DefaultAllocator()
     {
     }
+=======
+    DefaultAllocator() {}
+>>>>>>> origin/develop12
 };
 
 template <class T, class Allocator = AllocatorBase>
@@ -134,6 +138,7 @@ struct GetAllocator {
 /// storage requirements compared with `std::allocator<T>`.
 template <>
 struct GetAllocator<DefaultAllocator> {
+<<<<<<< HEAD
     GetAllocator() noexcept
     {
     }
@@ -141,6 +146,11 @@ struct GetAllocator<DefaultAllocator> {
     GetAllocator(DefaultAllocator&) noexcept
     {
     }
+=======
+    GetAllocator() noexcept {}
+
+    GetAllocator(DefaultAllocator&) noexcept {}
+>>>>>>> origin/develop12
 
     DefaultAllocator& get_allocator() const noexcept
     {
@@ -183,9 +193,13 @@ struct STLAllocator : detail::GetAllocator<Allocator> {
 
     /// The default constructor is only availble when the static method
     /// `Allocator::get_default()` exists.
+<<<<<<< HEAD
     STLAllocator() noexcept
     {
     }
+=======
+    STLAllocator() noexcept {}
+>>>>>>> origin/develop12
 
     constexpr STLAllocator(Allocator& base) noexcept
         : detail::GetAllocator<Allocator>(base)
@@ -296,8 +310,12 @@ struct STLDeleter<T[], Allocator> : detail::GetAllocator<Allocator> {
     template <class A>
     STLDeleter& operator=(const STLDeleter<T[], A>& other) noexcept
     {
+<<<<<<< HEAD
         static_cast<detail::GetAllocator<Allocator>&>(*this) =
             static_cast<const detail::GetAllocator<A>&>(other);
+=======
+        static_cast<detail::GetAllocator<Allocator>&>(*this) = static_cast<const detail::GetAllocator<A>&>(other);
+>>>>>>> origin/develop12
         m_count = other.m_count;
         return *this;
     }

@@ -21,12 +21,19 @@
 
 #include "impl/collection_notifier.hpp"
 
+<<<<<<< HEAD
 #include <realm/row.hpp>
+=======
+#include <realm/obj.hpp>
+>>>>>>> origin/develop12
 
 namespace realm {
 class ObjectSchema;
 struct Property;
+<<<<<<< HEAD
 using RowExpr = BasicRowExpr<Table>;
+=======
+>>>>>>> origin/develop12
 
 namespace _impl {
     class ObjectNotifier;
@@ -47,8 +54,15 @@ enum class CreatePolicy : int8_t {
 class Object {
 public:
     Object();
+<<<<<<< HEAD
     Object(std::shared_ptr<Realm> r, ObjectSchema const& s, RowExpr const& o);
     Object(std::shared_ptr<Realm> r, StringData object_type, size_t ndx);
+=======
+    Object(std::shared_ptr<Realm> r, Obj const& o);
+    Object(std::shared_ptr<Realm> r, ObjectSchema const& s, Obj const& o);
+    Object(std::shared_ptr<Realm> r, StringData object_type, ObjKey key);
+    Object(std::shared_ptr<Realm> r, StringData object_type, size_t index);
+>>>>>>> origin/develop12
 
     Object(Object const&);
     Object(Object&&);
@@ -58,16 +72,39 @@ public:
     ~Object();
 
     std::shared_ptr<Realm> const& realm() const { return m_realm; }
+<<<<<<< HEAD
     ObjectSchema const& get_object_schema() const { return *m_object_schema; }
     RowExpr row() const { return m_row; }
 
     bool is_valid() const { return m_row.is_attached(); }
+=======
+    std::shared_ptr<Realm> const& get_realm() const { return m_realm; }
+    ObjectSchema const& get_object_schema() const { return *m_object_schema; }
+    Obj obj() const { return m_obj; }
+
+    bool is_valid() const { return m_obj.is_valid(); }
+
+    // Returns a frozen copy of this object.
+    Object freeze(std::shared_ptr<Realm> frozen_realm) const;
+
+    // Returns whether or not this Object is frozen.
+    bool is_frozen() const noexcept;
+>>>>>>> origin/develop12
 
     NotificationToken add_notification_callback(CollectionChangeCallback callback) &;
 
     void ensure_user_in_everyone_role();
     void ensure_private_role_exists_for_user();
 
+<<<<<<< HEAD
+=======
+    template<typename ValueType>
+    void set_column_value(StringData prop_name, ValueType&& value) { m_obj.set(prop_name, value); }
+
+    template<typename ValueType>
+    ValueType get_column_value(StringData prop_name) const { return m_obj.get<ValueType>(prop_name); }
+
+>>>>>>> origin/develop12
     // The following functions require an accessor context which converts from
     // the binding's native data types to the core data types. See CppContext
     // for a reference implementation of such a context.
@@ -80,23 +117,38 @@ public:
                             ValueType value, CreatePolicy policy = CreatePolicy::ForceCreate);
 
     template<typename ValueType, typename ContextType>
+<<<<<<< HEAD
     ValueType get_property_value(ContextType& ctx, StringData prop_name);
 
     template<typename ValueType, typename ContextType>
     ValueType get_property_value(ContextType& ctx, const Property& property);
+=======
+    ValueType get_property_value(ContextType& ctx, StringData prop_name) const;
+
+    template<typename ValueType, typename ContextType>
+    ValueType get_property_value(ContextType& ctx, const Property& property) const;
+>>>>>>> origin/develop12
 
     // create an Object from a native representation
     template<typename ValueType, typename ContextType>
     static Object create(ContextType& ctx, std::shared_ptr<Realm> const& realm,
                          const ObjectSchema &object_schema, ValueType value,
                          CreatePolicy policy = CreatePolicy::ForceCreate,
+<<<<<<< HEAD
                          size_t current_row = size_t(-1), Row* = nullptr);
+=======
+                         ObjKey current_obj = ObjKey(), Obj* = nullptr);
+>>>>>>> origin/develop12
 
     template<typename ValueType, typename ContextType>
     static Object create(ContextType& ctx, std::shared_ptr<Realm> const& realm,
                          StringData object_type, ValueType value,
                          CreatePolicy policy = CreatePolicy::ForceCreate,
+<<<<<<< HEAD
                          size_t current_row = size_t(-1), Row* = nullptr);
+=======
+                         ObjKey current_obj = ObjKey(), Obj* = nullptr);
+>>>>>>> origin/develop12
 
     template<typename ValueType, typename ContextType>
     static Object get_for_primary_key(ContextType& ctx,
@@ -115,7 +167,11 @@ private:
 
     std::shared_ptr<Realm> m_realm;
     const ObjectSchema *m_object_schema;
+<<<<<<< HEAD
     Row m_row;
+=======
+    Obj m_obj;
+>>>>>>> origin/develop12
     _impl::CollectionNotifier::Handle<_impl::ObjectNotifier> m_notifier;
 
 
@@ -123,6 +179,7 @@ private:
     void set_property_value_impl(ContextType& ctx, const Property &property,
                                  ValueType value, CreatePolicy policy, bool is_default);
     template<typename ValueType, typename ContextType>
+<<<<<<< HEAD
     ValueType get_property_value_impl(ContextType& ctx, const Property &property);
 
     template<typename ValueType, typename ContextType>
@@ -131,6 +188,18 @@ private:
 
     void verify_attached() const;
     Property const& property_for_name(StringData prop_name) const;
+=======
+    ValueType get_property_value_impl(ContextType& ctx, const Property &property) const;
+
+    template<typename ValueType, typename ContextType>
+    static ObjKey get_for_primary_key_impl(ContextType& ctx, Table const& table,
+                                           const Property &primary_prop,
+                                           ValueType primary_value);
+
+    void verify_attached() const;
+    Property const& property_for_name(StringData prop_name) const;
+    void validate_property_for_setter(Property const&) const;
+>>>>>>> origin/develop12
 };
 
 struct InvalidatedObjectException : public std::logic_error {

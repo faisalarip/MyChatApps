@@ -18,7 +18,11 @@
 #ifndef FBSDKViewHierarchyMacros_h
 #define FBSDKViewHierarchyMacros_h
 
+<<<<<<< HEAD
 //  keys for event binding path compoenent
+=======
+// keys for event binding path compoenent
+>>>>>>> origin/develop12
 #define CODELESS_MAPPING_METHOD_KEY             @"method"
 #define CODELESS_MAPPING_EVENT_NAME_KEY         @"event_name"
 #define CODELESS_MAPPING_EVENT_TYPE_KEY         @"event_type"
@@ -65,7 +69,11 @@
 #define CODELESS_SETTING_TIMESTAMP_KEY          @"codeless_setting_timestamp"
 #define CODELESS_SETTING_CACHE_TIMEOUT          (7 * 24 * 60 * 60)
 
+<<<<<<< HEAD
 //  keys for view tree
+=======
+// keys for view tree
+>>>>>>> origin/develop12
 #define CODELESS_VIEW_TREE_DESC_KEY             @"description"
 #define CODELESS_VIEW_TREE_DIMENSION_KEY        @"dimension"
 #define CODELESS_VIEW_TREE_TAG_KEY              @"tag"
@@ -84,7 +92,11 @@
 #define CODELESS_VIEW_TREE_TEXT_IS_ITALIC_KEY   @"is_italic"
 #define CODELESS_VIEW_TREE_TEXT_SIZE_KEY        @"font_size"
 
+<<<<<<< HEAD
 //  keys for view hierarchy
+=======
+// keys for view hierarchy
+>>>>>>> origin/develop12
 #define VIEW_HIERARCHY_CHILD_VIEWS_KEY          @"childviews"
 #define VIEW_HIERARCHY_CLASS_NAME_KEY           @"classname"
 #define VIEW_HIERARCHY_CLASS_TYPE_BITMASK_KEY   @"classtypebitmask"

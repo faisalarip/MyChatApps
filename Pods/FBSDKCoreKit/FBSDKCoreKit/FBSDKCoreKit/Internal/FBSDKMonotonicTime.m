@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKMonotonicTime.h"
 
 #include <assert.h>
@@ -27,6 +28,14 @@
 #include <mach/mach_time.h>
 
 #include <dispatch/dispatch.h>
+=======
+ #import "FBSDKMonotonicTime.h"
+
+ #include <assert.h>
+ #include <dispatch/dispatch.h>
+ #include <mach/mach.h>
+ #include <mach/mach_time.h>
+>>>>>>> origin/develop12
 
 /**
  * PLEASE NOTE: FBSDKSDKMonotonicTimeTests work fine, but are disabled
@@ -35,6 +44,7 @@
  */
 static uint64_t _get_time_nanoseconds(void)
 {
+<<<<<<< HEAD
     static struct mach_timebase_info tb_info = {0};
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -43,27 +53,52 @@ static uint64_t _get_time_nanoseconds(void)
     });
 
     return (mach_absolute_time() * tb_info.numer) / tb_info.denom;
+=======
+  static struct mach_timebase_info tb_info = {0};
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    int ret = mach_timebase_info(&tb_info);
+    assert(0 == ret);
+  });
+
+  return (mach_absolute_time() * tb_info.numer) / tb_info.denom;
+>>>>>>> origin/develop12
 }
 
 FBSDKMonotonicTimeSeconds FBSDKMonotonicTimeGetCurrentSeconds(void)
 {
+<<<<<<< HEAD
     const uint64_t nowNanoSeconds = _get_time_nanoseconds();
     return (FBSDKMonotonicTimeSeconds)nowNanoSeconds / (FBSDKMonotonicTimeSeconds)1000000000.0;
+=======
+  const uint64_t nowNanoSeconds = _get_time_nanoseconds();
+  return (FBSDKMonotonicTimeSeconds)nowNanoSeconds / (FBSDKMonotonicTimeSeconds)1000000000.0;
+>>>>>>> origin/develop12
 }
 
 FBSDKMonotonicTimeMilliseconds FBSDKMonotonicTimeGetCurrentMilliseconds(void)
 {
+<<<<<<< HEAD
     const uint64_t nowNanoSeconds = _get_time_nanoseconds();
     return nowNanoSeconds / 1000000;
+=======
+  const uint64_t nowNanoSeconds = _get_time_nanoseconds();
+  return nowNanoSeconds / 1000000;
+>>>>>>> origin/develop12
 }
 
 FBSDKMonotonicTimeNanoseconds FBSDKMonotonicTimeGetCurrentNanoseconds(void)
 {
+<<<<<<< HEAD
     return _get_time_nanoseconds();
+=======
+  return _get_time_nanoseconds();
+>>>>>>> origin/develop12
 }
 
 FBSDKMachAbsoluteTimeUnits FBSDKMonotonicTimeConvertSecondsToMachUnits(FBSDKMonotonicTimeSeconds seconds)
 {
+<<<<<<< HEAD
     static double ratio = 0;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -74,10 +109,23 @@ FBSDKMachAbsoluteTimeUnits FBSDKMonotonicTimeConvertSecondsToMachUnits(FBSDKMono
     });
 
     return seconds * ratio;
+=======
+  static double ratio = 0;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    struct mach_timebase_info tb_info = {0};
+    int ret = mach_timebase_info(&tb_info);
+    assert(0 == ret);
+    ratio = ((double) tb_info.denom / (double)tb_info.numer) * 1000000000.0;
+  });
+
+  return seconds * ratio;
+>>>>>>> origin/develop12
 }
 
 FBSDKMonotonicTimeSeconds FBSDKMonotonicTimeConvertMachUnitsToSeconds(FBSDKMachAbsoluteTimeUnits machUnits)
 {
+<<<<<<< HEAD
     static double ratio = 0;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -88,6 +136,18 @@ FBSDKMonotonicTimeSeconds FBSDKMonotonicTimeConvertMachUnitsToSeconds(FBSDKMachA
     });
 
     return ratio * (double)machUnits;
+=======
+  static double ratio = 0;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    struct mach_timebase_info tb_info = {0};
+    int ret = mach_timebase_info(&tb_info);
+    assert(0 == ret);
+    ratio = ((double) tb_info.numer / (double)tb_info.denom) / 1000000000.0;
+  });
+
+  return ratio * (double)machUnits;
+>>>>>>> origin/develop12
 }
 
 #endif

@@ -81,7 +81,11 @@ public:
     void set_size(size_t new_size);
 
     /// \param new_size Specifies the new buffer size.
+<<<<<<< HEAD
     /// \param copy_begin, copy_end Specifies a range of element
+=======
+    /// \param copy_begin copy_end Specifies a range of element
+>>>>>>> origin/develop12
     /// values to be retained. \a copy_end must be less than, or equal
     /// to size().
     ///

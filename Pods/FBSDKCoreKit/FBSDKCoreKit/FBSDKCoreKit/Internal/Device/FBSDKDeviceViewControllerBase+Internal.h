@@ -20,6 +20,7 @@
 
 #if TARGET_OS_TV
 
+<<<<<<< HEAD
 #if SWIFT_PACKAGE
 #import "FBSDKDeviceViewControllerBase.h"
 #else
@@ -28,6 +29,16 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKDeviceDialogView.h"
+=======
+ #if SWIFT_PACKAGE
+  #import "FBSDKDeviceViewControllerBase.h"
+ #else
+  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
+ #endif
+
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKDeviceDialogView.h"
+>>>>>>> origin/develop12
 
 @class FBSDKDeviceDialogView;
 
@@ -38,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  This is an internal API that should not be used directly and is subject to change.
 */
+<<<<<<< HEAD
 @interface FBSDKDeviceViewControllerBase()<
 UIViewControllerAnimatedTransitioning,
 UIViewControllerTransitioningDelegate,
@@ -45,6 +57,15 @@ FBSDKDeviceDialogViewDelegate
 >
 
 @property (nonatomic, strong, readonly) FBSDKDeviceDialogView *deviceDialogView;
+=======
+@interface FBSDKDeviceViewControllerBase () <
+  UIViewControllerAnimatedTransitioning,
+  UIViewControllerTransitioningDelegate,
+  FBSDKDeviceDialogViewDelegate
+>
+
+@property (nonatomic, readonly, strong) FBSDKDeviceDialogView *deviceDialogView;
+>>>>>>> origin/develop12
 
 @end
 

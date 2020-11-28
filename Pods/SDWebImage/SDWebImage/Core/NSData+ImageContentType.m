@@ -13,10 +13,15 @@
 #else
 #import <MobileCoreServices/MobileCoreServices.h>
 #endif
+<<<<<<< HEAD
 #import "SDImageHEICCoderInternal.h"
 
 // Currently Image/IO does not support WebP
 #define kSDUTTypeWebP ((__bridge CFStringRef)@"public.webp")
+=======
+#import "SDImageIOAnimatedCoderInternal.h"
+
+>>>>>>> origin/develop12
 #define kSVGTagEnd @"</svg>"
 
 @implementation NSData (ImageContentType)
@@ -76,12 +81,18 @@
             }
         }
         case 0x3C: {
+<<<<<<< HEAD
             if (data.length > 100) {
                 // Check end with SVG tag
                 NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(data.length - 100, 100)] encoding:NSASCIIStringEncoding];
                 if ([testString containsString:kSVGTagEnd]) {
                     return SDImageFormatSVG;
                 }
+=======
+            // Check end with SVG tag
+            if ([data rangeOfData:[kSVGTagEnd dataUsingEncoding:NSUTF8StringEncoding] options:NSDataSearchBackwards range: NSMakeRange(data.length - MIN(100, data.length), MIN(100, data.length))].location != NSNotFound) {
+                return SDImageFormatSVG;
+>>>>>>> origin/develop12
             }
         }
     }

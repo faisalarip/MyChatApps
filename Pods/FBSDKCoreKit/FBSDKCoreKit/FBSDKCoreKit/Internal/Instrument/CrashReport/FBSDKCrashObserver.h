@@ -18,11 +18,19 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import "FBSDKCrashObserving.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCrashObserver : NSObject<FBSDKCrashObserving>
+=======
+#import "FBSDKInternalUtility.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
+>>>>>>> origin/develop12
 
 + (void)enable;
 

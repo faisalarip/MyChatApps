@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "FIRInstallationsIIDTokenStore.h"
+=======
+#import "FirebaseInstallations/Source/Library/IIDMigration/FIRInstallationsIIDTokenStore.h"
+>>>>>>> origin/develop12
 
 #if __has_include(<FBLPromises/FBLPromises.h>)
 #import <FBLPromises/FBLPromises.h>
@@ -22,9 +26,15 @@
 #import "FBLPromises.h"
 #endif
 
+<<<<<<< HEAD
 #import <GoogleUtilities/GULKeychainUtils.h>
 
 #import "FIRInstallationsErrorUtil.h"
+=======
+#import "GoogleUtilities/Environment/Private/GULKeychainUtils.h"
+
+#import "FirebaseInstallations/Source/Library/Errors/FIRInstallationsErrorUtil.h"
+>>>>>>> origin/develop12
 
 static NSString *const kFIRInstallationsIIDTokenKeychainId = @"com.google.iid-tokens";
 

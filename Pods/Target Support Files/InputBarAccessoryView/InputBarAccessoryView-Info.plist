@@ -15,7 +15,11 @@
   <key>CFBundlePackageType</key>
   <string>FMWK</string>
   <key>CFBundleShortVersionString</key>
+<<<<<<< HEAD
   <string>4.3.2</string>
+=======
+  <string>5.2.0</string>
+>>>>>>> origin/develop12
   <key>CFBundleSignature</key>
   <string>????</string>
   <key>CFBundleVersion</key>

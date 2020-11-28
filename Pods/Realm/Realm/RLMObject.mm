@@ -29,6 +29,7 @@
 #import "RLMRealm_Private.hpp"
 #import "RLMSchema_Private.h"
 
+<<<<<<< HEAD
 #import "collection_notifications.hpp"
 #import "object.hpp"
 
@@ -38,6 +39,10 @@
 @property (nonatomic, readwrite, strong, nullable) id value;
 @end
 
+=======
+#import "object.hpp"
+
+>>>>>>> origin/develop12
 // We declare things in RLMObject which are actually implemented in RLMObjectBase
 // for documentation's sake, which leads to -Wunimplemented-method warnings.
 // Other alternatives to this would be to disable -Wunimplemented-method for this
@@ -159,6 +164,7 @@
     return [object isKindOfClass:RLMObject.class] && RLMObjectBaseAreEqual(self, object);
 }
 
+<<<<<<< HEAD
 - (RLMNotificationToken *)addNotificationBlock:(RLMObjectChangeBlock)block {
     return RLMObjectAddNotificationBlock(self, ^(NSArray<NSString *> *propertyNames,
                                                  NSArray *oldValues, NSArray *newValues, NSError *error) {
@@ -180,6 +186,23 @@
             block(false, properties, nil);
         }
     });
+=======
+- (instancetype)freeze {
+    return RLMObjectFreeze(self);
+}
+
+- (BOOL)isFrozen {
+    return _realm.isFrozen;
+}
+
+- (RLMNotificationToken *)addNotificationBlock:(RLMObjectChangeBlock)block {
+    return RLMObjectAddNotificationBlock(self, block, nil);
+}
+
+- (RLMNotificationToken *)addNotificationBlock:(RLMObjectChangeBlock)block
+                                         queue:(nonnull dispatch_queue_t)queue {
+    return RLMObjectAddNotificationBlock(self, block, queue);
+>>>>>>> origin/develop12
 }
 
 + (NSString *)className {
@@ -249,6 +272,7 @@ BOOL RLMIsObjectOrSubclass(Class klass) {
 BOOL RLMIsObjectSubclass(Class klass) {
     return RLMIsKindOfClass(class_getSuperclass(class_getSuperclass(klass)), RLMObjectBase.class);
 }
+<<<<<<< HEAD
 
 @interface RLMObjectNotificationToken : RLMCancellationToken
 @end
@@ -362,3 +386,5 @@ RLMNotificationToken *RLMObjectAddNotificationBlock(RLMObjectBase *obj, RLMObjec
 
 @implementation RLMPropertyChange
 @end
+=======
+>>>>>>> origin/develop12

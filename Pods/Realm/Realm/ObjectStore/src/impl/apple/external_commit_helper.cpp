@@ -19,7 +19,11 @@
 #include "impl/external_commit_helper.hpp"
 #include "impl/realm_coordinator.hpp"
 
+<<<<<<< HEAD
 #include <realm/group_shared_options.hpp>
+=======
+#include <realm/db_options.hpp>
+>>>>>>> origin/develop12
 #include <realm/util/fifo_helper.hpp>
 
 #include <asl.h>
@@ -109,7 +113,11 @@ ExternalCommitHelper::ExternalCommitHelper(RealmCoordinator& parent)
     // In order of priority we attempt to write the file in the following locations:
     //  1) Next to the Realm file itself
     //  2) A location defined by `Realm::Config::fifo_files_fallback_path`
+<<<<<<< HEAD
     //  3) A location defined by `SharedGroupOptions::set_sys_tmp_dir()`
+=======
+    //  3) A location defined by `DBOptions::set_sys_tmp_dir()`
+>>>>>>> origin/develop12
     //
     // Core has a similar policy for its named pipes.
     //
@@ -119,7 +127,11 @@ ExternalCommitHelper::ExternalCommitHelper(RealmCoordinator& parent)
 
     std::string path;
     std::string temp_dir = util::normalize_dir(parent.get_config().fifo_files_fallback_path);
+<<<<<<< HEAD
     std::string sys_temp_dir = util::normalize_dir(SharedGroupOptions::get_sys_tmp_dir());
+=======
+    std::string sys_temp_dir = util::normalize_dir(DBOptions::get_sys_tmp_dir());
+>>>>>>> origin/develop12
 
     path = parent.get_path() + ".note";
     bool fifo_created = realm::util::try_create_fifo(path);

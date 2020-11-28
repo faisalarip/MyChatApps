@@ -203,9 +203,15 @@ NSArray *RLMCollectionValueForKey(Collection& collection, NSString *key, RLMClas
             RLMAccessorContext context(info);
             for (size_t i = 0; i < count; ++i) {
                 RLMListBase *list = [[cls alloc] init];
+<<<<<<< HEAD
                 list._rlmArray = [[RLMManagedArray alloc] initWithList:realm::List(info.realm->_realm, *info.table(),
                                                                                    info.tableColumn(prop),
                                                                                    collection.get(i).get_index())
+=======
+                list._rlmArray = [[RLMManagedArray alloc] initWithList:realm::List(info.realm->_realm,
+                                                                                   collection.get(i),
+                                                                                   info.tableColumn(prop))
+>>>>>>> origin/develop12
                                                             parentInfo:&info
                                                               property:prop];
                 [array addObject:list];
@@ -294,6 +300,7 @@ std::vector<std::pair<std::string, bool>> RLMSortDescriptorsToKeypathArray(NSArr
     return keypaths;
 }
 
+<<<<<<< HEAD
 @implementation RLMCancellationToken {
     realm::NotificationToken _token;
     __unsafe_unretained RLMRealm *_realm;
@@ -321,6 +328,8 @@ std::vector<std::pair<std::string, bool>> RLMSortDescriptorsToKeypathArray(NSArr
 
 @end
 
+=======
+>>>>>>> origin/develop12
 @implementation RLMCollectionChange {
     realm::CollectionChangeSet _indices;
 }
@@ -369,11 +378,15 @@ static NSArray *toIndexPathArray(realm::IndexSet const& set, NSUInteger section)
 
 - (NSArray<NSIndexPath *> *)insertionsInSection:(NSUInteger)section {
     return toIndexPathArray(_indices.insertions, section);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 }
 
 - (NSArray<NSIndexPath *> *)modificationsInSection:(NSUInteger)section {
     return toIndexPathArray(_indices.modifications, section);
+<<<<<<< HEAD
 
 }
 @end
@@ -386,6 +399,24 @@ RLMNotificationToken *RLMAddNotificationBlock(id objcCollection,
     auto skip = suppressInitialChange ? std::make_shared<bool>(true) : nullptr;
     auto cb = [=, &collection](realm::CollectionChangeSet const& changes,
                                std::exception_ptr err) {
+=======
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<RLMCollectionChange: %p> insertions: %@, deletions: %@, modifications: %@",
+            (__bridge void *)self, self.insertions, self.deletions, self.modifications];
+}
+
+@end
+
+namespace {
+struct CollectionCallbackWrapper {
+    void (^block)(id, RLMCollectionChange *, NSError *);
+    id collection;
+    bool ignoreChangesInInitialNotification;
+
+    void operator()(realm::CollectionChangeSet const& changes, std::exception_ptr err) {
+>>>>>>> origin/develop12
         if (err) {
             try {
                 rethrow_exception(err);
@@ -398,6 +429,7 @@ RLMNotificationToken *RLMAddNotificationBlock(id objcCollection,
             }
         }
 
+<<<<<<< HEAD
         if (skip && *skip) {
             *skip = false;
             block(objcCollection, nil, nil);
@@ -417,3 +449,89 @@ RLMNotificationToken *RLMAddNotificationBlock(id objcCollection,
 // Explicitly instantiate the templated function for the two types we'll use it on
 template RLMNotificationToken *RLMAddNotificationBlock<realm::List>(id, realm::List&, void (^)(id, RLMCollectionChange *, NSError *), bool);
 template RLMNotificationToken *RLMAddNotificationBlock<realm::Results>(id, realm::Results&, void (^)(id, RLMCollectionChange *, NSError *), bool);
+=======
+        if (ignoreChangesInInitialNotification) {
+            ignoreChangesInInitialNotification = false;
+            block(collection, nil, nil);
+        }
+        else if (changes.empty()) {
+            block(collection, nil, nil);
+        }
+        else {
+            block(collection, [[RLMCollectionChange alloc] initWithChanges:changes], nil);
+        }
+    }
+};
+} // anonymous namespace
+
+@interface RLMCancellationToken : RLMNotificationToken
+@end
+
+@implementation RLMCancellationToken {
+@public
+    __unsafe_unretained RLMRealm *_realm;
+    realm::NotificationToken _token;
+    std::mutex _mutex;
+}
+
+- (RLMRealm *)realm {
+    std::lock_guard<std::mutex> lock(_mutex);
+    return _realm;
+}
+
+- (void)suppressNextNotification {
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_realm) {
+        _token.suppress_next();
+    }
+}
+
+- (void)invalidate {
+    std::lock_guard<std::mutex> lock(_mutex);
+    _token = {};
+    _realm = nil;
+}
+
+template<typename RLMCollection>
+RLMNotificationToken *RLMAddNotificationBlock(RLMCollection *collection,
+                                              void (^block)(id, RLMCollectionChange *, NSError *),
+                                              dispatch_queue_t queue) {
+    RLMRealm *realm = collection.realm;
+    if (!realm) {
+        @throw RLMException(@"Linking objects notifications are only supported on managed objects.");
+    }
+    bool skipFirst = std::is_same_v<RLMCollection, RLMResults>;
+    auto token = [[RLMCancellationToken alloc] init];
+
+    if (!queue) {
+        [realm verifyNotificationsAreSupported:true];
+        token->_realm = realm;
+        token->_token = RLMGetBackingCollection(collection).add_notification_callback(CollectionCallbackWrapper{block, collection, skipFirst});
+        return token;
+    }
+
+    RLMThreadSafeReference *tsr = [RLMThreadSafeReference referenceWithThreadConfined:collection];
+    token->_realm = realm;
+    RLMRealmConfiguration *config = realm.configuration;
+    dispatch_async(queue, ^{
+        std::lock_guard<std::mutex> lock(token->_mutex);
+        if (!token->_realm) {
+            return;
+        }
+        NSError *error;
+        RLMRealm *realm = token->_realm = [RLMRealm realmWithConfiguration:config queue:queue error:&error];
+        if (!realm) {
+            block(nil, nil, error);
+            return;
+        }
+        RLMCollection *collection = [realm resolveThreadSafeReference:tsr];
+        token->_token = RLMGetBackingCollection(collection).add_notification_callback(CollectionCallbackWrapper{block, collection, skipFirst});
+    });
+    return token;
+}
+@end
+
+// Explicitly instantiate the templated function for the two types we'll use it on
+template RLMNotificationToken *RLMAddNotificationBlock<>(RLMManagedArray *, void (^)(id, RLMCollectionChange *, NSError *), dispatch_queue_t);
+template RLMNotificationToken *RLMAddNotificationBlock<>(RLMResults *, void (^)(id, RLMCollectionChange *, NSError *), dispatch_queue_t);
+>>>>>>> origin/develop12

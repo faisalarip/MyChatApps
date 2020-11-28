@@ -55,8 +55,12 @@ struct Predicate
         False
     } type = Type::And;
 
+<<<<<<< HEAD
     enum class Operator
     {
+=======
+    enum class Operator {
+>>>>>>> origin/develop12
         None,
         Equal,
         NotEqual,
@@ -77,8 +81,12 @@ struct Predicate
         CaseInsensitive,
     };
 
+<<<<<<< HEAD
     enum class ComparisonType
     {
+=======
+    enum class ComparisonType {
+>>>>>>> origin/develop12
         Unspecified,
         Any,
         All,
@@ -125,9 +133,12 @@ struct DescriptorOrderingState
 
 struct ParserResult
 {
+<<<<<<< HEAD
     ParserResult(Predicate p, DescriptorOrderingState o)
     : predicate(p)
     , ordering(o) {}
+=======
+>>>>>>> origin/develop12
     Predicate predicate;
     DescriptorOrderingState ordering;
 };

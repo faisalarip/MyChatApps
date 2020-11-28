@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIREmailAuthProvider.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIREmailAuthProvider.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/AuthProvider/Email/FIREmailPasswordAuthCredential.h"
 

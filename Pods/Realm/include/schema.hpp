@@ -34,6 +34,7 @@ class Schema : private std::vector<ObjectSchema> {
 private:
     using base = std::vector<ObjectSchema>;
 public:
+<<<<<<< HEAD
     Schema();
     ~Schema();
     // Create a schema from a vector of ObjectSchema
@@ -48,6 +49,22 @@ public:
     // find an ObjectSchema by name
     iterator find(StringData name);
     const_iterator find(StringData name) const;
+=======
+    Schema() noexcept;
+    ~Schema();
+    // Create a schema from a vector of ObjectSchema
+    Schema(base types) noexcept;
+    Schema(std::initializer_list<ObjectSchema> types);
+
+    Schema(Schema const&);
+    Schema(Schema&&) noexcept;
+    Schema& operator=(Schema const&);
+    Schema& operator=(Schema&&) noexcept;
+
+    // find an ObjectSchema by name
+    iterator find(StringData name) noexcept;
+    const_iterator find(StringData name) const noexcept;
+>>>>>>> origin/develop12
 
     // find an ObjectSchema with the same name as the passed in one
     iterator find(ObjectSchema const& object) noexcept;
@@ -60,10 +77,17 @@ public:
     // Get the changes which must be applied to this schema to produce the passed-in schema
     std::vector<SchemaChange> compare(Schema const&, bool include_removals=false) const;
 
+<<<<<<< HEAD
     void copy_table_columns_from(Schema const&);
 
     friend bool operator==(Schema const&, Schema const&);
     friend bool operator!=(Schema const& a, Schema const& b) { return !(a == b); }
+=======
+    void copy_keys_from(Schema const&) noexcept;
+
+    friend bool operator==(Schema const&, Schema const&) noexcept;
+    friend bool operator!=(Schema const& a, Schema const& b) noexcept { return !(a == b); }
+>>>>>>> origin/develop12
 
     using base::iterator;
     using base::const_iterator;
@@ -74,7 +98,11 @@ public:
 
 private:
     template<typename T, typename U, typename Func>
+<<<<<<< HEAD
     static void zip_matching(T&& a, U&& b, Func&& func);
+=======
+    static void zip_matching(T&& a, U&& b, Func&& func) noexcept;
+>>>>>>> origin/develop12
 };
 
 namespace schema_change {
@@ -162,7 +190,11 @@ public:
         REALM_COMPILER_HINT_UNREACHABLE();
     }
 
+<<<<<<< HEAD
     friend bool operator==(SchemaChange const& lft, SchemaChange const& rgt);
+=======
+    friend bool operator==(SchemaChange const& lft, SchemaChange const& rgt) noexcept;
+>>>>>>> origin/develop12
 private:
     enum class Kind {
 #define REALM_SCHEMA_CHANGE_TYPE(name) name,

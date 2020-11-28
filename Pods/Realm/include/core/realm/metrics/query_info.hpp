@@ -35,7 +35,10 @@ namespace metrics {
 
 class QueryInfo {
 public:
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
     enum QueryType {
         type_Find,
         type_FindAll,

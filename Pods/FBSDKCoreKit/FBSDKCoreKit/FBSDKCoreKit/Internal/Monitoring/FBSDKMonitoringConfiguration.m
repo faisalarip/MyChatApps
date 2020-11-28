@@ -16,16 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+<<<<<<< HEAD
 #import "FBSDKCoreKit+Internal.h"
 
 #import "FBSDKMonitoringConfiguration.h"
 
+=======
+#import "FBSDKMonitoringConfiguration.h"
+
+#import "FBSDKCoreKit+Internal.h"
+
+>>>>>>> origin/develop12
 static NSString *defaultRateKey = @"default";
 static NSString *sampleRatesKey = @"sample_rates";
 static NSString *sampleRateNameKey = @"key";
 static NSString *sampleRateValueKey = @"value";
 
+<<<<<<< HEAD
 @implementation FBSDKMonitoringConfiguration {
+=======
+@implementation FBSDKMonitoringConfiguration
+{
+>>>>>>> origin/develop12
   NSDictionary<NSString *, NSNumber *> *_sampleRates;
 }
 
@@ -78,11 +90,21 @@ typedef NSDictionary<NSString *, NSNumber *> SampleRates;
   return [[FBSDKTypeUtility dictionary:_sampleRates objectForKey:entry.name ofType:NSObject.class] intValue] ?: self.defaultSamplingRate;
 }
 
+<<<<<<< HEAD
 - (void)encodeWithCoder:(nonnull NSCoder *)encoder {
   [encoder encodeObject:_sampleRates forKey:sampleRatesKey];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder {
+=======
+- (void)encodeWithCoder:(nonnull NSCoder *)encoder
+{
+  [encoder encodeObject:_sampleRates forKey:sampleRatesKey];
+}
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
+{
+>>>>>>> origin/develop12
   _sampleRates = [decoder decodeObjectOfClass:[SampleRates class] forKey:sampleRatesKey];
   return self;
 }

@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <CommonCrypto/CommonCrypto.h>
 #import <FirebaseAuth/FIRFacebookAuthProvider.h>
 #import <FirebaseAuth/FIROAuthCredential.h>
 #import <FirebaseAuth/FIROAuthProvider.h>
 #import <FirebaseCore/FIRApp.h>
 #import <FirebaseCore/FIROptions.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIROAuthProvider.h"
+#include <CommonCrypto/CommonCrypto.h>
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRFacebookAuthProvider.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIROAuthCredential.h"
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthGlobalWorkQueue.h"
 #import "FirebaseAuth/Sources/Auth/FIRAuth_Internal.h"
@@ -48,11 +56,27 @@ typedef void (^FIRHeadfulLiteURLCallBack)(NSURL *_Nullable headfulLiteURL,
  */
 NSString *const kHeadfulLiteURLStringFormat = @"https://%@/__/auth/handler?%@";
 
+<<<<<<< HEAD
+=======
+/** @var kHeadfulLiteEmulatorURLStringFormat
+    @brief The format of the URL used to open the emulated headful lite page during sign-in.
+ */
+NSString *const kHeadfulLiteEmulatorURLStringFormat = @"http://%@/emulator/auth/handler?%@";
+
+>>>>>>> origin/develop12
 /** @var kauthTypeSignInWithRedirect
     @brief The auth type to be specified in the sign-in request with redirect request and response.
  */
 static NSString *const kAuthTypeSignInWithRedirect = @"signInWithRedirect";
 
+<<<<<<< HEAD
+=======
+/** @var kCustomUrlSchemePrefix
+    @brief The prefix to append to the Firebase app ID custom callback scheme..
+ */
+static NSString *const kCustomUrlSchemePrefix = @"app-";
+
+>>>>>>> origin/develop12
 @implementation FIROAuthProvider {
   /** @var _auth
       @brief The auth instance used for launching the URL presenter.
@@ -204,8 +228,20 @@ static NSString *const kAuthTypeSignInWithRedirect = @"signInWithRedirect";
   if (self) {
     _auth = auth;
     _providerID = providerID;
+<<<<<<< HEAD
     _callbackScheme = [[[_auth.app.options.clientID componentsSeparatedByString:@"."]
                            reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
+=======
+    if (_auth.app.options.clientID) {
+      _callbackScheme = [[[_auth.app.options.clientID componentsSeparatedByString:@"."]
+                             reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
+    } else {
+      _callbackScheme = [kCustomUrlSchemePrefix
+          stringByAppendingString:[_auth.app.options.googleAppID
+                                      stringByReplacingOccurrencesOfString:@":"
+                                                                withString:@"-"]];
+    }
+>>>>>>> origin/develop12
   }
   return self;
 }
@@ -273,19 +309,37 @@ static NSString *const kAuthTypeSignInWithRedirect = @"signInWithRedirect";
                                      }
                                      __strong __typeof__(self) strongSelf = weakSelf;
                                      NSString *bundleID = [NSBundle mainBundle].bundleIdentifier;
+<<<<<<< HEAD
                                      NSString *clienID = strongSelf->_auth.app.options.clientID;
+=======
+                                     NSString *clientID = strongSelf->_auth.app.options.clientID;
+                                     NSString *appID = strongSelf->_auth.app.options.googleAppID;
+>>>>>>> origin/develop12
                                      NSString *apiKey =
                                          strongSelf->_auth.requestConfiguration.APIKey;
                                      NSMutableDictionary *urlArguments = [@{
                                        @"apiKey" : apiKey,
+<<<<<<< HEAD
                                        @"authType" : @"signInWithRedirect",
                                        @"ibi" : bundleID ?: @"",
                                        @"clientId" : clienID,
+=======
+                                       @"authType" : kAuthTypeSignInWithRedirect,
+                                       @"ibi" : bundleID ?: @"",
+>>>>>>> origin/develop12
                                        @"sessionId" : [strongSelf hashforString:sessionID],
                                        @"v" : [FIRAuthBackend authUserAgent],
                                        @"eventId" : eventID,
                                        @"providerId" : strongSelf->_providerID,
                                      } mutableCopy];
+<<<<<<< HEAD
+=======
+                                     if (clientID) {
+                                       urlArguments[@"clientId"] = clientID;
+                                     } else {
+                                       urlArguments[@"appId"] = appID;
+                                     }
+>>>>>>> origin/develop12
                                      if (strongSelf.scopes.count) {
                                        urlArguments[@"scopes"] =
                                            [strongSelf.scopes componentsJoinedByString:@","];
@@ -307,9 +361,23 @@ static NSString *const kAuthTypeSignInWithRedirect = @"signInWithRedirect";
                                      }
                                      NSString *argumentsString = [strongSelf
                                          httpArgumentsStringForArgsDictionary:urlArguments];
+<<<<<<< HEAD
                                      NSString *URLString =
                                          [NSString stringWithFormat:kHeadfulLiteURLStringFormat,
                                                                     authDomain, argumentsString];
+=======
+                                     NSString *URLString;
+                                     if (strongSelf->_auth.requestConfiguration
+                                             .emulatorHostAndPort) {
+                                       URLString = [NSString
+                                           stringWithFormat:kHeadfulLiteEmulatorURLStringFormat,
+                                                            authDomain, argumentsString];
+                                     } else {
+                                       URLString =
+                                           [NSString stringWithFormat:kHeadfulLiteURLStringFormat,
+                                                                      authDomain, argumentsString];
+                                     }
+>>>>>>> origin/develop12
                                      if (completion) {
                                        NSCharacterSet *set =
                                            [NSCharacterSet URLFragmentAllowedCharacterSet];

@@ -18,6 +18,7 @@
 
 #import "FBSDKInternalUtility.h"
 
+<<<<<<< HEAD
 #import <sys/time.h>
 
 #import <mach-o/dyld.h>
@@ -39,15 +40,44 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   FBSDKInternalUtilityMajorVersionShift = 16,
   //FBSDKInternalUtilityMinorVersionShift = 8, // unused
   //FBSDKInternalUtilityPatchVersionShift = 0, // unused
+=======
+#import <mach-o/dyld.h>
+#import <sys/time.h>
+
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKError.h"
+#import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
+
+typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionMask) {
+  FBSDKInternalUtilityMajorVersionMask = 0xFFFF0000,
+  // FBSDKInternalUtilityMinorVersionMask = 0x0000FF00, // unused
+  // FBSDKInternalUtilityPatchVersionMask = 0x000000FF, // unused
+};
+
+typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
+  FBSDKInternalUtilityMajorVersionShift = 16,
+  // FBSDKInternalUtilityMinorVersionShift = 8, // unused
+  // FBSDKInternalUtilityPatchVersionShift = 0, // unused
+>>>>>>> origin/develop12
 };
 
 @implementation FBSDKInternalUtility
 
+<<<<<<< HEAD
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
   return
   [[FBSDKAccessToken currentAccessToken] respondsToSelector:@selector(graphDomain)] &&
   [[FBSDKAccessToken currentAccessToken].graphDomain isEqualToString:@"gaming"] &&
   ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]);
+=======
+static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
+{
+  return
+  [[FBSDKAccessToken currentAccessToken] respondsToSelector:@selector(graphDomain)]
+  && [[FBSDKAccessToken currentAccessToken].graphDomain isEqualToString:@"gaming"]
+  && ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]);
+>>>>>>> origin/develop12
 }
 
 #pragma mark - Class Methods
@@ -56,7 +86,11 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
 {
   NSString *appID = ([FBSDKSettings appID] ?: @"");
   NSString *suffix = ([FBSDKSettings appURLSchemeSuffix] ?: @"");
+<<<<<<< HEAD
   return [[NSString alloc] initWithFormat: @"fb%@%@", appID, suffix];
+=======
+  return [[NSString alloc] initWithFormat:@"fb%@%@", appID, suffix];
+>>>>>>> origin/develop12
 }
 
 + (NSURL *)appURLWithHost:(NSString *)host
@@ -122,7 +156,11 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
       } else if ([status isEqualToString:@"declined"]) {
         [declinedPermissions addObject:permissionName];
       } else if ([status isEqualToString:@"expired"]) {
+<<<<<<< HEAD
           [expiredPermissions addObject:permissionName];
+=======
+        [expiredPermissions addObject:permissionName];
+>>>>>>> origin/develop12
       }
     }
   }
@@ -168,10 +206,17 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
 
   if (path.length) {
     NSScanner *versionScanner = [[NSScanner alloc] initWithString:path];
+<<<<<<< HEAD
     if ([versionScanner scanString:@"/v" intoString:NULL] &&
         [versionScanner scanInteger:NULL] &&
         [versionScanner scanString:@"." intoString:NULL] &&
         [versionScanner scanInteger:NULL]) {
+=======
+    if ([versionScanner scanString:@"/v" intoString:NULL]
+        && [versionScanner scanInteger:NULL]
+        && [versionScanner scanString:@"." intoString:NULL]
+        && [versionScanner scanInteger:NULL]) {
+>>>>>>> origin/develop12
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                              logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
                                        version,
@@ -199,8 +244,13 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
 
 + (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier
 {
+<<<<<<< HEAD
   return ([bundleIdentifier hasPrefix:@"com.facebook."] ||
           [bundleIdentifier hasPrefix:@".com.facebook."]);
+=======
+  return ([bundleIdentifier hasPrefix:@"com.facebook."]
+    || [bundleIdentifier hasPrefix:@".com.facebook."]);
+>>>>>>> origin/develop12
 }
 
 + (BOOL)isOSRunTimeVersionAtLeast:(NSOperatingSystemVersion)version
@@ -210,8 +260,13 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
 
 + (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier
 {
+<<<<<<< HEAD
   return ([bundleIdentifier isEqualToString:@"com.apple.mobilesafari"] ||
           [bundleIdentifier isEqualToString:@"com.apple.SafariViewService"]);
+=======
+  return ([bundleIdentifier isEqualToString:@"com.apple.mobilesafari"]
+    || [bundleIdentifier isEqualToString:@"com.apple.SafariViewService"]);
+>>>>>>> origin/develop12
 }
 
 + (BOOL)isUIKitLinkTimeVersionAtLeast:(FBSDKUIKitVersion)version
@@ -277,10 +332,17 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
         default:
         case 3:
           operatingSystemVersion.patchVersion = [[FBSDKTypeUtility array:components objectAtIndex:2] integerValue];
+<<<<<<< HEAD
           // fall through
         case 2:
           operatingSystemVersion.minorVersion = [[FBSDKTypeUtility array:components objectAtIndex:1] integerValue];
           // fall through
+=======
+        // fall through
+        case 2:
+          operatingSystemVersion.minorVersion = [[FBSDKTypeUtility array:components objectAtIndex:1] integerValue];
+        // fall through
+>>>>>>> origin/develop12
         case 1:
           operatingSystemVersion.majorVersion = [[FBSDKTypeUtility array:components objectAtIndex:0] integerValue];
           break;
@@ -295,8 +357,13 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
 
 + (BOOL)shouldManuallyAdjustOrientation
 {
+<<<<<<< HEAD
   return (![self isUIKitLinkTimeVersionAtLeast:FBSDKUIKitVersion_8_0] ||
           ![self isUIKitRunTimeVersionAtLeast:FBSDKUIKitVersion_8_0]);
+=======
+  return (![self isUIKitLinkTimeVersionAtLeast:FBSDKUIKitVersion_8_0]
+    || ![self isUIKitRunTimeVersionAtLeast:FBSDKUIKitVersion_8_0]);
+>>>>>>> origin/develop12
 }
 
 + (NSURL *)URLWithScheme:(NSString *)scheme
@@ -460,12 +527,21 @@ static NSMapTable *_transientObjects;
 {
   if (![FBSDKSettings appID]) {
     NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
+<<<<<<< HEAD
                        @"FacebookAppID to the Info.plist or call [FBSDKSettings setAppID:].";
+=======
+    @"FacebookAppID to the Info.plist or call [FBSDKSettings setAppID:].";
+>>>>>>> origin/develop12
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
 }
 
+<<<<<<< HEAD
 + (NSString *)validateRequiredClientAccessToken {
+=======
++ (NSString *)validateRequiredClientAccessToken
+{
+>>>>>>> origin/develop12
   if (![FBSDKSettings clientToken]) {
     NSString *reason = @"ClientToken is required to be set for this operation. "
     @"Set the FacebookClientToken in the Info.plist or call [FBSDKSettings setClientToken:]. "
@@ -487,7 +563,11 @@ static NSMapTable *_transientObjects;
 
 + (void)validateFacebookReservedURLSchemes
 {
+<<<<<<< HEAD
   for (NSString * fbUrlScheme in @[FBSDK_CANOPENURL_FACEBOOK, FBSDK_CANOPENURL_MESSENGER, FBSDK_CANOPENURL_FBAPI, FBSDK_CANOPENURL_SHARE_EXTENSION]) {
+=======
+  for (NSString *fbUrlScheme in @[FBSDK_CANOPENURL_FACEBOOK, FBSDK_CANOPENURL_MESSENGER, FBSDK_CANOPENURL_FBAPI, FBSDK_CANOPENURL_SHARE_EXTENSION]) {
+>>>>>>> origin/develop12
     if ([self isRegisteredURLScheme:fbUrlScheme]) {
       NSString *reason = [NSString stringWithFormat:@"%@ is registered as a URL scheme. Please move the entry from CFBundleURLSchemes in your Info.plist to LSApplicationQueriesSchemes. If you are trying to resolve \"canOpenURL: failed\" warnings, those only indicate that the Facebook app is not installed on your device or simulator and can be ignored.", fbUrlScheme];
       @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
@@ -497,10 +577,17 @@ static NSMapTable *_transientObjects;
 
 + (UIWindow *)findWindow
 {
+<<<<<<< HEAD
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   UIWindow *topWindow = [UIApplication sharedApplication].keyWindow;
 #pragma clang diagnostic pop
+=======
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  UIWindow *topWindow = [UIApplication sharedApplication].keyWindow;
+  #pragma clang diagnostic pop
+>>>>>>> origin/develop12
   if (topWindow == nil || topWindow.windowLevel < UIWindowLevelNormal) {
     for (UIWindow *window in [UIApplication sharedApplication].windows) {
       if (window.windowLevel >= topWindow.windowLevel && !window.isHidden) {
@@ -537,7 +624,11 @@ static NSMapTable *_transientObjects;
 
   if (topWindow == nil) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+<<<<<<< HEAD
                      formatString:@"Unable to find a valid UIWindow", nil];
+=======
+                       formatString:@"Unable to find a valid UIWindow", nil];
+>>>>>>> origin/develop12
   }
   return topWindow;
 }
@@ -572,6 +663,10 @@ static NSMapTable *_transientObjects;
   return UIApplication.sharedApplication.statusBarOrientation;
 #endif
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 #endif
 
 + (NSString *)hexadecimalStringFromData:(NSData *)data
@@ -582,14 +677,23 @@ static NSMapTable *_transientObjects;
   }
 
   const unsigned char *dataBuffer = data.bytes;
+<<<<<<< HEAD
   NSMutableString *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+=======
+  NSMutableString *hexString = [NSMutableString stringWithCapacity:(dataLength * 2)];
+>>>>>>> origin/develop12
   for (int i = 0; i < dataLength; ++i) {
     [hexString appendFormat:@"%02x", dataBuffer[i]];
   }
   return [hexString copy];
 }
 
+<<<<<<< HEAD
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme {
+=======
++ (BOOL)isRegisteredURLScheme:(NSString *)urlScheme
+{
+>>>>>>> origin/develop12
   static dispatch_once_t fetchBundleOnce;
   static NSArray *urlTypes = nil;
 
@@ -622,7 +726,11 @@ static NSMapTable *_transientObjects;
     }
   }
 
+<<<<<<< HEAD
   if (![self isRegisteredCanOpenURLScheme:urlScheme]){
+=======
+  if (![self isRegisteredCanOpenURLScheme:urlScheme]) {
+>>>>>>> origin/develop12
     NSString *reason = [NSString stringWithFormat:@"%@ is missing from your Info.plist under LSApplicationQueriesSchemes and is required for iOS 9.0", urlScheme];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:reason];
   }
@@ -642,11 +750,19 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isPublishPermission:(NSString *)permission
 {
+<<<<<<< HEAD
   return [permission hasPrefix:@"publish"] ||
   [permission hasPrefix:@"manage"] ||
   [permission isEqualToString:@"ads_management"] ||
   [permission isEqualToString:@"create_event"] ||
   [permission isEqualToString:@"rsvp_event"];
+=======
+  return [permission hasPrefix:@"publish"]
+  || [permission hasPrefix:@"manage"]
+  || [permission isEqualToString:@"ads_management"]
+  || [permission isEqualToString:@"create_event"]
+  || [permission isEqualToString:@"rsvp_event"];
+>>>>>>> origin/develop12
 }
 
 + (BOOL)isUnity

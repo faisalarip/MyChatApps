@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRUser.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRUser.h"
+>>>>>>> origin/develop12
 
 @class FIRAuth;
 @class FIRAuthRequestConfiguration;

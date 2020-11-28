@@ -21,12 +21,24 @@
 
 #include "collection_notifications.hpp"
 
+<<<<<<< HEAD
 #include <realm/util/optional.hpp>
 
 #include <unordered_map>
 
 namespace realm {
 namespace _impl {
+=======
+#include <realm/keys.hpp>
+
+#include <functional>
+#include <unordered_set>
+#include <vector>
+
+namespace realm {
+namespace _impl {
+
+>>>>>>> origin/develop12
 class CollectionChangeBuilder : public CollectionChangeSet {
 public:
     CollectionChangeBuilder(CollectionChangeBuilder const&) = default;
@@ -41,6 +53,7 @@ public:
 
     // Calculate where rows need to be inserted or deleted from old_rows to turn
     // it into new_rows, and check all matching rows for modifications
+<<<<<<< HEAD
     // If `move_candidates` is supplied they it will be used to do more accurate
     // determination of which rows moved. This is only supported when the rows
     // are in table order (i.e. not sorted or from a LinkList)
@@ -48,6 +61,15 @@ public:
                                              std::vector<size_t> const& new_rows,
                                              std::function<bool (size_t)> row_did_change,
                                              util::Optional<IndexSet> const& move_candidates = util::none);
+=======
+    static CollectionChangeBuilder calculate(std::vector<int64_t> const& old_rows,
+                                             std::vector<int64_t> const& new_rows,
+                                             std::function<bool (int64_t)> key_did_change,
+                                             bool in_table_order);
+    static CollectionChangeBuilder calculate(std::vector<size_t> const& old_rows,
+                                             std::vector<size_t> const& new_rows,
+                                             std::function<bool (int64_t)> key_did_change);
+>>>>>>> origin/develop12
 
     // generic operations {
     CollectionChangeSet finalize() &&;
@@ -64,6 +86,7 @@ public:
     void move(size_t from, size_t to);
     // }
 
+<<<<<<< HEAD
     // operations only implemented for Row semantics {
     void move_over(size_t ndx, size_t last_ndx, bool track_moves=true);
     // must be followed by move_over(old_ndx, ...)
@@ -79,6 +102,9 @@ public:
 
 private:
     std::unordered_map<size_t, size_t> m_move_mapping;
+=======
+private:
+>>>>>>> origin/develop12
     bool m_track_columns = true;
 
     template<typename Func>

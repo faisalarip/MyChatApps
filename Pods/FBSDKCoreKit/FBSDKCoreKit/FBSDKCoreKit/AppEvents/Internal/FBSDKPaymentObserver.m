@@ -20,9 +20,14 @@
 
 #import <StoreKit/StoreKit.h>
 
+<<<<<<< HEAD
 #import "FBSDKCoreKit+Internal.h"
 
 #import "FBSDKAppEvents+Internal.h"
+=======
+#import "FBSDKAppEvents+Internal.h"
+#import "FBSDKCoreKit+Internal.h"
+>>>>>>> origin/develop12
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
@@ -48,16 +53,28 @@ static NSMutableArray *g_pendingRequestors;
 
 static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_auto_log_subs";
 
+<<<<<<< HEAD
 @interface FBSDKPaymentProductRequestor : NSObject<SKProductsRequestDelegate>
 
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
 
 - (instancetype)initWithTransaction:(SKPaymentTransaction*)transaction;
+=======
+@interface FBSDKPaymentProductRequestor : NSObject <SKProductsRequestDelegate>
+
+@property (nonatomic, retain) SKPaymentTransaction *transaction;
+
+- (instancetype)initWithTransaction:(SKPaymentTransaction *)transaction;
+>>>>>>> origin/develop12
 - (void)resolveProducts;
 
 @end
 
+<<<<<<< HEAD
 @interface FBSDKPaymentObserver() <SKPaymentTransactionObserver>
+=======
+@interface FBSDKPaymentObserver () <SKPaymentTransactionObserver>
+>>>>>>> origin/develop12
 @end
 
 @implementation FBSDKPaymentObserver
@@ -88,7 +105,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
   return shared;
 }
 
+<<<<<<< HEAD
 - (instancetype) init
+=======
+- (instancetype)init
+>>>>>>> origin/develop12
 {
   self = [super init];
   if (self) {
@@ -99,7 +120,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 - (void)startObservingTransactions
 {
+<<<<<<< HEAD
   @synchronized (self) {
+=======
+  @synchronized(self) {
+>>>>>>> origin/develop12
     if (!_observingTransactions) {
       [(SKPaymentQueue *)[fbsdkdfl_SKPaymentQueueClass() defaultQueue] addTransactionObserver:self];
       _observingTransactions = YES;
@@ -109,7 +134,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 - (void)stopObservingTransactions
 {
+<<<<<<< HEAD
   @synchronized (self) {
+=======
+  @synchronized(self) {
+>>>>>>> origin/develop12
     if (_observingTransactions) {
       [(SKPaymentQueue *)[fbsdkdfl_SKPaymentQueueClass() defaultQueue] removeTransactionObserver:self];
       _observingTransactions = NO;
@@ -141,7 +170,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 @end
 
+<<<<<<< HEAD
 @interface FBSDKPaymentProductRequestor()
+=======
+@interface FBSDKPaymentProductRequestor ()
+>>>>>>> origin/develop12
 @property (nonatomic, retain) SKProductsRequest *productRequest;
 @end
 
@@ -159,7 +192,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
   }
 }
 
+<<<<<<< HEAD
 - (instancetype)initWithTransaction:(SKPaymentTransaction*)transaction
+=======
+- (instancetype)initWithTransaction:(SKPaymentTransaction *)transaction
+>>>>>>> origin/develop12
 {
   self = [super init];
   if (self) {
@@ -211,9 +248,15 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 - (void)logTransactionEvent:(SKProduct *)product
 {
+<<<<<<< HEAD
   if ([self isSubscription:product] &&
       [FBSDKGateKeeperManager boolForKey:FBSDKGateKeeperAppEventsIfAutoLogSubs
                             defaultValue:NO]) {
+=======
+  if ([self isSubscription:product]
+      && [FBSDKGateKeeperManager boolForKey:FBSDKGateKeeperAppEventsIfAutoLogSubs
+                               defaultValue:NO]) {
+>>>>>>> origin/develop12
     [self logImplicitSubscribeTransaction:self.transaction ofProduct:product];
   } else {
     [self logImplicitPurchaseTransaction:self.transaction ofProduct:product];
@@ -252,6 +295,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
     default: break;
   }
   SKPayment *payment = transaction.payment;
+<<<<<<< HEAD
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary: @{
                                                                                           FBSDKAppEventParameterNameContentID: payment.productIdentifier ?: @"",
                                                                                           FBSDKAppEventParameterNameNumItems: @(payment.quantity),
@@ -264,6 +308,20 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
                                                  FBSDKAppEventParameterNameProductTitle: [self getTruncatedString:product.localizedTitle],
                                                  FBSDKAppEventParameterNameDescription: [self getTruncatedString:product.localizedDescription],
                                                  }];
+=======
+  NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:@{
+                                            FBSDKAppEventParameterNameContentID : payment.productIdentifier ?: @"",
+                                            FBSDKAppEventParameterNameNumItems : @(payment.quantity),
+                                            FBSDKAppEventParameterNameTransactionDate : transactionDate ?: @"",
+                                          }];
+  if (product) {
+    [eventParameters addEntriesFromDictionary:@{
+       FBSDKAppEventParameterNameCurrency : [product.priceLocale objectForKey:NSLocaleCurrencyCode],
+       FBSDKAppEventParameterNameNumItems : @(payment.quantity),
+       FBSDKAppEventParameterNameProductTitle : [self getTruncatedString:product.localizedTitle],
+       FBSDKAppEventParameterNameDescription : [self getTruncatedString:product.localizedDescription],
+     }];
+>>>>>>> origin/develop12
     if (transactionID) {
       [FBSDKTypeUtility dictionary:eventParameters setObject:transactionID forKey:FBSDKAppEventParameterNameTransactionID];
     }
@@ -330,8 +388,13 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
     if (paymentDiscount) {
       NSArray<SKProductDiscount *> *discounts = product.discounts;
       for (SKProductDiscount *discount in discounts) {
+<<<<<<< HEAD
         if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial &&
             [paymentDiscount.identifier isEqualToString:discount.identifier]) {
+=======
+        if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial
+            && [paymentDiscount.identifier isEqualToString:discount.identifier]) {
+>>>>>>> origin/develop12
           return YES;
         }
       }
@@ -341,8 +404,13 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 #endif
   // introductory offer starting from iOS 11.2
   if (@available(iOS 11.2, *)) {
+<<<<<<< HEAD
     if (product.introductoryPrice &&
         product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
+=======
+    if (product.introductoryPrice
+        && product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
+>>>>>>> origin/develop12
       NSString *originalTransactionID = transaction.originalTransaction.transactionIdentifier;
       // only consider the very first trial transaction as start trial
       if (!originalTransactionID) {
@@ -407,8 +475,13 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
 {
+<<<<<<< HEAD
   NSArray* products = response.products;
   NSArray* invalidProductIdentifiers = response.invalidProductIdentifiers;
+=======
+  NSArray *products = response.products;
+  NSArray *invalidProductIdentifiers = response.invalidProductIdentifiers;
+>>>>>>> origin/develop12
   if (products.count + invalidProductIdentifiers.count != 1) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                        formatString:@"FBSDKPaymentObserver: Expect to resolve one product per request"];
@@ -517,7 +590,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
 
   if ([_eventsWithReceipt containsObject:eventName]) {
+<<<<<<< HEAD
     NSData* receipt = [self fetchDeviceReceipt];
+=======
+    NSData *receipt = [self fetchDeviceReceipt];
+>>>>>>> origin/develop12
     if (receipt) {
       NSString *base64encodedReceipt = [receipt base64EncodedStringWithOptions:0];
       [FBSDKTypeUtility dictionary:eventParameters setObject:base64encodedReceipt forKey:@"receipt_data"];
@@ -537,7 +614,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 }
 
 // Fetch the current receipt for this application.
+<<<<<<< HEAD
 - (NSData*)fetchDeviceReceipt
+=======
+- (NSData *)fetchDeviceReceipt
+>>>>>>> origin/develop12
 {
   NSURL *receiptURL = [NSBundle bundleForClass:[self class]].appStoreReceiptURL;
   NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];

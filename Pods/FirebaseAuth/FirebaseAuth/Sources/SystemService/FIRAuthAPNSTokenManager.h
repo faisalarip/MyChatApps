@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if !TARGET_OS_OSX
+=======
+#import <TargetConditionals.h>
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
+>>>>>>> origin/develop12
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -56,7 +61,11 @@ typedef void (^FIRAuthAPNSTokenCallback)(FIRAuthAPNSToken *_Nullable token,
  */
 - (instancetype)init NS_UNAVAILABLE;
 
+<<<<<<< HEAD
 /** @fn initWithApplication:bundle
+=======
+/** @fn initWithApplication:
+>>>>>>> origin/develop12
     @brief Initializes the instance.
     @param application The @c UIApplication to request the token from.
     @return The initialized instance.

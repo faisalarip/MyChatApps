@@ -16,7 +16,15 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import <GoogleUtilities/GULApplication.h>
+=======
+#if SWIFT_PACKAGE
+#import "GoogleUtilities/AppDelegateSwizzler/Private/GULApplication.h"
+#else
+#import <GoogleUtilities/GULApplication.h>
+#endif
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 

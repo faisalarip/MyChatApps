@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "FIRInstallationsVersion.h"
+=======
+#import "FirebaseInstallations/Source/Library/Public/FirebaseInstallations/FIRInstallationsVersion.h"
+>>>>>>> origin/develop12
 
 // Convert the macro to a string
 #define STR(x) STR_EXPAND(x)

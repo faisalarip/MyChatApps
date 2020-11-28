@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKTooltipView.h"
 
 #import <CoreText/CoreText.h>
@@ -43,11 +44,40 @@ static const CGFloat kNUXStrokeLineWidth  = 0.5f;
 static const CGFloat kNUXSideCap          = 6;
 static const CGFloat kNUXFontSize         = 10;
 static const CGFloat kNUXCrossGlyphSize   = 11;
+=======
+ #import "FBSDKTooltipView.h"
+
+ #import <CoreText/CoreText.h>
+
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+
+static const CGFloat kTransitionDuration = 0.3;
+static const CGFloat kZoomOutScale = 0.001f;
+static const CGFloat kZoomInScale = 1.1f;
+static const CGFloat kZoomBounceScale = 0.98f;
+
+static const CGFloat kNUXRectInset = 6;
+static const CGFloat kNUXBubbleMargin = 17 - kNUXRectInset;
+static const CGFloat kNUXPointMargin = -3;
+static const CGFloat kNUXCornerRadius = 4;
+static const CGFloat kNUXStrokeLineWidth = 0.5f;
+static const CGFloat kNUXSideCap = 6;
+static const CGFloat kNUXFontSize = 10;
+static const CGFloat kNUXCrossGlyphSize = 11;
+>>>>>>> origin/develop12
 
 static CGMutablePathRef _fbsdkCreateUpPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius);
 static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius);
 
+<<<<<<< HEAD
 #pragma mark -
+=======
+ #pragma mark -
+>>>>>>> origin/develop12
 
 @implementation FBSDKTooltipView
 {
@@ -82,12 +112,20 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     _textLabel.backgroundColor = [UIColor clearColor];
     _textLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     _textLabel.numberOfLines = 0;
+<<<<<<< HEAD
     _textLabel.font = [UIFont boldSystemFontOfSize: kNUXFontSize];
+=======
+    _textLabel.font = [UIFont boldSystemFontOfSize:kNUXFontSize];
+>>>>>>> origin/develop12
     _textLabel.textAlignment = NSTextAlignmentLeft;
     _arrowHeight = 7;
     _textPadding = 10;
     _maximumTextWidth = 185;
+<<<<<<< HEAD
     _verticalCrossOffset = - 2.5f;
+=======
+    _verticalCrossOffset = -2.5f;
+>>>>>>> origin/develop12
     _verticalTextOffset = 0;
     _displayDuration = 6.0;
     self.colorStyle = colorStyle;
@@ -117,7 +155,11 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [_insideTapGestureRecognizer removeTarget:self action:NULL];
 }
 
+<<<<<<< HEAD
 #pragma mark - Public Methods
+=======
+ #pragma mark - Public Methods
+>>>>>>> origin/develop12
 
 - (void)setMessage:(NSString *)message
 {
@@ -135,7 +177,11 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   }
 }
 
+<<<<<<< HEAD
 #pragma mark Presentation
+=======
+ #pragma mark Presentation
+>>>>>>> origin/develop12
 
 - (void)presentFromView:(UIView *)anchorView
 {
@@ -196,7 +242,11 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   }];
 }
 
+<<<<<<< HEAD
 #pragma mark Style
+=======
+ #pragma mark Style
+>>>>>>> origin/develop12
 
 - (FBSDKTooltipColorStyle)colorStyle
 {
@@ -209,29 +259,52 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   switch (colorStyle) {
     case FBSDKTooltipColorStyleNeutralGray:
       _gradientColors = @[
+<<<<<<< HEAD
                           (id)(FBSDKUIColorWithRGB(0x51, 0x50, 0x4f).CGColor),
                           (id)(FBSDKUIColorWithRGB(0x2d, 0x2c, 0x2c).CGColor)
                           ];
       _innerStrokeColor = [UIColor colorWithWhite:0.13f alpha:1.0f];
       _crossCloseGlyphColor = [UIColor colorWithWhite:0.69f alpha:1.0f];
       break;
+=======
+        (id)(FBSDKUIColorWithRGB(0x51, 0x50, 0x4f).CGColor),
+        (id)(FBSDKUIColorWithRGB(0x2d, 0x2c, 0x2c).CGColor)
+    ];
+    _innerStrokeColor = [UIColor colorWithWhite:0.13f alpha:1.0f];
+    _crossCloseGlyphColor = [UIColor colorWithWhite:0.69f alpha:1.0f];
+    break;
+>>>>>>> origin/develop12
 
     case FBSDKTooltipColorStyleFriendlyBlue:
     default:
       _gradientColors = @[
+<<<<<<< HEAD
                           (id)(FBSDKUIColorWithRGB(0x6e, 0x9c, 0xf5).CGColor),
                           (id)(FBSDKUIColorWithRGB(0x49, 0x74, 0xc6).CGColor)
                           ];
       _innerStrokeColor = [UIColor colorWithRed:0.12f green:0.26f blue:0.55f alpha:1.0f];
       _crossCloseGlyphColor = [UIColor colorWithRed:0.60f green:0.73f blue:1.0f alpha:1.0f];
       break;
+=======
+        (id)(FBSDKUIColorWithRGB(0x6e, 0x9c, 0xf5).CGColor),
+        (id)(FBSDKUIColorWithRGB(0x49, 0x74, 0xc6).CGColor)
+    ];
+    _innerStrokeColor = [UIColor colorWithRed:0.12f green:0.26f blue:0.55f alpha:1.0f];
+    _crossCloseGlyphColor = [UIColor colorWithRed:0.60f green:0.73f blue:1.0f alpha:1.0f];
+    break;
+>>>>>>> origin/develop12
   }
 
   _textLabel.textColor = [UIColor whiteColor];
 }
 
+<<<<<<< HEAD
 #pragma mark - Private Methods
 #pragma mark Animation
+=======
+ #pragma mark - Private Methods
+ #pragma mark Animation
+>>>>>>> origin/develop12
 
 - (void)animateFadeIn
 {
@@ -243,8 +316,15 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   if (_pointingUp) {
     zoomOffsetY = -zoomOffsetY;
   }
+<<<<<<< HEAD
   self.layer.transform = fbsdkdfl_CATransform3DConcat(fbsdkdfl_CATransform3DMakeScale(kZoomOutScale, kZoomOutScale, kZoomOutScale),
                                                       fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX, zoomOffsetY, 0));
+=======
+  self.layer.transform = fbsdkdfl_CATransform3DConcat(
+    fbsdkdfl_CATransform3DMakeScale(kZoomOutScale, kZoomOutScale, kZoomOutScale),
+    fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX, zoomOffsetY, 0)
+  );
+>>>>>>> origin/develop12
   self.hidden = NO;
 
   // Prepare animation steps
@@ -259,7 +339,11 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     }
 
     CATransform3D scale = fbsdkdfl_CATransform3DMakeScale(kZoomInScale, kZoomInScale, kZoomInScale);
+<<<<<<< HEAD
     CATransform3D translate =fbsdkdfl_CATransform3DMakeTranslation(newZoomOffsetX, newZoomOffsetY, 0);
+=======
+    CATransform3D translate = fbsdkdfl_CATransform3DMakeTranslation(newZoomOffsetX, newZoomOffsetY, 0);
+>>>>>>> origin/develop12
     self.layer.transform = fbsdkdfl_CATransform3DConcat(scale, translate);
   };
 
@@ -271,8 +355,15 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     if (self->_pointingUp) {
       zoomOffsetY2 = -zoomOffsetY2;
     }
+<<<<<<< HEAD
     self.layer.transform = fbsdkdfl_CATransform3DConcat(fbsdkdfl_CATransform3DMakeScale(kZoomBounceScale, kZoomBounceScale, kZoomBounceScale),
                                                         fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX2, zoomOffsetY2, 0));
+=======
+    self.layer.transform = fbsdkdfl_CATransform3DConcat(
+      fbsdkdfl_CATransform3DMakeScale(kZoomBounceScale, kZoomBounceScale, kZoomBounceScale),
+      fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX2, zoomOffsetY2, 0)
+    );
+>>>>>>> origin/develop12
   };
 
   // 3rd Step.
@@ -281,11 +372,16 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   };
 
   // Animate 3 steps sequentially
+<<<<<<< HEAD
   [UIView animateWithDuration:kTransitionDuration/1.5
+=======
+  [UIView animateWithDuration:kTransitionDuration / 1.5
+>>>>>>> origin/develop12
                         delay:0
                       options:UIViewAnimationOptionCurveEaseInOut
                    animations:zoomIn
                    completion:^(BOOL finished) {
+<<<<<<< HEAD
                      [UIView animateWithDuration:kTransitionDuration/2.2
                                       animations:bounceZoom
                                       completion:^(BOOL innerFinished) {
@@ -296,6 +392,18 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 }
 
 - (void) animateFadeOutWithCompletion: (void(^)(void)) completionHandler
+=======
+                     [UIView animateWithDuration:kTransitionDuration / 2.2
+                                      animations:bounceZoom
+                                      completion:^(BOOL innerFinished) {
+                        [UIView animateWithDuration:kTransitionDuration / 5
+                                         animations:normalizeZoom];
+                      }];
+                   }];
+}
+
+- (void)animateFadeOutWithCompletion:(void (^)(void))completionHandler
+>>>>>>> origin/develop12
 {
   [UIView animateWithDuration:0.3
                         delay:0
@@ -304,6 +412,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
                      self.alpha = 0.0;
                    }
                    completion:^(BOOL complete) {
+<<<<<<< HEAD
                      if(completionHandler)
                        completionHandler();
                    }];
@@ -312,6 +421,17 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 #pragma mark Gestures
 
 - (void)onTapInTooltip:(UIGestureRecognizer*)sender
+=======
+                     if (completionHandler) {
+                       completionHandler();
+                     }
+                   }];
+}
+
+ #pragma mark Gestures
+
+- (void)onTapInTooltip:(UIGestureRecognizer *)sender
+>>>>>>> origin/develop12
 {
   // ignore incomplete tap gestures
   if (sender.state != UIGestureRecognizerStateEnded) {
@@ -322,7 +442,11 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [self dismiss];
 }
 
+<<<<<<< HEAD
 #pragma mark Drawing
+=======
+ #pragma mark Drawing
+>>>>>>> origin/develop12
 
 CGMutablePathRef _fbsdkCreateUpPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius)
 {
@@ -396,6 +520,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   CGFloat arrowSideMargin = 1 + 0.5f * MAX(kNUXRectInset, _arrowHeight);
   CGFloat arrowYMarginOffset = _pointingUp ? arrowSideMargin : kNUXRectInset;
   CGFloat halfStroke = kNUXStrokeLineWidth / 2.0;
+<<<<<<< HEAD
   CGRect outerRect = CGRectMake(kNUXRectInset + halfStroke,
                                 arrowYMarginOffset + halfStroke,
                                 self.bounds.size.width - 2 * kNUXRectInset - kNUXStrokeLineWidth,
@@ -407,6 +532,27 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
                                          CGRectGetMidY(fillRect) - 0.5f * kNUXCrossGlyphSize);
   CGRect closeCrossGlyphRect = CGRectMake(CGRectGetMaxX(fillRect) - 2 * kNUXFontSize, closeCrossGlyphPositionY,
                                           kNUXCrossGlyphSize, kNUXCrossGlyphSize);
+=======
+  CGRect outerRect = CGRectMake(
+    kNUXRectInset + halfStroke,
+    arrowYMarginOffset + halfStroke,
+    self.bounds.size.width - 2 * kNUXRectInset - kNUXStrokeLineWidth,
+    self.bounds.size.height - kNUXRectInset - arrowSideMargin - kNUXStrokeLineWidth
+  );
+  outerRect = CGRectInset(outerRect, 5, 5);
+  CGRect innerRect = CGRectInset(outerRect, kNUXStrokeLineWidth, kNUXStrokeLineWidth);
+  CGRect fillRect = CGRectInset(innerRect, kNUXStrokeLineWidth / 2.0, kNUXStrokeLineWidth / 2.0);
+  CGFloat closeCrossGlyphPositionY = MIN(
+    CGRectGetMinY(fillRect) + _textPadding + _verticalCrossOffset,
+    CGRectGetMidY(fillRect) - 0.5f * kNUXCrossGlyphSize
+  );
+  CGRect closeCrossGlyphRect = CGRectMake(
+    CGRectGetMaxX(fillRect) - 2 * kNUXFontSize,
+    closeCrossGlyphPositionY,
+    kNUXCrossGlyphSize,
+    kNUXCrossGlyphSize
+  );
+>>>>>>> origin/develop12
 
   // setup and get paths
   CGContextRef context = UIGraphicsGetCurrentContext();
@@ -416,6 +562,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   CGMutablePathRef crossCloseGlyphPath = _createCloseCrossGlyphWithRect(closeCrossGlyphRect);
   CGRect gradientRect = fillRect;
   if (_pointingUp) {
+<<<<<<< HEAD
     outerPath = _fbsdkCreateUpPointingBubbleWithRect(outerRect,
                                                 _arrowMidpoint, _arrowHeight,
                                                 kNUXCornerRadius + kNUXStrokeLineWidth);
@@ -437,6 +584,47 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
     fillPath = _fbsdkCreateDownPointingBubbleWithRect(fillRect,
                                                  _arrowMidpoint, _arrowHeight,
                                                  kNUXCornerRadius - kNUXStrokeLineWidth);
+=======
+    outerPath = _fbsdkCreateUpPointingBubbleWithRect(
+      outerRect,
+      _arrowMidpoint,
+      _arrowHeight,
+      kNUXCornerRadius + kNUXStrokeLineWidth
+    );
+    innerPath = _fbsdkCreateUpPointingBubbleWithRect(
+      innerRect,
+      _arrowMidpoint,
+      _arrowHeight,
+      kNUXCornerRadius
+    );
+    fillPath = _fbsdkCreateUpPointingBubbleWithRect(
+      fillRect,
+      _arrowMidpoint,
+      _arrowHeight,
+      kNUXCornerRadius - kNUXStrokeLineWidth
+    );
+    gradientRect.origin.y -= _arrowHeight;
+    gradientRect.size.height += _arrowHeight;
+  } else {
+    outerPath = _fbsdkCreateDownPointingBubbleWithRect(
+      outerRect,
+      _arrowMidpoint,
+      _arrowHeight,
+      kNUXCornerRadius + kNUXStrokeLineWidth
+    );
+    innerPath = _fbsdkCreateDownPointingBubbleWithRect(
+      innerRect,
+      _arrowMidpoint,
+      _arrowHeight,
+      kNUXCornerRadius
+    );
+    fillPath = _fbsdkCreateDownPointingBubbleWithRect(
+      fillRect,
+      _arrowMidpoint,
+      _arrowHeight,
+      kNUXCornerRadius - kNUXStrokeLineWidth
+    );
+>>>>>>> origin/develop12
     gradientRect.size.height += _arrowHeight;
   }
   self.layer.shadowPath = outerPath;
@@ -467,7 +655,11 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   CFRelease(crossCloseGlyphPath);
 }
 
+<<<<<<< HEAD
 #pragma mark Layout
+=======
+ #pragma mark Layout
+>>>>>>> origin/develop12
 
 - (void)layoutSubviews
 {
@@ -478,8 +670,13 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [self layoutSubviewsAndDetermineFrame];
 }
 
+<<<<<<< HEAD
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+=======
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+>>>>>>> origin/develop12
 - (CGRect)layoutSubviewsAndDetermineFrame
 {
   // Compute the positioning of the arrow.
@@ -501,10 +698,19 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   CGFloat yPos = arrowYMarginOffset + kNUXStrokeLineWidth + _textPadding;
 
   // Set the text label frame.
+<<<<<<< HEAD
   _textLabel.frame = CGRectMake(xPos,
                                 yPos + _verticalTextOffset, // sizing function may not return desired height exactly
                                 CGRectGetWidth(_textLabel.bounds),
                                 CGRectGetHeight(_textLabel.bounds));
+=======
+  _textLabel.frame = CGRectMake(
+    xPos,
+    yPos + _verticalTextOffset, // sizing function may not return desired height exactly
+    CGRectGetWidth(_textLabel.bounds),
+    CGRectGetHeight(_textLabel.bounds)
+  );
+>>>>>>> origin/develop12
 
   // Determine the size of the nux bubble.
   CGFloat bubbleHeight = CGRectGetHeight(_textLabel.bounds) + _verticalTextOffset + _textPadding * 2;
@@ -539,6 +745,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
     yOrigin = _positionInView.y - nuxHeight - kNUXPointMargin + MAX(0, kNUXRectInset - _arrowHeight);
   }
 
+<<<<<<< HEAD
   return CGRectMake(originX - kNUXRectInset,
                     yOrigin,
                     nuxWidth,
@@ -547,19 +754,39 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 #pragma clang diagnostic pop
 
 #pragma mark Message & Tagline
+=======
+  return CGRectMake(
+    originX - kNUXRectInset,
+    yOrigin,
+    nuxWidth,
+    nuxHeight
+  );
+}
+
+ #pragma clang diagnostic pop
+
+ #pragma mark Message & Tagline
+>>>>>>> origin/develop12
 
 - (void)setMessage:(NSString *)message tagline:(NSString *)tagline
 {
   message = message ?: @"";
   // Ensure tagline is empty string or ends with space
   tagline = tagline ?: @"";
+<<<<<<< HEAD
   if (tagline.length && ![tagline hasSuffix:@" "])
     tagline = [tagline stringByAppendingString:@" "];
+=======
+  if (tagline.length && ![tagline hasSuffix:@" "]) {
+    tagline = [tagline stringByAppendingString:@" "];
+  }
+>>>>>>> origin/develop12
 
   // Concatenate tagline & main message
   message = [tagline stringByAppendingString:message];
 
   NSRange fullRange = NSMakeRange(0, message.length);
+<<<<<<< HEAD
   NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString: message];
 
   UIFont *font=[UIFont boldSystemFontOfSize:kNUXFontSize];
@@ -567,6 +794,15 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:fullRange];
   if (tagline.length) {
     [attrString addAttribute:NSForegroundColorAttributeName value: FBSDKUIColorWithRGB(0x6D, 0x87, 0xC7) range:NSMakeRange(0, tagline.length)];
+=======
+  NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:message];
+
+  UIFont *font = [UIFont boldSystemFontOfSize:kNUXFontSize];
+  [attrString addAttribute:NSFontAttributeName value:font range:fullRange];
+  [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:fullRange];
+  if (tagline.length) {
+    [attrString addAttribute:NSForegroundColorAttributeName value:FBSDKUIColorWithRGB(0x6D, 0x87, 0xC7) range:NSMakeRange(0, tagline.length)];
+>>>>>>> origin/develop12
   }
 
   _textLabel.attributedText = attrString;
@@ -577,7 +813,11 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [self setNeedsDisplay];
 }
 
+<<<<<<< HEAD
 #pragma mark Auto Dismiss Timeout
+=======
+ #pragma mark Auto Dismiss Timeout
+>>>>>>> origin/develop12
 
 - (void)scheduleAutomaticFadeout
 {

@@ -22,18 +22,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FIRFinalizeMFASignInRequest : FIRIdentityToolkitRequest <FIRAuthRPCRequest>
 
+<<<<<<< HEAD
 @property(nonatomic, copy, readonly, nullable) NSString *MFAProvider;
 
+=======
+>>>>>>> origin/develop12
 @property(nonatomic, copy, readonly, nullable) NSString *MFAPendingCredential;
 
 @property(nonatomic, copy, readonly, nullable)
     FIRAuthProtoFinalizeMFAPhoneRequestInfo *verificationInfo;
 
+<<<<<<< HEAD
 - (nullable instancetype)initWithMFAProvider:(NSString *)MFAProvider
                         MFAPendingCredential:(NSString *)MFAPendingCredential
                             verificationInfo:
                                 (FIRAuthProtoFinalizeMFAPhoneRequestInfo *)verificationInfo
                         requestConfiguration:(FIRAuthRequestConfiguration *)requestConfiguration;
+=======
+- (nullable instancetype)
+    initWithMFAPendingCredential:(NSString *)MFAPendingCredential
+                verificationInfo:(FIRAuthProtoFinalizeMFAPhoneRequestInfo *)verificationInfo
+            requestConfiguration:(FIRAuthRequestConfiguration *)requestConfiguration;
+>>>>>>> origin/develop12
 
 @end
 

@@ -23,14 +23,22 @@ final class StorageManager {
     
     /// Upload picture to firebase storage and returns completion with url string to download
     public func uploadProfilePicture(with data: Data, fileName: String, completion: @escaping uploadPictureCompletion) {
+<<<<<<< HEAD
         storage.child("image/\(fileName)").putData(data, metadata: nil) { (storageMetadata, error) in
+=======
+        storage.child("image/\(fileName)").putData(data, metadata: nil) { [weak self] (metadata, error) in
+>>>>>>> origin/develop12
             guard error == nil else {
                 print("Failed upload to firebase storage for picture")
                 completion(.failure(StorageError.failedToUpload))
                 return
             }
             
+<<<<<<< HEAD
             self.storage.child("image/\(fileName)").downloadURL { (url, error) in
+=======
+            self?.storage.child("image/\(fileName)").downloadURL { (url, error) in
+>>>>>>> origin/develop12
                 guard let url = url else {
                     print("Failed to get download url")
                     completion(.failure(StorageError.failedToGetDownloadUrl))
@@ -43,7 +51,63 @@ final class StorageManager {
             }
             
         }
+<<<<<<< HEAD
     }        
+=======
+    }
+    
+    /// Upload photo message to firebase storage    
+    public func uploadPhotosMessage(with data: Data, filename: String, completion: @escaping uploadPictureCompletion) {
+        
+        storage.child("message_images/\(filename)").putData(data, metadata: nil) { [weak self] (metadata, error) in
+            guard error == nil else {
+                print("Failed to upload data to firebase for picture ")
+                completion(.failure(StorageError.failedToUpload))
+                return
+            }
+            
+            self?.storage.child("message_images/\(filename)").downloadURL(completion: { (url, error) in
+                guard let url = url, error == nil else {
+                    print("Failed to get download url from firebase storage")
+                    completion(.failure(StorageError.failedToGetDownloadUrl))
+                    return
+                }
+                
+                let urlString = url.absoluteString
+                print("Got a urlString from firebase storage \(urlString)")
+                completion(.success(urlString))
+            })
+            
+        }
+        
+    }
+    
+    /// Upload video message to firebase storage
+    public func uploadVideosMessage(with fileUrl: URL, filename: String, completion: @escaping uploadPictureCompletion) {
+        
+        storage.child("message_videos/\(filename)").putFile(from: fileUrl, metadata: nil) { [weak self] (metadata, error) in
+            guard error == nil else {
+                print("Failed to upload video file to firebase for picture ")
+                completion(.failure(StorageError.failedToUpload))
+                return
+            }
+            
+            self?.storage.child("message_videos/\(filename)").downloadURL(completion: { (url, error) in
+                guard let url = url, error == nil else {
+                    print("Failed to get download url video from firebase storage")
+                    completion(.failure(StorageError.failedToGetDownloadUrl))
+                    return
+                }
+                
+                let urlString = url.absoluteString
+                print("Got a urlString from firebase storage \(urlString)")
+                completion(.success(urlString))
+            })
+            
+        }
+        
+    }
+>>>>>>> origin/develop12
     
     public enum StorageError: Error {
         case failedToUpload

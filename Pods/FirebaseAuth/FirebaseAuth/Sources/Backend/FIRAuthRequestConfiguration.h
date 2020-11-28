@@ -40,6 +40,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy, nullable) NSString *additionalFrameworkMarker;
 
+<<<<<<< HEAD
+=======
+/** @property emulatorHostAndPort
+    @brief If set, the local emulator host and port to point to instead of the remote backend.
+ */
+@property(nonatomic, copy, nullable) NSString *emulatorHostAndPort;
+
+>>>>>>> origin/develop12
 - (instancetype)init NS_UNAVAILABLE;
 
 /** @fn initWithRequestClass:APIKey:authLanguage:

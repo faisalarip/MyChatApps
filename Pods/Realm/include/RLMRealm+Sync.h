@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import "RLMRealm.h"
+=======
+#import <Realm/RLMRealm.h>
+>>>>>>> origin/develop12
 
 @class RLMResults, RLMSyncSession;
 

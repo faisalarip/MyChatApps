@@ -37,6 +37,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy, readonly) NSString *APIKey;
 
+<<<<<<< HEAD
+=======
+/** @property tenantID
+    @brief The tenant ID of the request. nil if none is available.
+ */
+@property(nonatomic, copy, readonly, nullable) NSString *tenantID;
+
+>>>>>>> origin/develop12
 /** @fn init
     @brief Please use initWithEndpoint:APIKey:
  */

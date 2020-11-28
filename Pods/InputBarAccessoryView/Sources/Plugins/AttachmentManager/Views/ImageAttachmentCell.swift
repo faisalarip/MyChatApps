@@ -2,7 +2,11 @@
 //  ImageAttachmentCell.swift
 //  InputBarAccessoryView
 //
+<<<<<<< HEAD
 //  Copyright © 2017-2019 Nathan Tannar.
+=======
+//  Copyright © 2017-2020 Nathan Tannar.
+>>>>>>> origin/develop12
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +35,11 @@ open class ImageAttachmentCell: AttachmentCell {
     
     // MARK: - Properties
     
+<<<<<<< HEAD
     override class var reuseIdentifier: String {
+=======
+    override public class var reuseIdentifier: String {
+>>>>>>> origin/develop12
         return "ImageAttachmentCell"
     }
     

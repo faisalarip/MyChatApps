@@ -33,8 +33,15 @@ static inline CGSize FBSDKEdgeInsetsInsetSize(CGSize size, UIEdgeInsets insets)
  */
 static inline CGSize FBSDKEdgeInsetsOutsetSize(CGSize size, UIEdgeInsets insets)
 {
+<<<<<<< HEAD
   return CGSizeMake(insets.left + size.width + insets.right,
                     insets.top + size.height + insets.bottom);
+=======
+  return CGSizeMake(
+    insets.left + size.width + insets.right,
+    insets.top + size.height + insets.bottom
+  );
+>>>>>>> origin/develop12
 }
 
 /**
@@ -64,6 +71,7 @@ static inline CGSize FBSDKTextSize(NSString *text,
   NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
   paragraphStyle.lineBreakMode = lineBreakMode;
   NSDictionary *attributes = @{
+<<<<<<< HEAD
                                NSFontAttributeName: font,
                                NSParagraphStyleAttributeName: paragraphStyle,
                                };
@@ -72,6 +80,16 @@ static inline CGSize FBSDKTextSize(NSString *text,
                                                options:(NSStringDrawingUsesDeviceMetrics |
                                                         NSStringDrawingUsesLineFragmentOrigin |
                                                         NSStringDrawingUsesFontLeading)
+=======
+    NSFontAttributeName : font,
+    NSParagraphStyleAttributeName : paragraphStyle,
+  };
+  NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+  CGSize size = [attributedString boundingRectWithSize:constrainedSize
+                                               options:(NSStringDrawingUsesDeviceMetrics
+                                                 | NSStringDrawingUsesLineFragmentOrigin
+                                                 | NSStringDrawingUsesFontLeading)
+>>>>>>> origin/develop12
                                                context:NULL].size;
   return CGSizeMake(ceilf(size.width), ceilf(size.height));
 }

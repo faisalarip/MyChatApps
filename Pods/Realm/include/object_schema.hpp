@@ -19,15 +19,25 @@
 #ifndef REALM_OBJECT_SCHEMA_HPP
 #define REALM_OBJECT_SCHEMA_HPP
 
+<<<<<<< HEAD
+=======
+#include <realm/keys.hpp>
+>>>>>>> origin/develop12
 #include <realm/string_data.hpp>
 
 #include <string>
 #include <vector>
 
 namespace realm {
+<<<<<<< HEAD
 class Descriptor;
 class Group;
 class Schema;
+=======
+class Group;
+class Schema;
+class Table;
+>>>>>>> origin/develop12
 enum class PropertyType: unsigned char;
 struct ObjectSchemaValidationException;
 struct Property;
@@ -40,14 +50,26 @@ public:
                  std::initializer_list<Property> computed_properties);
     ~ObjectSchema();
 
+<<<<<<< HEAD
     // create object schema from existing table
     // if no table is provided it is looked up in the group
     ObjectSchema(Group const& group, StringData name, size_t index=-1);
+=======
+    ObjectSchema(ObjectSchema const&) = default;
+    ObjectSchema(ObjectSchema&&) noexcept = default;
+    ObjectSchema& operator=(ObjectSchema const&) = default;
+    ObjectSchema& operator=(ObjectSchema&&) noexcept = default;
+
+    // create object schema from existing table
+    // if no table key is provided it is looked up in the group
+    ObjectSchema(Group const& group, StringData name, TableKey key);
+>>>>>>> origin/develop12
 
     std::string name;
     std::vector<Property> persisted_properties;
     std::vector<Property> computed_properties;
     std::string primary_key;
+<<<<<<< HEAD
 
     Property *property_for_public_name(StringData public_name);
     const Property *property_for_public_name(StringData public_name) const;
@@ -69,6 +91,30 @@ public:
 
 private:
     void set_primary_key_property();
+=======
+    TableKey table_key;
+
+    Property *property_for_public_name(StringData public_name) noexcept;
+    const Property *property_for_public_name(StringData public_name) const noexcept;
+    Property *property_for_name(StringData name) noexcept;
+    const Property *property_for_name(StringData name) const noexcept;
+    Property *primary_key_property() noexcept {
+        return property_for_name(primary_key);
+    }
+    const Property *primary_key_property() const noexcept {
+        return property_for_name(primary_key);
+    }
+    bool property_is_computed(Property const& property) const noexcept;
+
+    void validate(Schema const& schema, std::vector<ObjectSchemaValidationException>& exceptions) const;
+
+    friend bool operator==(ObjectSchema const& a, ObjectSchema const& b) noexcept;
+
+    static PropertyType from_core_type(Table const& table, ColKey col);
+
+private:
+    void set_primary_key_property() noexcept;
+>>>>>>> origin/develop12
 };
 }
 

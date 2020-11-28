@@ -57,6 +57,10 @@ public:
     // Get the list of metric objects tracked since the last take
     std::unique_ptr<QueryInfoList> take_queries();
     std::unique_ptr<TransactionInfoList> take_transactions();
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 private:
     std::unique_ptr<QueryInfoList> m_query_info;
     std::unique_ptr<TransactionInfoList> m_transaction_info;
@@ -72,5 +76,8 @@ private:
 } // namespace realm
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 #endif // REALM_METRICS_HPP

@@ -18,6 +18,7 @@
 
 #import "FBSDKPerformanceMonitorEntry.h"
 
+<<<<<<< HEAD
 #import "FBSDKTypeUtility.h"
 
 static NSString * const FBSDKPerformanceNameKey = @"event_name";
@@ -26,6 +27,17 @@ static NSString * const FBSDKPerformanceEndTimeKey = @"time_end";
 static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
 
 @implementation FBSDKPerformanceMonitorEntry {
+=======
+#import "FBSDKInternalUtility.h"
+
+static NSString *const FBSDKPerformanceNameKey = @"event_name";
+static NSString *const FBSDKPerformanceStartTimeKey = @"time_start";
+static NSString *const FBSDKPerformanceEndTimeKey = @"time_end";
+static NSString *const FBSDKPerformanceTimeSpentKey = @"time_spent";
+
+@implementation FBSDKPerformanceMonitorEntry
+{
+>>>>>>> origin/develop12
   NSString *_name;
   NSDate *_startTime;
   NSDate *_endTime;
@@ -52,7 +64,12 @@ static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
   return [_name copy];
 }
 
+<<<<<<< HEAD
 - (void)encodeWithCoder:(nonnull NSCoder *)encoder {
+=======
+- (void)encodeWithCoder:(nonnull NSCoder *)encoder
+{
+>>>>>>> origin/develop12
   if (_name && _startTime && _endTime) {
     [encoder encodeObject:_name forKey:FBSDKPerformanceNameKey];
     [encoder encodeObject:_startTime forKey:FBSDKPerformanceStartTimeKey];
@@ -60,7 +77,12 @@ static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
   }
 }
 
+<<<<<<< HEAD
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder {
+=======
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
+{
+>>>>>>> origin/develop12
   _name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPerformanceNameKey];
   _startTime = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPerformanceStartTimeKey];
   _endTime = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPerformanceEndTimeKey];
@@ -72,9 +94,16 @@ static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
   return nil;
 }
 
+<<<<<<< HEAD
 - (nonnull NSDictionary *)dictionaryRepresentation {
   NSMutableDictionary *dict = [NSMutableDictionary dictionary];
   
+=======
+- (nonnull NSDictionary *)dictionaryRepresentation
+{
+  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+>>>>>>> origin/develop12
   [FBSDKTypeUtility dictionary:dict setObject:_name
                         forKey:FBSDKPerformanceNameKey];
   [FBSDKTypeUtility dictionary:dict

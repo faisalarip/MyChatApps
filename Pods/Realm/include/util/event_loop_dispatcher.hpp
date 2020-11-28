@@ -19,11 +19,19 @@
 #ifndef REALM_OS_UTIL_EVENT_LOOP_DISPATCHER_HPP
 #define REALM_OS_UTIL_EVENT_LOOP_DISPATCHER_HPP
 
+<<<<<<< HEAD
 #include "util/event_loop_signal.hpp"
+=======
+#include "util/scheduler.hpp"
+>>>>>>> origin/develop12
 
 #include <mutex>
 #include <queue>
 #include <tuple>
+<<<<<<< HEAD
+=======
+#include <thread>
+>>>>>>> origin/develop12
 
 namespace realm {
 // FIXME: remove once we switch to C++ 17 where we can use std::apply
@@ -47,6 +55,7 @@ template <typename... Args>
 class EventLoopDispatcher<void(Args...)> {
     using Tuple = std::tuple<typename std::remove_reference<Args>::type...>;
 private:
+<<<<<<< HEAD
     struct Callback;
 
     struct State {
@@ -93,15 +102,63 @@ public:
     {
         if (m_thread == std::this_thread::get_id()) {
             m_state->m_func(std::forward<Args>(args)...);
+=======
+    struct State {
+        State(std::function<void(Args...)> func)
+        : func(std::move(func))
+        {
+        }
+
+        const std::function<void(Args...)> func;
+        std::queue<Tuple> invocations;
+        std::mutex mutex;
+        std::shared_ptr<util::Scheduler> scheduler;
+    };
+    const std::shared_ptr<State> m_state;
+    const std::shared_ptr<util::Scheduler> m_scheduler = util::Scheduler::make_default();
+
+public:
+    EventLoopDispatcher(std::function<void(Args...)> func)
+    : m_state(std::make_shared<State>(std::move(func)))
+    {
+        m_scheduler->set_notify_callback([state = m_state] {
+            std::unique_lock<std::mutex> lock(state->mutex);
+            while (!state->invocations.empty()) {
+                auto& tuple = state->invocations.front();
+                _apply_polyfill::apply(std::move(tuple), state->func);
+                state->invocations.pop();
+            }
+
+            // scheduler retains state, so state needs to only retain scheduler
+            // while it has pending work or neither will ever be destroyed
+            state->scheduler.reset();
+        });
+    }
+
+    const std::function<void(Args...)>& func() const { return m_state->func; }
+
+    void operator()(Args... args)
+    {
+        if (m_scheduler->is_on_thread()) {
+            m_state->func(std::forward<Args>(args)...);
+>>>>>>> origin/develop12
             return;
         }
 
         {
+<<<<<<< HEAD
             std::unique_lock<std::mutex> lock(m_state->m_mutex);
             m_state->m_signal = m_signal;
             m_state->m_invocations.push(std::make_tuple(std::forward<Args>(args)...));
         }
         m_signal->notify();
+=======
+            std::unique_lock<std::mutex> lock(m_state->mutex);
+            m_state->scheduler = m_scheduler;
+            m_state->invocations.push(std::make_tuple(std::forward<Args>(args)...));
+        }
+        m_scheduler->notify();
+>>>>>>> origin/develop12
     }
 };
 } // namespace util

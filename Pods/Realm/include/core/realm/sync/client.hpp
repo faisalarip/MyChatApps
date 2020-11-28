@@ -150,8 +150,13 @@ public:
         /// The default changeset cooker to be used by new sessions. Can be
         /// overridden by Session::Config::changeset_cooker.
         ///
+<<<<<<< HEAD
         /// \sa make_client_history(), TrivialChangesetCooker.
         std::shared_ptr<ClientHistory::ChangesetCooker> changeset_cooker;
+=======
+        /// \sa make_client_replication(), TrivialChangesetCooker.
+        std::shared_ptr<ClientReplication::ChangesetCooker> changeset_cooker;
+>>>>>>> origin/develop12
 
         /// The maximum number of milliseconds to allow for a connection to
         /// become fully established. This includes the time to resolve the
@@ -557,10 +562,17 @@ public:
         /// destroyed. Please see "Callback semantics" section under Client for
         /// more on this.
         ///
+<<<<<<< HEAD
         /// \sa make_client_history(), TrivialChangesetCooker.
         std::shared_ptr<ClientHistory::ChangesetCooker> changeset_cooker;
 
         /// The encryption key the SharedGroup will be opened with.
+=======
+        /// \sa make_client_replication(), TrivialChangesetCooker.
+        std::shared_ptr<ClientReplication::ChangesetCooker> changeset_cooker;
+
+        /// The encryption key the DB will be opened with.
+>>>>>>> origin/develop12
         util::Optional<std::array<char, 64>> encryption_key;
 
         /// ClientReset is used for both async open and client reset. If
@@ -937,17 +949,28 @@ public:
     /// replaces the corresponding parameters from the Session::Config object
     /// before the session is bound.
     /// void bind(std::string server_url, std::string signed_user_token) parses
+<<<<<<< HEAD
     /// the \param server_url and replaces the parameters in the Session::Config object
     /// before the session is bound.
     ///
+=======
+    /// the \p server_url and replaces the parameters in the Session::Config object
+    /// before the session is bound.
+    ///
+    /// \throw BadServerUrl if the specified server URL is malformed.
+    void bind();
+>>>>>>> origin/develop12
     /// \param server_url For example "realm://sync.realm.io/test". See
     /// server_address, server_path, and server_port in Session::Config for
     /// information about the individual components of the URL. See
     /// ProtocolEnvelope for the list of available URL schemes and the
     /// associated default ports.
+<<<<<<< HEAD
     ///
     /// \throw BadServerUrl if the specified server URL is malformed.
     void bind();
+=======
+>>>>>>> origin/develop12
     void bind(std::string server_url, std::string signed_user_token);
     void bind(std::string server_address, std::string server_path,
               std::string signed_user_token, port_type server_port = 0,

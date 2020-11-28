@@ -25,7 +25,11 @@
 import Foundation
 
 /// Used to determine the `Horizontal` and `Vertical` position of
+<<<<<<< HEAD
 // an `AccessoryView` in a `MessageCollectionViewCell`.
+=======
+/// an `AccessoryView` in a `MessageCollectionViewCell`.
+>>>>>>> origin/develop12
 public enum AccessoryPosition {
     
     /// Aligns the `AccessoryView`'s top edge to the cell's top edge.

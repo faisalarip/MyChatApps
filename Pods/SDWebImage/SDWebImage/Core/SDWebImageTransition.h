@@ -46,7 +46,11 @@ typedef void (^SDWebImageTransitionCompletionBlock)(BOOL finished);
 @interface SDWebImageTransition : NSObject
 
 /**
+<<<<<<< HEAD
  By default, we set the image to the view at the beginning of the animtions. You can disable this and provide custom set image process
+=======
+ By default, we set the image to the view at the beginning of the animations. You can disable this and provide custom set image process
+>>>>>>> origin/develop12
  */
 @property (nonatomic, assign) BOOL avoidAutoSetImage;
 /**
@@ -83,7 +87,11 @@ typedef void (^SDWebImageTransitionCompletionBlock)(BOOL finished);
  */
 @interface SDWebImageTransition (Conveniences)
 
+<<<<<<< HEAD
 /// Fade transition.
+=======
+/// Fade-in transition.
+>>>>>>> origin/develop12
 @property (nonatomic, class, nonnull, readonly) SDWebImageTransition *fadeTransition;
 /// Flip from left transition.
 @property (nonatomic, class, nonnull, readonly) SDWebImageTransition *flipFromLeftTransition;
@@ -98,6 +106,37 @@ typedef void (^SDWebImageTransitionCompletionBlock)(BOOL finished);
 /// Curl down transition.
 @property (nonatomic, class, nonnull, readonly) SDWebImageTransition *curlDownTransition;
 
+<<<<<<< HEAD
+=======
+/// Fade-in transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)fadeTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(fade(duration:));
+
+/// Flip from left  transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromLeftTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromLeft(duration:));
+
+/// Flip from right transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromRightTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromRight(duration:));
+
+/// Flip from top transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromTopTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromTop(duration:));
+
+/// Flip from bottom transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromBottomTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromBottom(duration:));
+
+///  Curl up transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)curlUpTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(curlUp(duration:));
+
+/// Curl down transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)curlDownTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(curlDown(duration:));
+
+>>>>>>> origin/develop12
 @end
 
 #endif

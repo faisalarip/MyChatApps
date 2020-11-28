@@ -17,6 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 #import "FBSDKError.h"
 
 NS_ASSUME_NONNULL_BEGIN

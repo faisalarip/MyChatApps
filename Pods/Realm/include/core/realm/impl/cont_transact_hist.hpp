@@ -28,6 +28,10 @@
 namespace realm {
 
 class Group;
+<<<<<<< HEAD
+=======
+class BinaryIterator;
+>>>>>>> origin/develop12
 
 namespace _impl {
 
@@ -45,7 +49,11 @@ public:
     /// updated - that is, the mapping is updated to provide full visibility to
     /// the file.
     ///
+<<<<<<< HEAD
     virtual void update_from_ref_and_version(ref_type ref, version_type version) = 0;
+=======
+    virtual void update_from_ref_and_version(ref_type, version_type) = 0;
+>>>>>>> origin/develop12
     virtual void update_from_parent(version_type version) = 0;
 
     /// Get all changesets between the specified versions. References to those
@@ -110,6 +118,7 @@ public:
     /// of histories are stored inside the Realm file.
     virtual void set_oldest_bound_version(version_type version) = 0;
 
+<<<<<<< HEAD
     /// Get the list of uncommitted changes accumulated so far in the current
     /// write transaction.
     ///
@@ -126,6 +135,13 @@ public:
 
     void set_updated(bool updated)
     {
+=======
+    virtual void verify() const = 0;
+
+    virtual void set_group(Group* group, bool updated = false)
+    {
+        m_group = group;
+>>>>>>> origin/develop12
         m_updated = updated;
     }
 
@@ -137,6 +153,12 @@ public:
         }
     }
 
+<<<<<<< HEAD
+=======
+protected:
+    Group* m_group = nullptr;
+
+>>>>>>> origin/develop12
 private:
     mutable bool m_updated = false;
 };

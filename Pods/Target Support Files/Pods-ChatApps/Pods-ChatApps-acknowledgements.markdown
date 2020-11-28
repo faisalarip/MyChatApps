@@ -440,6 +440,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -857,6 +858,9 @@ Copyright 2020 Google
       identification within third-party archives.
 
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -871,7 +875,15 @@ Copyright 2020 Google
    limitations under the License.
 
 
+<<<<<<< HEAD
 ## FirebaseCore
+=======
+## FirebaseAnalytics
+
+Copyright 2020 Google
+
+## FirebaseAuth
+>>>>>>> origin/develop12
 
 
                                  Apache License
@@ -1062,7 +1074,11 @@ Copyright 2020 Google
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -1077,7 +1093,11 @@ Copyright 2020 Google
    limitations under the License.
 
 
+<<<<<<< HEAD
 ## FirebaseCoreDiagnostics
+=======
+## FirebaseCore
+>>>>>>> origin/develop12
 
 
                                  Apache License
@@ -1268,7 +1288,11 @@ Copyright 2020 Google
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -1283,7 +1307,11 @@ Copyright 2020 Google
    limitations under the License.
 
 
+<<<<<<< HEAD
 ## FirebaseCoreDiagnosticsInterop
+=======
+## FirebaseCoreDiagnostics
+>>>>>>> origin/develop12
 
 
                                  Apache License
@@ -1474,7 +1502,11 @@ Copyright 2020 Google
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -1680,7 +1712,11 @@ Copyright 2020 Google
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -1886,7 +1922,11 @@ Copyright 2020 Google
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -2092,7 +2132,11 @@ Copyright 2020 Google
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -2714,6 +2758,7 @@ Copyright 2020 Google
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
+<<<<<<< HEAD
    Copyright [yyyy] [name of copyright owner]
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -2921,6 +2966,9 @@ Copyright 2020 Google
       identification within third-party archives.
 
    Copyright [yyyy] [name of copyright owner]
+=======
+   Copyright 2020 Firebase, Inc.
+>>>>>>> origin/develop12
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -3244,7 +3292,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 MIT License
 
+<<<<<<< HEAD
 Copyright (c) 2017-2019 MessageKit
+=======
+Copyright (c) 2017-2020 MessageKit
+>>>>>>> origin/develop12
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3977,7 +4029,11 @@ regulations.
 
 ## SDWebImage
 
+<<<<<<< HEAD
 Copyright (c) 2009-2018 Olivier Poitrey rs@dailymotion.com
+=======
+Copyright (c) 2009-2020 Olivier Poitrey rs@dailymotion.com
+>>>>>>> origin/develop12
  
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

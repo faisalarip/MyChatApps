@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import "RLMSyncUtil.h"
+=======
+#import <Realm/RLMSyncUtil.h>
+>>>>>>> origin/develop12
 
 @class RLMSyncSession, RLMSyncTimeoutOptions;
 

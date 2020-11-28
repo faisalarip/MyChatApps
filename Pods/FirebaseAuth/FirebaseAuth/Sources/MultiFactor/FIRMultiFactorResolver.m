@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if TARGET_OS_IOS
 
 #import <FirebaseAuth/FIRAdditionalUserInfo.h>
 #import <FirebaseAuth/FIRMultiFactorResolver.h>
+=======
+#import <TargetConditionals.h>
+#if TARGET_OS_IOS
+
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAdditionalUserInfo.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorResolver.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthDataResult_Internal.h"
 #import "FirebaseAuth/Sources/Auth/FIRAuth_Internal.h"
@@ -28,7 +36,11 @@
 #import "FirebaseAuth/Sources/MultiFactor/FIRMultiFactorSession+Internal.h"
 
 #if TARGET_OS_IOS
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRPhoneMultiFactorAssertion.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneMultiFactorAssertion.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/AuthProvider/Phone/FIRPhoneAuthCredential_Internal.h"
 #import "FirebaseAuth/Sources/MultiFactor/Phone/FIRPhoneMultiFactorAssertion+Internal.h"
@@ -59,11 +71,18 @@ NS_ASSUME_NONNULL_BEGIN
       [[FIRAuthProtoFinalizeMFAPhoneRequestInfo alloc]
           initWithSessionInfo:phoneAssertion.authCredential.verificationID
              verificationCode:phoneAssertion.authCredential.verificationCode];
+<<<<<<< HEAD
   FIRFinalizeMFASignInRequest *request =
       [[FIRFinalizeMFASignInRequest alloc] initWithMFAProvider:phoneAssertion.factorID
                                           MFAPendingCredential:self.MFAPendingCredential
                                               verificationInfo:finalizeMFAPhoneRequestInfo
                                           requestConfiguration:self.auth.requestConfiguration];
+=======
+  FIRFinalizeMFASignInRequest *request = [[FIRFinalizeMFASignInRequest alloc]
+      initWithMFAPendingCredential:self.MFAPendingCredential
+                  verificationInfo:finalizeMFAPhoneRequestInfo
+              requestConfiguration:self.auth.requestConfiguration];
+>>>>>>> origin/develop12
   [FIRAuthBackend
       finalizeMultiFactorSignIn:request
                        callback:^(FIRFinalizeMFASignInResponse *_Nullable response,

@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRAuth.h>
 #import <FirebaseAuthInterop/FIRAuthInterop.h>
 #import <Foundation/Foundation.h>
+=======
+#import <Foundation/Foundation.h>
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuth.h"
+#import "Interop/Auth/Public/FIRAuthInterop.h"
+>>>>>>> origin/develop12
 
 @class FIRAuthRequestConfiguration;
 @class FIRAuthURLPresenter;
@@ -142,6 +148,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (FIRAuthDataResultCallback)signInFlowAuthDataResultCallbackByDecoratingCallback:
     (nullable FIRAuthDataResultCallback)callback;
 
+<<<<<<< HEAD
+=======
+/** @fn useEmulatorWithHost:port
+    @brief Configures Firebase Auth to connect to an emulated host instead of the remote backend.
+ */
+- (void)useEmulatorWithHost:(NSString *)host port:(NSInteger)port;
+
+>>>>>>> origin/develop12
 @end
 
 NS_ASSUME_NONNULL_END

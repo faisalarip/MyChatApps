@@ -18,8 +18,13 @@
 
 #import "FBSDKErrorRecoveryAttempter.h"
 
+<<<<<<< HEAD
 #import "_FBSDKTemporaryErrorRecoveryAttempter.h"
 #import "FBSDKErrorRecoveryConfiguration.h"
+=======
+#import "FBSDKErrorRecoveryConfiguration.h"
+#import "_FBSDKTemporaryErrorRecoveryAttempter.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKErrorRecoveryAttempter
 
@@ -43,9 +48,16 @@
 {
   // should be implemented by subclasses.
 }
+<<<<<<< HEAD
 @end
 
 @implementation FBSDKErrorRecoveryAttempter(Protected)
+=======
+
+@end
+
+@implementation FBSDKErrorRecoveryAttempter (Protected)
+>>>>>>> origin/develop12
 
 - (void)completeRecovery:(BOOL)didRecover delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void *)contextInfo
 {

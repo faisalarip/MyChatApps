@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #if SWIFT_PACKAGE
+<<<<<<< HEAD
 #import "FBSDKGraphRequest.h"
 #else
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
@@ -26,6 +27,14 @@
 
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 {
+=======
+ #import "FBSDKGraphRequest.h"
+#else
+ #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#endif
+
+typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
+>>>>>>> origin/develop12
   FBSDKGraphRequestFlagNone = 0,
   // indicates this request should not use a client token as its token parameter
   FBSDKGraphRequestFlagSkipClientToken = 1 << 1,
@@ -49,7 +58,11 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 // so that we don't cause a sudden change in token state or trigger recovery
 // out of context of any user action.
 @property (nonatomic, assign) FBSDKGraphRequestFlags flags;
+<<<<<<< HEAD
 @property (nonatomic, readonly, getter=isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
+=======
+@property (nonatomic, readonly, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
+>>>>>>> origin/develop12
 @property (nonatomic, readonly) BOOL hasAttachments;
 
 + (BOOL)isAttachment:(id)item;

@@ -21,12 +21,19 @@
 
 #include "impl/collection_notifier.hpp"
 
+<<<<<<< HEAD
 #include <realm/group_shared.hpp>
+=======
+#include "property.hpp"
+
+#include <realm/list.hpp>
+>>>>>>> origin/develop12
 
 namespace realm {
 namespace _impl {
 class ListNotifier : public CollectionNotifier {
 public:
+<<<<<<< HEAD
     ListNotifier(LinkViewRef lv, std::shared_ptr<Realm> realm);
 
 private:
@@ -34,21 +41,39 @@ private:
     // SharedGroup yet
     LinkViewRef m_lv;
     std::unique_ptr<SharedGroup::Handover<LinkView>> m_lv_handover;
+=======
+    ListNotifier(std::shared_ptr<Realm> realm, LstBase const& list, PropertyType type);
+
+private:
+    PropertyType m_type;
+    std::unique_ptr<LstBase> m_list;
+
+    TableKey m_table;
+    ColKey m_col;
+    ObjKey m_obj;
+>>>>>>> origin/develop12
 
     // The last-seen size of the LinkView so that we can report row deletions
     // when the LinkView itself is deleted
     size_t m_prev_size;
 
+<<<<<<< HEAD
     // The actual change, calculated in run() and delivered in prepare_handover()
     CollectionChangeBuilder m_change;
+=======
+>>>>>>> origin/develop12
     TransactionChangeInfo* m_info;
 
     void run() override;
 
+<<<<<<< HEAD
     void do_prepare_handover(SharedGroup&) override;
 
     void do_attach_to(SharedGroup& sg) override;
     void do_detach_from(SharedGroup& sg) override;
+=======
+    void do_attach_to(Transaction& sg) override;
+>>>>>>> origin/develop12
 
     void release_data() noexcept override;
     bool do_add_required_change_info(TransactionChangeInfo& info) override;

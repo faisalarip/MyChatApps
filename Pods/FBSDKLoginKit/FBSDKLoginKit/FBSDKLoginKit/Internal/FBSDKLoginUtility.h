@@ -22,7 +22,15 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import "FBSDKLoginManager.h"
+=======
+#if SWIFT_PACKAGE
+ #import "FBSDKLoginManager.h"
+#else
+ #import <FBSDKLoginKit/FBSDKLoginManager.h>
+#endif
+>>>>>>> origin/develop12
 
 NS_SWIFT_NAME(LoginUtility)
 @interface FBSDKLoginUtility : NSObject

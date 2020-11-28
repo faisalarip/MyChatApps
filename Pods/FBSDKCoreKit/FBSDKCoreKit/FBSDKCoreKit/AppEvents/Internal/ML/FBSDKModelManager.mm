@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKModelManager.h"
 
 #import "FBSDKAppEvents+Internal.h"
@@ -36,6 +37,23 @@
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
 #import "FBSDKTypeUtility.h"
+=======
+ #import "FBSDKModelManager.h"
+
+ #import "FBSDKAppEvents+Internal.h"
+ #import "FBSDKFeatureExtractor.h"
+ #import "FBSDKFeatureManager.h"
+ #import "FBSDKGraphRequest.h"
+ #import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKIntegrityManager.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKMLMacros.h"
+ #import "FBSDKModelParser.h"
+ #import "FBSDKModelRuntime.hpp"
+ #import "FBSDKModelUtility.h"
+ #import "FBSDKSettings.h"
+ #import "FBSDKSuggestedEventsIndexer.h"
+>>>>>>> origin/develop12
 
 static NSString *const INTEGRITY_NONE = @"none";
 static NSString *const INTEGRITY_ADDRESS = @"address";
@@ -54,6 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKModelManager
 
+<<<<<<< HEAD
 #pragma mark - Public methods
 
 + (void)enable
@@ -96,10 +115,59 @@ NS_ASSUME_NONNULL_BEGIN
       [self checkFeaturesAndExecuteForMTML];
     }
   });
+=======
+ #pragma mark - Public methods
+
++ (void)enable
+{
+  @try {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      NSString *languageCode = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
+      // If the languageCode could not be fetched successfully, it's regarded as "en" by default.
+      if (languageCode && ![languageCode isEqualToString:@"en"]) {
+        return;
+      }
+
+      NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
+      if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:NULL error:NULL];
+      }
+      _directoryPath = dirPath;
+      _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
+      NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
+      if ([_modelInfo count] == 0 || ![FBSDKFeatureManager isEnabled:FBSDKFeatureModelRequest] || ![self isValidTimestamp:timestamp]) {
+        // fetch api
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                      initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
+
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+          if (!error) {
+            NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+            NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+            if (modelInfo) {
+              _modelInfo = [modelInfo mutableCopy];
+              [self processMTML];
+              // update cache for model info and timestamp
+              [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
+              [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+            }
+          }
+          [self checkFeaturesAndExecuteForMTML];
+        }];
+      } else {
+        [self checkFeaturesAndExecuteForMTML];
+      }
+    });
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to enable model manager, exception reason: %@", exception.reason);
+  }
+>>>>>>> origin/develop12
 }
 
 + (nullable NSDictionary *)getRulesForKey:(NSString *)useCase
 {
+<<<<<<< HEAD
   NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCase ofType:NSObject.class];
   if (model && model[VERSION_ID_KEY]) {
     NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
@@ -108,6 +176,20 @@ NS_ASSUME_NONNULL_BEGIN
       NSDictionary *rules = [FBSDKTypeUtility JSONObjectWithData:ruelsData options:0 error:nil];
       return rules;
     }
+=======
+  @try {
+    NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCase ofType:NSObject.class];
+    if (model && model[VERSION_ID_KEY]) {
+      NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
+      if (filePath) {
+        NSData *ruelsData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
+        NSDictionary *rules = [FBSDKTypeUtility JSONObjectWithData:ruelsData options:0 error:nil];
+        return rules;
+      }
+    }
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to get rules for usecase %@ from ml model, exception reason: %@", useCase, exception.reason);
+>>>>>>> origin/develop12
   }
   return nil;
 }
@@ -138,13 +220,18 @@ NS_ASSUME_NONNULL_BEGIN
   if (!_modelInfo) {
     return nil;
   }
+<<<<<<< HEAD
   NSDictionary<NSString *, id> * modelInfo = _modelInfo[useCase];
+=======
+  NSDictionary<NSString *, id> *modelInfo = _modelInfo[useCase];
+>>>>>>> origin/develop12
   if (!modelInfo) {
     return nil;
   }
   return modelInfo[THRESHOLDS_KEY];
 }
 
+<<<<<<< HEAD
 #pragma mark - Integrity Inferencer method
 
 + (BOOL)processIntegrity:(nullable NSString *)param
@@ -170,10 +257,42 @@ NS_ASSUME_NONNULL_BEGIN
       integrityType = [FBSDKTypeUtility array:integrityMapping objectAtIndex:i];
       break;
     }
+=======
+ #pragma mark - Integrity Inferencer method
+
++ (BOOL)processIntegrity:(nullable NSString *)param
+{
+  NSString *integrityType = INTEGRITY_NONE;
+  @try {
+    if (param.length == 0 || _MTMLWeights.size() == 0) {
+      return false;
+    }
+    NSArray<NSString *> *integrityMapping = [self getIntegrityMapping];
+    NSString *text = [FBSDKModelUtility normalizeText:param];
+    const char *bytes = [text UTF8String];
+    if ((int)strlen(bytes) == 0) {
+      return false;
+    }
+    NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:MTMLTaskIntegrityDetectKey];
+    if (thresholds.count != integrityMapping.count) {
+      return false;
+    }
+    const fbsdk::MTensor &res = fbsdk::predictOnMTML("integrity_detect", bytes, _MTMLWeights, nullptr);
+    const float *res_data = res.data();
+    for (int i = 0; i < thresholds.count; i++) {
+      if ((float)res_data[i] >= (float)[[FBSDKTypeUtility array:thresholds objectAtIndex:i] floatValue]) {
+        integrityType = [FBSDKTypeUtility array:integrityMapping objectAtIndex:i];
+        break;
+      }
+    }
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to process parameter for integrity usecase, exception reason: %@", exception.reason);
+>>>>>>> origin/develop12
   }
   return ![integrityType isEqualToString:INTEGRITY_NONE];
 }
 
+<<<<<<< HEAD
 #pragma mark - SuggestedEvents Inferencer method
 
 + (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData
@@ -198,11 +317,45 @@ NS_ASSUME_NONNULL_BEGIN
     if ((float)res_data[i] >= (float)[[FBSDKTypeUtility array:thresholds objectAtIndex:i] floatValue]) {
       return [FBSDKTypeUtility array:eventMapping objectAtIndex:i];
     }
+=======
+ #pragma mark - SuggestedEvents Inferencer method
+
++ (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData
+{
+  @try {
+    NSArray<NSString *> *eventMapping = [FBSDKModelManager getSuggestedEventsMapping];
+    if (textFeature.length == 0 || _MTMLWeights.size() == 0 || !denseData) {
+      return SUGGESTED_EVENT_OTHER;
+    }
+    const char *bytes = [textFeature UTF8String];
+    if ((int)strlen(bytes) == 0) {
+      return SUGGESTED_EVENT_OTHER;
+    }
+
+    NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:MTMLTaskAppEventPredKey];
+    if (thresholds.count != eventMapping.count) {
+      return SUGGESTED_EVENT_OTHER;
+    }
+
+    const fbsdk::MTensor &res = fbsdk::predictOnMTML("app_event_pred", bytes, _MTMLWeights, denseData);
+    const float *res_data = res.data();
+    for (int i = 0; i < thresholds.count; i++) {
+      if ((float)res_data[i] >= (float)[[FBSDKTypeUtility array:thresholds objectAtIndex:i] floatValue]) {
+        return [FBSDKTypeUtility array:eventMapping objectAtIndex:i];
+      }
+    }
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to process suggested events, exception reason: %@", exception.reason);
+>>>>>>> origin/develop12
   }
   return SUGGESTED_EVENT_OTHER;
 }
 
+<<<<<<< HEAD
 #pragma mark - Private methods
+=======
+ #pragma mark - Private methods
+>>>>>>> origin/develop12
 
 + (BOOL)isValidTimestamp:(NSDate *)timestamp
 {
@@ -226,10 +379,17 @@ NS_ASSUME_NONNULL_BEGIN
   }
   if (mtmlAssetUri && mtmlVersionId > 0) {
     [FBSDKTypeUtility dictionary:_modelInfo setObject:@{
+<<<<<<< HEAD
       USE_CASE_KEY: MTMLKey,
       ASSET_URI_KEY: mtmlAssetUri,
       VERSION_ID_KEY: [NSNumber numberWithLong:mtmlVersionId],
     } forKey:MTMLKey];
+=======
+       USE_CASE_KEY : MTMLKey,
+       ASSET_URI_KEY : mtmlAssetUri,
+       VERSION_ID_KEY : [NSNumber numberWithLong:mtmlVersionId],
+     } forKey:MTMLKey];
+>>>>>>> origin/develop12
   }
 }
 
@@ -265,7 +425,11 @@ NS_ASSUME_NONNULL_BEGIN
 
   NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCaseKey ofType:NSObject.class];
   if (!model || !_directoryPath) {
+<<<<<<< HEAD
       return;
+=======
+    return;
+>>>>>>> origin/develop12
   }
 
   NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -292,6 +456,7 @@ NS_ASSUME_NONNULL_BEGIN
     rulesFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, model[VERSION_ID_KEY]]];
     [self download:rulesUrlString filePath:rulesFilePath queue:queue group:group];
   }
+<<<<<<< HEAD
   dispatch_group_notify(group, dispatch_get_main_queue(), ^{
     if (handler) {
       if ([fileManager fileExistsAtPath:assetFilePath] && (!rulesFilePath || [fileManager fileExistsAtPath:rulesFilePath])) {
@@ -299,6 +464,16 @@ NS_ASSUME_NONNULL_BEGIN
       }
     }
   });
+=======
+  dispatch_group_notify(group,
+    dispatch_get_main_queue(), ^{
+      if (handler) {
+        if ([fileManager fileExistsAtPath:assetFilePath] && (!rulesFilePath || [fileManager fileExistsAtPath:rulesFilePath])) {
+          handler();
+        }
+      }
+    });
+>>>>>>> origin/develop12
 }
 
 + (void)clearCacheForModel:(NSDictionary<NSString *, id> *)model
@@ -324,6 +499,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (!filePath || [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
     return;
   }
+<<<<<<< HEAD
   dispatch_group_async(group, queue, ^{
     NSURL *url = [NSURL URLWithString:urlString];
     NSData *urlData = [NSData dataWithContentsOfURL:url];
@@ -331,6 +507,16 @@ NS_ASSUME_NONNULL_BEGIN
       [urlData writeToFile:filePath atomically:YES];
     }
   });
+=======
+  dispatch_group_async(group,
+    queue, ^{
+      NSURL *url = [NSURL URLWithString:urlString];
+      NSData *urlData = [NSData dataWithContentsOfURL:url];
+      if (urlData) {
+        [urlData writeToFile:filePath atomically:YES];
+      }
+    });
+>>>>>>> origin/develop12
 }
 
 + (nullable NSMutableDictionary<NSString *, id> *)convertToDictionary:(NSArray<NSDictionary<NSString *, id> *> *)models
@@ -341,7 +527,11 @@ NS_ASSUME_NONNULL_BEGIN
   NSMutableDictionary<NSString *, id> *modelInfo = [NSMutableDictionary dictionary];
   for (NSDictionary<NSString *, id> *model in models) {
     if (model[USE_CASE_KEY]) {
+<<<<<<< HEAD
       [modelInfo addEntriesFromDictionary:@{model[USE_CASE_KEY]:model}];
+=======
+      [modelInfo addEntriesFromDictionary:@{model[USE_CASE_KEY] : model}];
+>>>>>>> origin/develop12
     }
   }
   return modelInfo;
@@ -356,6 +546,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
   return
   @[SUGGESTED_EVENT_OTHER,
+<<<<<<< HEAD
   FBSDKAppEventNameCompletedRegistration,
   FBSDKAppEventNameAddedToCart,
   FBSDKAppEventNamePurchased,
@@ -363,6 +554,14 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 
+=======
+    FBSDKAppEventNameCompletedRegistration,
+    FBSDKAppEventNameAddedToCart,
+    FBSDKAppEventNamePurchased,
+    FBSDKAppEventNameInitiatedCheckout];
+}
+
+>>>>>>> origin/develop12
 @end
 
 NS_ASSUME_NONNULL_END

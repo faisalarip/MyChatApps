@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
@@ -28,13 +29,27 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
+=======
+ #import "FBSDKBridgeAPIProtocolWebV2.h"
+
+ #import "FBSDKBridgeAPIProtocolNativeV1.h"
+ #import "FBSDKDialogConfiguration.h"
+ #import "FBSDKError.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKServerConfiguration.h"
+ #import "FBSDKServerConfigurationManager.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKBridgeAPIProtocolWebV2
 {
   FBSDKBridgeAPIProtocolNativeV1 *_nativeProtocol;
 }
 
+<<<<<<< HEAD
 #pragma mark - Object Lifecycle
+=======
+ #pragma mark - Object Lifecycle
+>>>>>>> origin/develop12
 
 - (instancetype)init
 {
@@ -47,17 +62,29 @@
   return self;
 }
 
+<<<<<<< HEAD
 #pragma mark - FBSDKBridgeAPIProtocol
+=======
+ #pragma mark - FBSDKBridgeAPIProtocol
+>>>>>>> origin/develop12
 
 - (NSURL *)_redirectURLWithActionID:(NSString *)actionID methodName:(NSString *)methodName error:(NSError **)errorRef
 {
   NSDictionary *queryParameters = nil;
   if (actionID) {
+<<<<<<< HEAD
     NSDictionary *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID: actionID };
     NSString *bridgeArgsString = [FBSDKBasicUtility JSONStringForObject:bridgeArgs
                                                                   error:NULL
                                                    invalidObjectHandler:NULL];
     queryParameters = @{ FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs: bridgeArgsString };
+=======
+    NSDictionary *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID : actionID };
+    NSString *bridgeArgsString = [FBSDKBasicUtility JSONStringForObject:bridgeArgs
+                                                                  error:NULL
+                                                   invalidObjectHandler:NULL];
+    queryParameters = @{ FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs : bridgeArgsString };
+>>>>>>> origin/develop12
   }
   return [FBSDKInternalUtility appURLWithHost:@"bridge" path:methodName queryParameters:queryParameters error:errorRef];
 }

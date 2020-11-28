@@ -24,9 +24,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 - (void)applicationDidBecomeActive:(nullable UIApplication *)application;
+<<<<<<< HEAD
 - (void)applicationDidEnterBackground:(nullable UIApplication *)application;
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+=======
+- (void)applicationWillResignActive:(nullable UIApplication *)application;
+- (void)applicationDidEnterBackground:(nullable UIApplication *)application;
+- (BOOL)            application:(UIApplication *)application
+  didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+>>>>>>> origin/develop12
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url

@@ -19,10 +19,21 @@
 #ifndef REALM_BACKGROUND_COLLECTION_HPP
 #define REALM_BACKGROUND_COLLECTION_HPP
 
+<<<<<<< HEAD
 #include "impl/collection_change_builder.hpp"
 
 #include <realm/util/assert.hpp>
 #include <realm/version_id.hpp>
+=======
+#include "object_changeset.hpp"
+#include "impl/collection_change_builder.hpp"
+#include "util/checked_mutex.hpp"
+
+#include <realm/util/assert.hpp>
+#include <realm/version_id.hpp>
+#include <realm/keys.hpp>
+#include <realm/table_ref.hpp>
+>>>>>>> origin/develop12
 
 #include <array>
 #include <atomic>
@@ -30,16 +41,25 @@
 #include <functional>
 #include <mutex>
 #include <unordered_map>
+<<<<<<< HEAD
 
 namespace realm {
 class Realm;
 class SharedGroup;
 class Table;
+=======
+#include <unordered_set>
+
+namespace realm {
+class Realm;
+class Transaction;
+>>>>>>> origin/develop12
 
 namespace _impl {
 class RealmCoordinator;
 
 struct ListChangeInfo {
+<<<<<<< HEAD
     size_t table_ndx;
     size_t row_ndx;
     size_t col_ndx;
@@ -53,6 +73,21 @@ struct TransactionChangeInfo {
     std::vector<CollectionChangeBuilder> tables;
     std::vector<std::vector<size_t>> column_indices;
     std::vector<size_t> table_indices;
+=======
+    TableKey table_key;
+    int64_t row_key;
+    int64_t col_key;
+    CollectionChangeBuilder* changes;
+};
+
+// FIXME: this should be in core
+using TableKeyType = decltype(TableKey::value);
+using ObjKeyType = decltype(ObjKey::value);
+
+struct TransactionChangeInfo {
+    std::vector<ListChangeInfo> lists;
+    std::unordered_map<TableKeyType, ObjectChangeSet> tables;
+>>>>>>> origin/develop12
     bool track_all;
     bool schema_changed;
 };
@@ -60,18 +95,30 @@ struct TransactionChangeInfo {
 class DeepChangeChecker {
 public:
     struct OutgoingLink {
+<<<<<<< HEAD
         size_t col_ndx;
         bool is_list;
     };
     struct RelatedTable {
         size_t table_ndx;
+=======
+        int64_t col_key;
+        bool is_list;
+    };
+    struct RelatedTable {
+        TableKey table_key;
+>>>>>>> origin/develop12
         std::vector<OutgoingLink> links;
     };
 
     DeepChangeChecker(TransactionChangeInfo const& info, Table const& root_table,
                       std::vector<RelatedTable> const& related_tables);
 
+<<<<<<< HEAD
     bool operator()(size_t row_ndx);
+=======
+    bool operator()(int64_t obj_key);
+>>>>>>> origin/develop12
 
     // Recursively add `table` and all tables it links to to `out`, along with
     // information about the links from them
@@ -80,6 +127,7 @@ public:
 private:
     TransactionChangeInfo const& m_info;
     Table const& m_root_table;
+<<<<<<< HEAD
     const size_t m_root_table_ndx;
     IndexSet const* const m_root_modifications;
     std::vector<IndexSet> m_not_modified;
@@ -89,13 +137,29 @@ private:
         size_t table;
         size_t row;
         size_t col;
+=======
+    const TableKey m_root_table_key;
+    ObjectChangeSet const* const m_root_object_changes;
+    std::unordered_map<TableKeyType, std::unordered_set<ObjKeyType>> m_not_modified;
+    std::vector<RelatedTable> const& m_related_tables;
+
+    struct Path {
+        int64_t obj_key;
+        int64_t col_key;
+>>>>>>> origin/develop12
         bool depth_exceeded;
     };
     std::array<Path, 4> m_current_path;
 
+<<<<<<< HEAD
     bool check_row(Table const& table, size_t row_ndx, size_t depth = 0);
     bool check_outgoing_links(size_t table_ndx, Table const& table,
                               size_t row_ndx, size_t depth = 0);
+=======
+    bool check_row(Table const& table, ObjKeyType obj_key, size_t depth = 0);
+    bool check_outgoing_links(TableKey table_key, Table const& table,
+                              int64_t obj_key, size_t depth = 0);
+>>>>>>> origin/develop12
 };
 
 // A base class for a notifier that keeps a collection up to date and/or
@@ -118,6 +182,7 @@ public:
     // Add a callback to be called each time the collection changes
     // This can only be called from the target collection's thread
     // Returns a token which can be passed to remove_callback()
+<<<<<<< HEAD
     uint64_t add_callback(CollectionChangeCallback callback);
     // Remove a previously added token. The token is no longer valid after
     // calling this function and must not be used again. This function can be
@@ -125,6 +190,15 @@ public:
     void remove_callback(uint64_t token);
 
     void suppress_next_notification(uint64_t token);
+=======
+    uint64_t add_callback(CollectionChangeCallback callback) REQUIRES(!m_callback_mutex);
+    // Remove a previously added token. The token is no longer valid after
+    // calling this function and must not be used again. This function can be
+    // called from any thread.
+    void remove_callback(uint64_t token) REQUIRES(!m_callback_mutex);
+
+    void suppress_next_notification(uint64_t token) REQUIRES(!m_callback_mutex);
+>>>>>>> origin/develop12
 
     // ------------------------------------------------------------------------
     // API for RealmCoordinator to manage running things and calling callbacks
@@ -132,7 +206,11 @@ public:
     bool is_for_realm(Realm&) const noexcept;
     Realm* get_realm() const noexcept { return m_realm.get(); }
 
+<<<<<<< HEAD
     // Get the SharedGroup version which this collection can attach to (if it's
+=======
+    // Get the Transaction version which this collection can attach to (if it's
+>>>>>>> origin/develop12
     // in handover mode), or can deliver to (if it's been handed over to the BG worker alredad)
     // precondition: RealmCoordinator::m_notifier_mutex is locked
     VersionID version() const noexcept { return m_sg_version; }
@@ -141,11 +219,16 @@ public:
     // This is called on the worker thread to ensure that non-thread-safe things
     // can be destroyed on the correct thread, even if the last reference to the
     // CollectionNotifier is released on a different thread
+<<<<<<< HEAD
     virtual void release_data() noexcept = 0;
+=======
+    virtual void release_data() noexcept;
+>>>>>>> origin/develop12
 
     // Prepare to deliver the new collection and call callbacks.
     // Returns whether or not it has anything to deliver.
     // precondition: RealmCoordinator::m_notifier_mutex is locked
+<<<<<<< HEAD
     bool package_for_delivery();
 
     // Deliver the new state to the target collection using the given SharedGroup
@@ -160,12 +243,25 @@ public:
     // precondition: RealmCoordinator::m_notifier_mutex is unlocked
     void before_advance();
     void after_advance();
+=======
+    bool package_for_delivery() REQUIRES(!m_callback_mutex);
+
+    // Pass the given error to all registered callbacks, then remove them
+    // precondition: RealmCoordinator::m_notifier_mutex is unlocked
+    void deliver_error(std::exception_ptr) REQUIRES(!m_callback_mutex);
+
+    // Call each of the given callbacks with the changesets prepared by package_for_delivery()
+    // precondition: RealmCoordinator::m_notifier_mutex is unlocked
+    void before_advance() REQUIRES(!m_callback_mutex);
+    void after_advance() REQUIRES(!m_callback_mutex);
+>>>>>>> origin/develop12
 
     bool is_alive() const noexcept;
 
     // precondition: RealmCoordinator::m_notifier_mutex is locked *or* is called on worker thread
     bool has_run() const noexcept { return m_has_run; }
 
+<<<<<<< HEAD
     // Attach the handed-over query to `sg`. Must not be already attached to a SharedGroup.
     // precondition: RealmCoordinator::m_notifier_mutex is locked
     void attach_to(SharedGroup& sg);
@@ -173,6 +269,11 @@ public:
     // SharedGroup
     // precondition: RealmCoordinator::m_notifier_mutex is locked
     void detach();
+=======
+    // Attach the handed-over query to `sg`. Must not be already attached to a Transaction.
+    // precondition: RealmCoordinator::m_notifier_mutex is locked
+    void attach_to(std::shared_ptr<Transaction> sg);
+>>>>>>> origin/develop12
 
     // Set `info` as the new ChangeInfo that will be populated by the next
     // transaction advance, and register all required information in it
@@ -183,13 +284,18 @@ public:
     virtual void run() = 0;
 
     // precondition: RealmCoordinator::m_notifier_mutex is locked
+<<<<<<< HEAD
     void prepare_handover();
+=======
+    void prepare_handover() REQUIRES(!m_callback_mutex);
+>>>>>>> origin/develop12
 
     template <typename T>
     class Handle;
 
     bool have_callbacks() const noexcept { return m_have_callbacks; }
 protected:
+<<<<<<< HEAD
     void add_changes(CollectionChangeBuilder change);
     void set_table(Table const& table);
     std::unique_lock<std::mutex> lock_target();
@@ -201,6 +307,22 @@ private:
     virtual void do_attach_to(SharedGroup&) = 0;
     virtual void do_detach_from(SharedGroup&) = 0;
     virtual void do_prepare_handover(SharedGroup&) = 0;
+=======
+    void add_changes(CollectionChangeBuilder change) REQUIRES(!m_callback_mutex);
+    void set_table(ConstTableRef table);
+    std::unique_lock<std::mutex> lock_target();
+    Transaction& source_shared_group();
+
+    bool all_related_tables_covered(const TableVersions& versions);
+    std::function<bool (ObjectChangeSet::ObjectKeyType)> get_modification_checker(TransactionChangeInfo const&, ConstTableRef);
+
+    // The actual change, calculated in run() and delivered in prepare_handover()
+    CollectionChangeBuilder m_change;
+
+private:
+    virtual void do_attach_to(Transaction&) { }
+    virtual void do_prepare_handover(Transaction&) { }
+>>>>>>> origin/develop12
     virtual bool do_add_required_change_info(TransactionChangeInfo&) = 0;
     virtual bool prepare_to_deliver() { return true; }
 
@@ -208,7 +330,11 @@ private:
     std::shared_ptr<Realm> m_realm;
 
     VersionID m_sg_version;
+<<<<<<< HEAD
     SharedGroup* m_sg = nullptr;
+=======
+    std::shared_ptr<Transaction> m_sg;
+>>>>>>> origin/develop12
 
     bool m_has_run = false;
     bool m_error = false;
@@ -225,7 +351,11 @@ private:
 
     // Currently registered callbacks and a mutex which must always be held
     // while doing anything with them or m_callback_index
+<<<<<<< HEAD
     std::mutex m_callback_mutex;
+=======
+    util::CheckedMutex m_callback_mutex;
+>>>>>>> origin/develop12
     std::vector<Callback> m_callbacks;
 
     // Cached value for if m_callbacks is empty, needed to avoid deadlocks in
@@ -246,7 +376,11 @@ private:
     uint64_t m_next_token = 0;
 
     template<typename Fn>
+<<<<<<< HEAD
     void for_each_callback(Fn&& fn);
+=======
+    void for_each_callback(Fn&& fn) REQUIRES(!m_callback_mutex);
+>>>>>>> origin/develop12
 
     std::vector<Callback>::iterator find_callback(uint64_t token);
 };
@@ -279,7 +413,12 @@ public:
         return *this;
     }
 
+<<<<<<< HEAD
     Handle& operator=(std::shared_ptr<T>&& other)
+=======
+    template<typename U>
+    Handle& operator=(std::shared_ptr<U>&& other)
+>>>>>>> origin/develop12
     {
         reset();
         std::shared_ptr<T>::operator=(std::move(other));
@@ -318,7 +457,11 @@ public:
     // Send the before-change notifications
     void before_advance();
     // Deliver the payload associated with the contained notifiers and/or the error
+<<<<<<< HEAD
     void deliver(SharedGroup& sg);
+=======
+    void deliver(Transaction& sg);
+>>>>>>> origin/develop12
     // Send the after-change notifications
     void after_advance();
 

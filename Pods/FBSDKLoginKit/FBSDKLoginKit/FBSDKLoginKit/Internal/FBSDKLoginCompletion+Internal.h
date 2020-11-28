@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKLoginCompletion.h"
+=======
+ #import "FBSDKLoginCompletion.h"
+>>>>>>> origin/develop12
 
 @interface FBSDKLoginCompletionParameters ()
 
@@ -45,4 +49,15 @@
 
 @end
 
+<<<<<<< HEAD
+=======
+@interface FBSDKLoginURLCompleter ()
+
+@property (nonatomic, strong) FBSDKLoginCompletionParameters *parameters;
+
+- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
+
+@end
+
+>>>>>>> origin/develop12
 #endif

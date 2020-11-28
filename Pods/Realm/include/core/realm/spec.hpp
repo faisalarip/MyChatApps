@@ -21,14 +21,26 @@
 
 #include <realm/util/features.h>
 #include <realm/array.hpp>
+<<<<<<< HEAD
 #include <realm/array_string.hpp>
 #include <realm/array_integer.hpp>
 #include <realm/data_type.hpp>
 #include <realm/column_type.hpp>
+=======
+#include <realm/array_string_short.hpp>
+#include <realm/array_integer.hpp>
+#include <realm/data_type.hpp>
+#include <realm/column_type.hpp>
+#include <realm/keys.hpp>
+>>>>>>> origin/develop12
 
 namespace realm {
 
 class Table;
+<<<<<<< HEAD
+=======
+class Group;
+>>>>>>> origin/develop12
 
 class Spec {
 public:
@@ -38,11 +50,21 @@ public:
 
     bool has_strong_link_columns() noexcept;
 
+<<<<<<< HEAD
     void insert_column(size_t column_ndx, ColumnType type, StringData name, ColumnAttr attr = col_attr_None);
     void rename_column(size_t column_ndx, StringData new_name);
 
     /// Erase the column at the specified index, and move columns at
     /// succeeding indexes to the next lower index.
+=======
+    // insert column at index
+    void insert_column(size_t column_ndx, ColKey column_key, ColumnType type, StringData name,
+                       int attr = col_attr_None);
+    ColKey get_key(size_t column_ndx) const;
+    void rename_column(size_t column_ndx, StringData new_name);
+
+    /// Erase the column at the specified index.
+>>>>>>> origin/develop12
     ///
     /// This function is guaranteed to *never* throw if the spec is
     /// used in a non-transactional context, or if the spec has
@@ -50,6 +72,7 @@ public:
     /// transaction.
     void erase_column(size_t column_ndx);
 
+<<<<<<< HEAD
     //@{
     // If a new Spec is constructed from the returned subspec
     // reference, it is the responsibility of the application that the
@@ -58,6 +81,8 @@ public:
     Spec* get_subtable_spec(size_t column_ndx) noexcept;
     //@}
 
+=======
+>>>>>>> origin/develop12
     // Column info
     size_t get_column_count() const noexcept;
     size_t get_public_column_count() const noexcept;
@@ -69,6 +94,7 @@ public:
     size_t get_column_index(StringData name) const noexcept;
 
     // Column Attributes
+<<<<<<< HEAD
     ColumnAttr get_column_attr(size_t column_ndx) const noexcept;
 
     size_t get_subspec_ndx(size_t column_ndx) const noexcept;
@@ -99,6 +125,15 @@ public:
     /// search indexes, since their top refs are stored in Table::m_columns as
     /// well.
     size_t get_column_ndx_in_parent(size_t column_ndx) const;
+=======
+    ColumnAttrMask get_column_attr(size_t column_ndx) const noexcept;
+
+    // Auto Enumerated string columns
+    void upgrade_string_to_enum(size_t column_ndx, ref_type keys_ref);
+    size_t _get_enumkeys_ndx(size_t column_ndx) const noexcept;
+    bool is_string_enum_type(size_t column_ndx) const noexcept;
+    ref_type get_enumkeys_ref(size_t column_ndx, ArrayParent*& keys_parent) noexcept;
+>>>>>>> origin/develop12
 
     //@{
     /// Compare two table specs for equality.
@@ -130,6 +165,7 @@ private:
     // origin table.
     Array m_top;
     ArrayInteger m_types; // 1st slot in m_top
+<<<<<<< HEAD
     ArrayString m_names;  // 2nd slot in m_top
     ArrayInteger m_attr;  // 3rd slot in m_top
     Array m_subspecs;     // 4th slot in m_top (optional)
@@ -144,15 +180,27 @@ private:
     };
     using SubspecPtrs = std::vector<SubspecPtr>;
     SubspecPtrs m_subspec_ptrs;
+=======
+    ArrayStringShort m_names; // 2nd slot in m_top
+    ArrayInteger m_attr;  // 3rd slot in m_top
+    Array m_oldsubspecs;  // 4th slot in m_top
+    Array m_enumkeys;     // 5th slot in m_top
+    ArrayInteger m_keys;  // 6th slot in m_top
+    size_t m_num_public_columns;
+>>>>>>> origin/develop12
     bool m_has_strong_link_columns;
 
     Spec(Allocator&) noexcept; // Unattached
 
     bool init(ref_type) noexcept;
     void init(MemRef) noexcept;
+<<<<<<< HEAD
     void update_has_strong_link_columns() noexcept;
     void reset_subspec_ptrs();
     void adj_subspec_ptrs();
+=======
+    void update_internals() noexcept;
+>>>>>>> origin/develop12
 
     // Returns true in case the ref has changed.
     bool init_from_parent() noexcept;
@@ -168,13 +216,39 @@ private:
 
     void set_parent(ArrayParent*, size_t ndx_in_parent) noexcept;
 
+<<<<<<< HEAD
     void set_column_type(size_t column_ndx, ColumnType type);
     void set_column_attr(size_t column_ndx, ColumnAttr attr);
 
+=======
+    void set_column_attr(size_t column_ndx, ColumnAttrMask attr);
+
+    // Migration
+    bool convert_column_attributes();
+    bool convert_column_keys(TableKey table_key);
+    void fix_column_keys(TableKey table_key);
+    bool has_subspec()
+    {
+        return m_oldsubspecs.is_attached();
+    }
+    void destroy_subspec()
+    {
+        m_oldsubspecs.destroy();
+        m_top.set(3, 0);
+    }
+    TableKey get_opposite_link_table_key(size_t column_ndx) const noexcept;
+    size_t get_origin_column_ndx(size_t backlink_col_ndx) const noexcept;
+    ColKey find_backlink_column(TableKey origin_table_key, size_t spec_ndx) const noexcept;
+
+
+    // Generate a column key only from state in the spec.
+    ColKey update_colkey(ColKey existing_key, size_t spec_ndx, TableKey table_key);
+>>>>>>> origin/develop12
     /// Construct an empty spec and return just the reference to the
     /// underlying memory.
     static MemRef create_empty_spec(Allocator&);
 
+<<<<<<< HEAD
     struct ColumnInfo {
         size_t m_column_ref_ndx = 0; ///< Index within Table::m_columns
         bool m_has_search_index = false;
@@ -191,6 +265,10 @@ private:
     static bool get_first_column_type_from_ref(ref_type, Allocator&, ColumnType& type) noexcept;
 
     friend class Replication;
+=======
+    size_t get_subspec_ndx(size_t column_ndx) const noexcept;
+
+>>>>>>> origin/develop12
     friend class Group;
     friend class Table;
 };
@@ -207,6 +285,7 @@ inline bool Spec::has_strong_link_columns() noexcept
     return m_has_strong_link_columns;
 }
 
+<<<<<<< HEAD
 inline ref_type Spec::get_subspec_ref(size_t subspec_ndx) const noexcept
 {
     REALM_ASSERT(subspec_ndx < m_subspecs.size());
@@ -216,12 +295,15 @@ inline ref_type Spec::get_subspec_ref(size_t subspec_ndx) const noexcept
     return m_subspecs.get_as_ref(subspec_ndx);
 }
 
+=======
+>>>>>>> origin/develop12
 // Uninitialized Spec (call init() to init)
 inline Spec::Spec(Allocator& alloc) noexcept
     : m_top(alloc)
     , m_types(alloc)
     , m_names(alloc)
     , m_attr(alloc)
+<<<<<<< HEAD
     , m_subspecs(alloc)
     , m_enumkeys(alloc)
 {
@@ -240,6 +322,14 @@ inline const Spec* Spec::get_subspec_by_ndx(size_t subspec_ndx) const noexcept
     return const_cast<Spec*>(this)->get_subspec_by_ndx(subspec_ndx);
 }
 
+=======
+    , m_oldsubspecs(alloc)
+    , m_enumkeys(alloc)
+    , m_keys(alloc)
+{
+}
+
+>>>>>>> origin/develop12
 inline bool Spec::init_from_parent() noexcept
 {
     ref_type ref = m_top.get_ref_from_parent();
@@ -285,14 +375,19 @@ inline size_t Spec::get_column_count() const noexcept
 
 inline size_t Spec::get_public_column_count() const noexcept
 {
+<<<<<<< HEAD
     // Backlinks are the last columns, and do not have names, so getting
     // the number of names gives us the count of user facing columns
     return m_names.size();
+=======
+    return m_num_public_columns;
+>>>>>>> origin/develop12
 }
 
 inline ColumnType Spec::get_column_type(size_t ndx) const noexcept
 {
     REALM_ASSERT(ndx < get_column_count());
+<<<<<<< HEAD
     return ColumnType(m_types.get(ndx));
 }
 
@@ -316,20 +411,42 @@ inline ColumnAttr Spec::get_column_attr(size_t ndx) const noexcept
 }
 
 inline void Spec::set_column_attr(size_t column_ndx, ColumnAttr attr)
+=======
+    ColumnType type = ColumnType(m_types.get(ndx));
+    return type;
+}
+
+inline ColumnAttrMask Spec::get_column_attr(size_t ndx) const noexcept
+{
+    REALM_ASSERT(ndx < get_column_count());
+    return ColumnAttrMask(m_attr.get(ndx));
+}
+
+inline void Spec::set_column_attr(size_t column_ndx, ColumnAttrMask attr)
+>>>>>>> origin/develop12
 {
     REALM_ASSERT(column_ndx < get_column_count());
 
     // At this point we only allow one attr at a time
     // so setting it will overwrite existing. In the future
     // we will allow combinations.
+<<<<<<< HEAD
     m_attr.set(column_ndx, attr);
 
     update_has_strong_link_columns();
+=======
+    m_attr.set(column_ndx, attr.m_value);
+
+    update_internals();
+>>>>>>> origin/develop12
 }
 
 inline StringData Spec::get_column_name(size_t ndx) const noexcept
 {
+<<<<<<< HEAD
     REALM_ASSERT(ndx < get_column_count());
+=======
+>>>>>>> origin/develop12
     return m_names.get(ndx);
 }
 
@@ -338,6 +455,7 @@ inline size_t Spec::get_column_index(StringData name) const noexcept
     return m_names.find_first(name);
 }
 
+<<<<<<< HEAD
 inline bool Spec::get_first_column_type_from_ref(ref_type top_ref, Allocator& alloc, ColumnType& type) noexcept
 {
     const char* top_header = alloc.translate(top_ref);
@@ -378,6 +496,8 @@ inline bool Spec::has_subspec() const noexcept
     return (m_top.size() >= 4) && (m_top.get_as_ref(3) != 0);
 }
 
+=======
+>>>>>>> origin/develop12
 inline bool Spec::operator!=(const Spec& s) const noexcept
 {
     return !(*this == s);

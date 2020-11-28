@@ -11,7 +11,12 @@ This open-source library allows you to integrate Facebook into your iOS app.
 Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more
 at https://developers.facebook.com/docs/ios
 
+<<<<<<< HEAD
 NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK
+=======
+Please take a moment and [subscribe to releases](https://docs.github.com/en/enterprise/2.15/user/articles/watching-and-unwatching-repositories) so that you can be notified about new features, deprecations, and critical fixes. To see information about the latest release, consult our [changelog](CHANGELOG.md).
+
+>>>>>>> origin/develop12
 
 ## TRY IT OUT
 
@@ -61,7 +66,11 @@ or open an issue in this repository.
 
 See the [LICENSE](LICENSE) file.
 
+<<<<<<< HEAD
 ## Security Policy
+=======
+## SECURITY POLICY
+>>>>>>> origin/develop12
 
 See the [SECURITY POLICY](SECURITY.md) for more info on our bug bounty program.
 

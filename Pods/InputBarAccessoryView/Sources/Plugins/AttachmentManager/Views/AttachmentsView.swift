@@ -2,7 +2,11 @@
 //  AttachmentCollectionView.swift
 //  InputBarAccessoryView
 //
+<<<<<<< HEAD
 //  Copyright © 2017-2019 Nathan Tannar.
+=======
+//  Copyright © 2017-2020 Nathan Tannar.
+>>>>>>> origin/develop12
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -72,7 +76,15 @@ open class AttachmentCollectionView: UICollectionView {
     
     private func setup() {
         
+<<<<<<< HEAD
         backgroundColor = .white
+=======
+        if #available(iOS 13, *) {
+            backgroundColor = .systemBackground
+        } else {
+            backgroundColor = .white
+        }
+>>>>>>> origin/develop12
         alwaysBounceHorizontal = true
         showsHorizontalScrollIndicator = true
         setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .vertical)

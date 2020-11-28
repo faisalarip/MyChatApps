@@ -23,6 +23,10 @@
  */
 
 import Foundation
+<<<<<<< HEAD
+=======
+import UIKit
+>>>>>>> origin/develop12
 
 /// Used to determine the `Horizontal` and `Vertical` position of
 // an `AvatarView` in a `MessageCollectionViewCell`.

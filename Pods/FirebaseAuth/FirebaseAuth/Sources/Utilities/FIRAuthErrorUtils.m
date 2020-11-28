@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/Utilities/FIRAuthErrorUtils.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRAuthCredential.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthCredential.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/MultiFactor/FIRMultiFactorResolver+Internal.h"
 
@@ -383,8 +387,13 @@ static NSString *const kFIRAuthErrorMessageInvalidAppCredential =
 /** @var kFIRAuthErrorMessageQuotaExceeded
     @brief Message for @c FIRAuthErrorCodeQuotaExceeded error code.
  */
+<<<<<<< HEAD
 static NSString *const kFIRAuthErrorMessageQuotaExceeded = @"The phone verification quota for this "
                                                             "project has been exceeded.";
+=======
+static NSString *const kFIRAuthErrorMessageQuotaExceeded = @"The quota for this operation "
+                                                            "has been exceeded.";
+>>>>>>> origin/develop12
 
 /** @var kFIRAuthErrorMessageMissingAppToken
     @brief Message for @c FIRAuthErrorCodeMissingAppToken error code.
@@ -578,6 +587,23 @@ static NSString *const kFIRAuthErrorMessageRejectedCredential =
 static NSString *const kFIRAuthErrorMessageMissingOrInvalidNonce =
     @"The request contains malformed or mismatched credentials.";
 
+<<<<<<< HEAD
+=======
+/** @var kFIRAuthErrorMessageTenantIDMismatch.
+    @brief Message for @c FIRAuthErrorCodeTenantIDMismatch error code.
+ */
+static NSString *const kFIRAuthErrorMessageTenantIDMismatch =
+    @"The provided user's tenant ID does"
+     "not match the Auth instance's tenant ID.";
+
+/** @var kFIRAuthErrorMessageUnsupportedTenantOperation
+    @brief Message for @c FIRAuthErrorCodeUnsupportedTenantOperation error code.
+ */
+static NSString *const kFIRAuthErrorMessageUnsupportedTenantOperation =
+    @"This operation is not"
+     "supported in a multi-tenant context.";
+
+>>>>>>> origin/develop12
 /** @var FIRAuthErrorDescription
     @brief The error descrioption, based on the error code.
     @remarks No default case so that we get a compiler warning if a new value was added to the enum.
@@ -738,6 +764,13 @@ static NSString *FIRAuthErrorDescription(FIRAuthErrorCode code) {
       return kFIRAuthErrorMessageRejectedCredential;
     case FIRAuthErrorCodeMissingOrInvalidNonce:
       return kFIRAuthErrorMessageMissingOrInvalidNonce;
+<<<<<<< HEAD
+=======
+    case FIRAuthErrorCodeTenantIDMismatch:
+      return kFIRAuthErrorMessageTenantIDMismatch;
+    case FIRAuthErrorCodeUnsupportedTenantOperation:
+      return kFIRAuthErrorMessageUnsupportedTenantOperation;
+>>>>>>> origin/develop12
   }
 }
 
@@ -901,6 +934,13 @@ static NSString *const FIRAuthErrorCodeString(FIRAuthErrorCode code) {
       return @"ERROR_REJECTED_CREDENTIAL";
     case FIRAuthErrorCodeMissingOrInvalidNonce:
       return @"ERROR_MISSING_OR_INVALID_NONCE";
+<<<<<<< HEAD
+=======
+    case FIRAuthErrorCodeTenantIDMismatch:
+      return @"ERROR_TENANT_ID_MISMATCH";
+    case FIRAuthErrorCodeUnsupportedTenantOperation:
+      return @"ERROR_UNSUPPORTED_TENANT_OPERATION";
+>>>>>>> origin/develop12
   }
 }
 
@@ -1363,6 +1403,17 @@ static NSString *const FIRAuthErrorCodeString(FIRAuthErrorCode code) {
                     }];
 }
 
+<<<<<<< HEAD
+=======
++ (NSError *)tenantIDMismatchError {
+  return [self errorWithCode:FIRAuthInternalErrorCodeTenantIDMismatch];
+}
+
++ (NSError *)unsupportedTenantOperationError {
+  return [self errorWithCode:FIRAuthInternalErrorCodeUnsupportedTenantOperation];
+}
+
+>>>>>>> origin/develop12
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,9 +20,15 @@
 
 #include "impl/collection_notifier.hpp"
 #include "impl/notification_wrapper.hpp"
+<<<<<<< HEAD
 #include "impl/object_accessor_impl.hpp"
 #include "impl/realm_coordinator.hpp"
 #include "object_schema.hpp"
+=======
+#include "impl/realm_coordinator.hpp"
+#include "object_schema.hpp"
+#include "object_store.hpp"
+>>>>>>> origin/develop12
 #include "results.hpp"
 #include "shared_realm.hpp"
 #include "sync/impl/work_queue.hpp"
@@ -30,7 +36,10 @@
 #include "sync/sync_config.hpp"
 #include "sync/sync_session.hpp"
 
+<<<<<<< HEAD
 #include <realm/lang_bind_helper.hpp>
+=======
+>>>>>>> origin/develop12
 #include <realm/util/scope_exit.hpp>
 
 #include <cstdint>
@@ -54,9 +63,15 @@ namespace {
         // still be documented.
         auto table = realm::ObjectStore::table_for_object_type(group, realm::partial_sync::result_sets_type_name);
 
+<<<<<<< HEAD
         size_t expires_at_col_ndx = table->get_column_index(realm::partial_sync::property_expires_at);
         realm::TableView results = table->where().less(expires_at_col_ndx, now).find_all();
         results.clear(realm::RemoveMode::unordered);
+=======
+        auto expires_at_col_ndx = table->get_column_key(realm::partial_sync::property_expires_at);
+        realm::TableView results = table->where().less(expires_at_col_ndx, now).find_all();
+        results.clear();
+>>>>>>> origin/develop12
     }
 
     // Calculates the expiry date, claming at the high end if a timestamp overflows
@@ -123,14 +138,24 @@ void initialize_schema(Group& group)
     TableRef table = group.get_table(result_sets_table_name);
     if (!table) {
         // Create the schema required by Sync
+<<<<<<< HEAD
         table = sync::create_table(group, result_sets_table_name);
+=======
+        table = group.get_or_add_table(result_sets_table_name);
+>>>>>>> origin/develop12
     }
 
     // Create all required properties which don't already exist
     for (auto& property : s_partial_sync_schema) {
+<<<<<<< HEAD
         if (table->get_column_index(property.name) != npos)
             continue;
         size_t idx = table->add_column(property.type, property.name, property.nullable);
+=======
+        if (table->get_column_key(property.name))
+            continue;
+        auto idx = table->add_column(property.type, property.name, property.nullable);
+>>>>>>> origin/develop12
         if (property.indexed)
             table->add_search_index(idx);
     }
@@ -151,7 +176,11 @@ void ensure_partial_sync_schema_initialized(Realm& realm)
 
     auto has_all_required_columns = [](auto& table) -> bool {
         return std::all_of(std::begin(s_partial_sync_schema), std::end(s_partial_sync_schema),
+<<<<<<< HEAD
                            [&](auto& property) { return table.get_column_index(property.name) != npos; });
+=======
+                           [&](auto& property) { return table.get_column_key(property.name).operator bool(); });
+>>>>>>> origin/develop12
     };
 
     auto& group = realm.read_group();
@@ -174,6 +203,7 @@ void ensure_partial_sync_schema_initialized(Realm& realm)
 // and that notifies the sync session after committing a change.
 class WriteTransactionNotifyingSync {
 public:
+<<<<<<< HEAD
     WriteTransactionNotifyingSync(Realm::Config const& config, SharedGroup& sg)
     : m_config(config)
     , m_shared_group(&sg)
@@ -182,10 +212,19 @@ public:
             LangBindHelper::promote_to_write(*m_shared_group);
         else
             m_shared_group->begin_write();
+=======
+    WriteTransactionNotifyingSync(Realm::Config const& config, TransactionRef tr)
+    : m_config(config)
+    , m_tr(std::move(tr))
+    {
+        if (m_tr->get_transact_stage() == DB::TransactStage::transact_Reading)
+            m_tr->promote_to_write();
+>>>>>>> origin/develop12
     }
 
     ~WriteTransactionNotifyingSync()
     {
+<<<<<<< HEAD
         if (m_shared_group)
             m_shared_group->rollback();
     }
@@ -195,6 +234,17 @@ public:
         REALM_ASSERT(m_shared_group);
         auto version = m_shared_group->commit();
         m_shared_group = nullptr;
+=======
+        if (m_tr)
+            m_tr->rollback();
+    }
+
+    DB::version_type commit()
+    {
+        REALM_ASSERT(m_tr);
+        auto version = m_tr->commit();
+        m_tr = nullptr;
+>>>>>>> origin/develop12
 
         auto session = SyncManager::shared().get_session(m_config.path, *m_config.sync_config, false);
         SyncSession::Internal::nonsync_transact_notify(*session, version);
@@ -203,20 +253,35 @@ public:
 
     void rollback()
     {
+<<<<<<< HEAD
         REALM_ASSERT(m_shared_group);
         m_shared_group->rollback();
         m_shared_group = nullptr;
+=======
+        REALM_ASSERT(m_tr);
+        m_tr->rollback();
+        m_tr = nullptr;
+>>>>>>> origin/develop12
     }
 
     Group& get_group() const noexcept
     {
+<<<<<<< HEAD
         REALM_ASSERT(m_shared_group);
         return _impl::SharedGroupFriend::get_group(*m_shared_group);
+=======
+        REALM_ASSERT(m_tr);
+        return *m_tr;
+>>>>>>> origin/develop12
     }
 
 private:
     Realm::Config const& m_config;
+<<<<<<< HEAD
     SharedGroup* m_shared_group;
+=======
+    TransactionRef m_tr;
+>>>>>>> origin/develop12
 };
 
 // Provides a convenient way for code in this file to access private details of `Realm`
@@ -225,7 +290,11 @@ class PartialSyncHelper {
 public:
     static decltype(auto) get_shared_group(Realm& realm)
     {
+<<<<<<< HEAD
         return Realm::Internal::get_shared_group(realm);
+=======
+        return Realm::Internal::get_db(realm);
+>>>>>>> origin/develop12
     }
 
     static decltype(auto) get_coordinator(Realm& realm)
@@ -234,6 +303,10 @@ public:
     }
 };
 
+<<<<<<< HEAD
+=======
+/*
+>>>>>>> origin/develop12
 template<typename... Args>
 static auto export_for_handover(Realm& realm, Args&&... args)
 {
@@ -253,6 +326,10 @@ static auto import_from_handover(SharedGroup& sg, std::unique_ptr<SharedGroup::H
     sg.unpin_version(sg.get_version_of_current_transaction());
     return *obj;
 }
+<<<<<<< HEAD
+=======
+*/
+>>>>>>> origin/develop12
 
 } // namespace _impl
 
@@ -272,6 +349,7 @@ QueryTypeMismatchException::QueryTypeMismatchException(const std::string& msg)
 
 namespace {
 
+<<<<<<< HEAD
 template<typename F>
 void with_open_shared_group(Realm::Config const& config, F&& function)
 {
@@ -327,6 +405,52 @@ struct ResultSetsColumns {
     size_t updated_at;
     size_t expires_at;
     size_t time_to_live;
+=======
+struct ResultSetsColumns {
+    ResultSetsColumns(Table& table, std::string const& matches_property_name)
+    {
+        name = table.get_column_key(property_name);
+        REALM_ASSERT(name);
+
+        query = table.get_column_key(property_query);
+        REALM_ASSERT(query);
+
+        error_message = table.get_column_key(property_error_message);
+        REALM_ASSERT(error_message);
+
+        status = table.get_column_key(property_status);
+        REALM_ASSERT(status);
+
+        this->matches_property_name = table.get_column_key(property_matches_property_name);
+        REALM_ASSERT(this->matches_property_name);
+
+        created_at = table.get_column_key(property_created_at);
+        REALM_ASSERT(created_at);
+
+        updated_at = table.get_column_key(property_updated_at);
+        REALM_ASSERT(updated_at);
+
+        expires_at = table.get_column_key(property_expires_at);
+        REALM_ASSERT(expires_at);
+
+        time_to_live = table.get_column_key(property_time_to_live);
+        REALM_ASSERT(time_to_live);
+
+        // This may be `npos` if the column does not yet exist.
+        matches_property = table.get_column_key(matches_property_name);
+    }
+
+    ColKey name;
+    ColKey query;
+    ColKey error_message;
+    ColKey status;
+    ColKey matches_property_name;
+    ColKey matches_property;
+    ColKey created_at;
+    ColKey updated_at;
+    ColKey expires_at;
+    ColKey time_to_live;
+>>>>>>> origin/develop12
 };
 
 // Performs the logic of actually writing the subscription (if needed) to the Realm and making sure
@@ -340,7 +464,11 @@ struct ResultSetsColumns {
 // If `update = true` and  if a subscription with `name` already exists, its query and time_to_live
 // will be updated instead of an exception being thrown if the query parsed in was different than
 // the persisted query.
+<<<<<<< HEAD
 Row write_subscription(std::string const& object_type, std::string const& name, std::string const& query,
+=======
+Obj write_subscription(std::string const& object_type, std::string const& name, std::string const& query,
+>>>>>>> origin/develop12
         util::Optional<int64_t> time_to_live_ms, bool update, Group& group)
 {
     Timestamp now = system_clock::now();
@@ -350,7 +478,11 @@ Row write_subscription(std::string const& object_type, std::string const& name, 
     ResultSetsColumns columns(*table, matches_property);
 
     // Update schema if needed.
+<<<<<<< HEAD
     if (columns.matches_property == npos) {
+=======
+    if (!columns.matches_property) {
+>>>>>>> origin/develop12
         auto target_table = ObjectStore::table_for_object_type(group, object_type);
         columns.matches_property = table->add_column_link(type_LinkList, matches_property, *target_table);
     }
@@ -359,6 +491,7 @@ Row write_subscription(std::string const& object_type, std::string const& name, 
     }
 
     // Find existing subscription (if any)
+<<<<<<< HEAD
     auto row_ndx = table->find_first_string(columns.name, name);
     if (row_ndx != npos) {
 
@@ -366,6 +499,16 @@ Row write_subscription(std::string const& object_type, std::string const& name, 
         // There is nothing that prevents Sync from handling this, but allowing it will complicate
         // Binding API's, so for now it is disallowed.
         auto existing_matching_property = table->get_string(columns.matches_property_name, row_ndx);
+=======
+    auto obj_key = table->find_first_string(columns.name, name);
+    Obj subscription;
+    if (obj_key) {
+        subscription = table->get_object(obj_key);
+        // Check that we don't attempt to replace an existing query with a query on a new type.
+        // There is nothing that prevents Sync from handling this, but allowing it will complicate
+        // Binding API's, so for now it is disallowed.
+        auto existing_matching_property = subscription.get<String>(columns.matches_property_name);
+>>>>>>> origin/develop12
         if (existing_matching_property != matches_property) {
             throw QueryTypeMismatchException(util::format("Replacing an existing query with a query on "
                                                           "a different type is not allowed: %1 vs. %2 for %3",
@@ -377,6 +520,7 @@ Row write_subscription(std::string const& object_type, std::string const& name, 
         // updating TTL using this API and instead require updates to TTL to go through a managed Subscription.
         if (update) {
             // If the query changed we must reset state to force the server to re-evaluate the subscription.
+<<<<<<< HEAD
             if (table->get_string(columns.query, row_ndx) != query) {
                 table->set_string(columns.error_message, row_ndx, "");
                 table->set_int(columns.status, row_ndx, 0);
@@ -386,6 +530,17 @@ Row write_subscription(std::string const& object_type, std::string const& name, 
         }
         else {
             StringData existing_query = table->get_string(columns.query, row_ndx);
+=======
+            if (subscription.get<String>(columns.query) != query) {
+                subscription.set(columns.error_message, "");
+                subscription.set(columns.status, 0);
+            }
+            subscription.set(columns.query, query);
+            subscription.set(columns.time_to_live, time_to_live_ms);
+        }
+        else {
+            StringData existing_query = subscription.get<String>(columns.query);
+>>>>>>> origin/develop12
             if (existing_query != query)
                 throw ExistingSubscriptionException(util::format("An existing subscription exists with the name '%1' "
                                                                  "but with a different query: '%1' vs '%2'",
@@ -395,16 +550,26 @@ Row write_subscription(std::string const& object_type, std::string const& name, 
     }
     else {
         // No existing subscription was found. Create a new one
+<<<<<<< HEAD
         row_ndx = sync::create_object(group, *table);
         table->set_string(columns.name, row_ndx, name);
         table->set_string(columns.query, row_ndx, query);
         table->set_string(columns.matches_property_name, row_ndx, matches_property);
         table->set_timestamp(columns.created_at, row_ndx, now);
         table->set(columns.time_to_live, row_ndx, time_to_live_ms);
+=======
+        subscription = table->create_object();
+        subscription.set(columns.name, name);
+        subscription.set(columns.query, query);
+        subscription.set(columns.matches_property_name, matches_property);
+        subscription.set(columns.created_at, now);
+        subscription.set(columns.time_to_live, time_to_live_ms);
+>>>>>>> origin/develop12
     }
 
     // Always set updated_at/expires_at when a subscription is touched, no matter if it is new, updated or someone just
     // resubscribes.
+<<<<<<< HEAD
     table->set_timestamp(columns.updated_at, row_ndx, now);
     if (table->is_null(columns.time_to_live, row_ndx) || table->get_int(columns.time_to_live, row_ndx) == std::numeric_limits<int64_t>::max()) {
         table->set_null(columns.expires_at, row_ndx);
@@ -416,6 +581,17 @@ Row write_subscription(std::string const& object_type, std::string const& name, 
     // Fetch subscription first and return it. Cleanup needs to be performed after as it might delete subscription
     // causing the row_ndx to change.
     Row subscription = table->get(row_ndx);
+=======
+    subscription.set(columns.updated_at, now);
+    time_to_live_ms = subscription.get<util::Optional<Int>>(columns.time_to_live);
+    if (!time_to_live_ms || *time_to_live_ms == std::numeric_limits<int64_t>::max()) {
+        subscription.set_null(columns.expires_at);
+    }
+    else {
+        subscription.set(columns.expires_at, calculate_expiry_date(now, *time_to_live_ms));
+    }
+
+>>>>>>> origin/develop12
     cleanup_subscriptions(group, now);
     return subscription;
 }
@@ -425,6 +601,7 @@ void enqueue_registration(Realm& realm, std::string object_type, std::string que
                           std::function<void(std::exception_ptr)> callback)
 {
     auto config = realm.config();
+<<<<<<< HEAD
 
     auto& work_queue = _impl::PartialSyncHelper::get_coordinator(realm).partial_sync_work_queue();
     work_queue.enqueue([object_type=std::move(object_type), query=std::move(query), name=std::move(name),
@@ -435,6 +612,17 @@ void enqueue_registration(Realm& realm, std::string object_type, std::string que
                 write_subscription(object_type, name, query, time_to_live, update, write.get_group());
                 write.commit();
             });
+=======
+    auto transact = realm.duplicate();
+
+    auto& work_queue = _impl::PartialSyncHelper::get_coordinator(realm).partial_sync_work_queue();
+    work_queue.enqueue([object_type, query, name, transact=std::move(transact),
+                        callback=std::move(callback), config=std::move(config), time_to_live=time_to_live, update=update] {
+        try {
+            _impl::WriteTransactionNotifyingSync write(config, std::move(transact));
+            write_subscription(object_type, name, query, time_to_live, update, write.get_group());
+            write.commit();
+>>>>>>> origin/develop12
         } catch (...) {
             callback(std::current_exception());
             return;
@@ -448,6 +636,7 @@ void enqueue_unregistration(Object result_set, std::function<void()> callback)
 {
     auto realm = result_set.realm();
     auto config = realm->config();
+<<<<<<< HEAD
     auto& work_queue = _impl::PartialSyncHelper::get_coordinator(*realm).partial_sync_work_queue();
 
     // Export a reference to the __ResultSets row so we can hand it to the worker thread.
@@ -466,6 +655,27 @@ void enqueue_unregistration(Object result_set, std::function<void()> callback)
                 write.rollback();
             }
         });
+=======
+    auto transact = realm->duplicate();
+    auto& work_queue = _impl::PartialSyncHelper::get_coordinator(*realm).partial_sync_work_queue();
+
+    // Export a reference to the __ResultSets row so we can hand it to the worker thread.
+    auto obj = result_set.obj();
+    auto obj_key = obj.get_key();
+    auto table_key = obj.get_table()->get_key();
+
+    work_queue.enqueue([obj_key, table_key, transact=std::move(transact), callback=std::move(callback),
+                        config=std::move(config)] () {
+        _impl::WriteTransactionNotifyingSync write(config, std::move(transact));
+        auto t = write.get_group().get_table(table_key);
+        if (t->is_valid(obj_key)) {
+            t->remove_object(obj_key);
+            write.commit();
+        }
+        else {
+            write.rollback();
+        }
+>>>>>>> origin/develop12
         callback();
     });
 }
@@ -480,6 +690,7 @@ void enqueue_unregistration(Results const& result_set, std::shared_ptr<Notifier>
 
     // Export a reference to the query which will match the __ResultSets row
     // once it's created so we can hand it to the worker thread
+<<<<<<< HEAD
     Query q = result_set.get_query();
     auto handover = _impl::export_for_handover(*realm, q, MutableSourcePayload::Move);
 
@@ -506,6 +717,33 @@ void enqueue_unregistration(Results const& result_set, std::shared_ptr<Notifier>
                 write.rollback();
             }
         });
+=======
+    auto transact = realm->duplicate();
+    auto tmp_query = result_set.get_query();
+    std::shared_ptr<Query> query = transact->import_copy_of(tmp_query, PayloadPolicy::Move);
+
+    work_queue.enqueue([query=std::move(query), transact=std::move(transact), callback=std::move(callback),
+                        config=std::move(config), notifier=std::move(notifier)] () {
+
+        // If creating the subscription failed there might be another
+        // pre-existing subscription which matches our query, so we need to
+        // not remove that
+        if (notifier->failed())
+            return;
+
+        _impl::WriteTransactionNotifyingSync write(config, std::move(transact));
+        auto obj_key = query->find();
+        auto t = query->get_table();
+        if (t->is_valid(obj_key)) {
+            const_cast<Table&>(*t).remove_object(obj_key);
+            write.commit();
+        }
+        else {
+            // If unsubscribe() is called twice before the subscription is
+            // even created the row might already be gone
+            write.rollback();
+        }
+>>>>>>> origin/develop12
         callback();
     });
 }
@@ -531,13 +769,17 @@ struct Subscription::Notifier : public _impl::CollectionNotifier {
     {
     }
 
+<<<<<<< HEAD
     void release_data() noexcept override { }
+=======
+>>>>>>> origin/develop12
     void run() override
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         if (m_has_results_to_deliver) {
             // Mark the object as being modified so that CollectionNotifier is aware
             // that there are changes to deliver.
+<<<<<<< HEAD
             m_changes.modify(0);
         }
     }
@@ -552,6 +794,12 @@ struct Subscription::Notifier : public _impl::CollectionNotifier {
         m_has_results_to_deliver = false;
     }
 
+=======
+            m_change.modify(0);
+        }
+    }
+
+>>>>>>> origin/develop12
     void finished_subscribing(std::exception_ptr error)
     {
         {
@@ -598,6 +846,7 @@ struct Subscription::Notifier : public _impl::CollectionNotifier {
     }
 
 private:
+<<<<<<< HEAD
     void do_attach_to(SharedGroup&) override { }
     void do_detach_from(SharedGroup&) override { }
 
@@ -605,19 +854,35 @@ private:
     {
         add_changes(std::move(m_changes));
     }
+=======
+    void do_attach_to(Transaction&) override { }
+>>>>>>> origin/develop12
 
     bool do_add_required_change_info(_impl::TransactionChangeInfo&) override { return false; }
     bool prepare_to_deliver() override
     {
         std::lock_guard<std::mutex> lock(m_mutex);
+<<<<<<< HEAD
         return m_has_results_to_deliver;
+=======
+        m_error = m_pending_error;
+        m_pending_error = nullptr;
+
+        m_state = m_pending_state;
+        bool had_results = m_has_results_to_deliver;
+        m_has_results_to_deliver = false;
+        return had_results;
+>>>>>>> origin/develop12
 
     }
 
     _impl::RealmCoordinator *m_coordinator;
 
     mutable std::mutex m_mutex;
+<<<<<<< HEAD
     _impl::CollectionChangeBuilder m_changes;
+=======
+>>>>>>> origin/develop12
     std::exception_ptr m_pending_error = nullptr;
     std::exception_ptr m_error = nullptr;
     bool m_has_results_to_deliver = false;
@@ -657,7 +922,11 @@ Subscription subscribe(Results const& results, SubscriptionOptions options)
     return subscription;
 }
 
+<<<<<<< HEAD
 Row subscribe_blocking(Results const& results, util::Optional<std::string> user_provided_name,
+=======
+Obj subscribe_blocking(Results const& results, util::Optional<std::string> user_provided_name,
+>>>>>>> origin/develop12
                        util::Optional<int64_t> time_to_live_ms, bool update)
 {
 
@@ -733,7 +1002,11 @@ void unsubscribe(Object&& subscription)
 }
 
 Subscription::Subscription(std::string name, std::string object_type, std::shared_ptr<Realm> realm)
+<<<<<<< HEAD
 : m_object_schema(realm->read_group(), result_sets_type_name)
+=======
+: m_object_schema(realm->read_group(), result_sets_type_name, TableKey())
+>>>>>>> origin/develop12
 {
     // FIXME: Why can't I do this in the initializer list?
     m_notifier = std::make_shared<Notifier>(realm);
@@ -744,8 +1017,13 @@ Subscription::Subscription(std::string name, std::string object_type, std::share
     m_wrapper_created_at = system_clock::now();
     TableRef table = ObjectStore::table_for_object_type(realm->read_group(), result_sets_type_name);
     Query query = table->where();
+<<<<<<< HEAD
     query.equal(m_object_schema.property_for_name(property_name)->table_column, name);
     query.equal(m_object_schema.property_for_name(property_matches_property_name)->table_column, matches_property);
+=======
+    query.equal(m_object_schema.property_for_name(property_name)->column_key, name);
+    query.equal(m_object_schema.property_for_name(property_matches_property_name)->column_key, matches_property);
+>>>>>>> origin/develop12
     m_result_sets = Results(std::move(realm), std::move(query));
 }
 
@@ -780,8 +1058,12 @@ void Subscription::run_callback(SubscriptionCallbackWrapper& callback_wrapper) {
     // Store reference to underlying subscription object the first time we encounter it.
     // Used to track if anyone is later deleting it.
     if (!m_result_sets_object && m_result_sets.size() > 0) {
+<<<<<<< HEAD
         auto row = m_result_sets.first().value();
         m_result_sets_object = util::Optional<Row>(row);
+=======
+        m_result_sets_object = util::Optional<Obj>(m_result_sets.first());
+>>>>>>> origin/develop12
     }
 
     // Verify this is a state change we actually want to report to the user
@@ -821,9 +1103,14 @@ SubscriptionState Subscription::state() const
 
     // In some cases the subscription already exists. In that case we just report the state of the __ResultSets object.
     if (auto object = result_set_object()) {
+<<<<<<< HEAD
         CppContext context;
         auto state = static_cast<SubscriptionState>(any_cast<int64_t>(object->get_property_value<util::Any>(context, property_status)));
         auto updated_at = any_cast<Timestamp>(object->get_property_value<util::Any>(context, property_updated_at));
+=======
+        auto state = static_cast<SubscriptionState>(object->get_column_value<int64_t>(property_status));
+        auto updated_at = object->get_column_value<Timestamp>(property_updated_at);
+>>>>>>> origin/develop12
 
         if (updated_at < m_wrapper_created_at) {
             // If the `updated_at` property on an existing subscription wasn't updated after the wrapper was created,
@@ -849,7 +1136,11 @@ SubscriptionState Subscription::state() const
 
     // If we previously had a reference to the subscription and that is now gone, we interpret that as
     // someone deleted the subscription (without using the explict unsubscribe API).
+<<<<<<< HEAD
     if (m_result_sets_object && !m_result_sets_object->is_attached()) {
+=======
+    if (m_result_sets_object && !m_result_sets_object->is_valid()) {
+>>>>>>> origin/develop12
         return SubscriptionState::Invalidated;
     }
 
@@ -864,8 +1155,12 @@ std::exception_ptr Subscription::error() const
         return error;
 
     if (auto object = result_set_object()) {
+<<<<<<< HEAD
         CppContext context;
         auto message = any_cast<std::string>(object->get_property_value<util::Any>(context, "error_message"));
+=======
+        auto message = object->get_column_value<StringData>("error_message");
+>>>>>>> origin/develop12
         if (message.size())
             return make_exception_ptr(std::runtime_error(message));
     }

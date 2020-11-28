@@ -28,9 +28,17 @@
 #include "property.hpp"
 #include "schema.hpp"
 #include "thread_safe_reference.hpp"
+<<<<<<< HEAD
 
 #if REALM_ENABLE_SYNC
 #include "sync/impl/work_queue.hpp"
+=======
+#include "util/scheduler.hpp"
+
+#if REALM_ENABLE_SYNC
+#include "sync/impl/work_queue.hpp"
+#include "sync/impl/sync_file.hpp"
+>>>>>>> origin/develop12
 #include "sync/async_open_task.hpp"
 #include "sync/partial_sync.hpp"
 #include "sync/sync_config.hpp"
@@ -38,9 +46,16 @@
 #include "sync/sync_session.hpp"
 #endif
 
+<<<<<<< HEAD
 #include <realm/group_shared.hpp>
 #include <realm/lang_bind_helper.hpp>
 #include <realm/string_data.hpp>
+=======
+#include <realm/db.hpp>
+#include <realm/history.hpp>
+#include <realm/string_data.hpp>
+#include <realm/util/fifo_helper.hpp>
+>>>>>>> origin/develop12
 
 #include <algorithm>
 #include <unordered_map>
@@ -65,10 +80,17 @@ std::shared_ptr<RealmCoordinator> RealmCoordinator::get_coordinator(StringData p
     return coordinator;
 }
 
+<<<<<<< HEAD
 std::shared_ptr<RealmCoordinator> RealmCoordinator::get_coordinator(const Realm::Config& config)
 {
     auto coordinator = get_coordinator(config.path);
     std::lock_guard<std::mutex> lock(coordinator->m_realm_mutex);
+=======
+std::shared_ptr<RealmCoordinator> RealmCoordinator::get_coordinator(const Realm::Config& config) NO_THREAD_SAFETY_ANALYSIS
+{
+    auto coordinator = get_coordinator(config.path);
+    util::CheckedLockGuard lock(coordinator->m_realm_mutex);
+>>>>>>> origin/develop12
     coordinator->set_config(config);
     return coordinator;
 }
@@ -76,11 +98,24 @@ std::shared_ptr<RealmCoordinator> RealmCoordinator::get_coordinator(const Realm:
 std::shared_ptr<RealmCoordinator> RealmCoordinator::get_existing_coordinator(StringData path)
 {
     std::lock_guard<std::mutex> lock(s_coordinator_mutex);
+<<<<<<< HEAD
     auto it = s_coordinators_per_path.find(path);
     return it == s_coordinators_per_path.end() ? nullptr : it->second.lock();
 }
 
 void RealmCoordinator::create_sync_session(bool force_client_resync, bool validate_sync_history)
+=======
+
+    auto& weak_coordinator = s_coordinators_per_path[path];
+    if (auto coordinator = weak_coordinator.lock()) {
+        return coordinator;
+    }
+
+    return {};
+}
+
+void RealmCoordinator::create_sync_session(bool force_client_resync)
+>>>>>>> origin/develop12
 {
 #if REALM_ENABLE_SYNC
     if (m_sync_session)
@@ -96,23 +131,38 @@ void RealmCoordinator::create_sync_session(bool force_client_resync, bool valida
         throw std::logic_error("The realm encryption key specified in SyncConfig does not match the one in Realm::Config");
     }
 
+<<<<<<< HEAD
     auto sync_config = *m_config.sync_config;
     sync_config.validate_sync_history = validate_sync_history;
     m_sync_session = SyncManager::shared().get_session(m_config.path, sync_config, force_client_resync);
+=======
+    m_sync_session = SyncManager::shared().get_session(m_config.path, *m_config.sync_config, force_client_resync);
+>>>>>>> origin/develop12
 
     std::weak_ptr<RealmCoordinator> weak_self = shared_from_this();
     SyncSession::Internal::set_sync_transact_callback(*m_sync_session,
                                                       [weak_self](VersionID old_version, VersionID new_version) {
         if (auto self = weak_self.lock()) {
+<<<<<<< HEAD
             if (self->m_transaction_callback)
                 self->m_transaction_callback(old_version, new_version);
+=======
+            util::CheckedUniqueLock lock(self->m_transaction_callback_mutex);
+            if (auto transaction_callback = self->m_transaction_callback) {
+                lock.unlock();
+                transaction_callback(old_version, new_version);
+            }
+>>>>>>> origin/develop12
             if (self->m_notifier)
                 self->m_notifier->notify_others();
         }
     });
 #else
     static_cast<void>(force_client_resync);
+<<<<<<< HEAD
     static_cast<void>(validate_sync_history);
+=======
+>>>>>>> origin/develop12
 #endif
 }
 
@@ -147,6 +197,10 @@ void RealmCoordinator::set_config(const Realm::Config& config)
                                          [](auto& notifier) { return notifier.expired(); });
     if (no_existing_realm) {
         m_config = config;
+<<<<<<< HEAD
+=======
+        m_config.scheduler = nullptr;
+>>>>>>> origin/develop12
     }
     else {
         if (m_config.immutable() != config.immutable()) {
@@ -161,6 +215,10 @@ void RealmCoordinator::set_config(const Realm::Config& config)
         if (m_config.schema_mode != config.schema_mode) {
             throw MismatchedConfigException("Realm at path '%1' already opened with a different schema mode.", config.path);
         }
+<<<<<<< HEAD
+=======
+        util::CheckedLockGuard lock(m_schema_cache_mutex);
+>>>>>>> origin/develop12
         if (config.schema && m_schema_version != ObjectStore::NotVersioned && m_schema_version != config.schema_version) {
             throw MismatchedConfigException("Realm at path '%1' already opened with different schema version.", config.path);
         }
@@ -192,12 +250,37 @@ void RealmCoordinator::set_config(const Realm::Config& config)
     }
 }
 
+<<<<<<< HEAD
 std::shared_ptr<Realm> RealmCoordinator::get_cached_realm(Realm::Config const& config, AnyExecutionContextID execution_context)
 {
     if (!config.cache)
         return nullptr;
     for (auto& cached_realm : m_weak_realm_notifiers) {
         if (!cached_realm.is_cached_for_execution_context(execution_context))
+=======
+std::shared_ptr<Realm> RealmCoordinator::get_cached_realm(Realm::Config const& config, std::shared_ptr<Scheduler> scheduler)
+{
+    if (!config.cache)
+        return nullptr;
+    util::CheckedUniqueLock lock(m_realm_mutex);
+    return do_get_cached_realm(config, scheduler);
+}
+
+std::shared_ptr<Realm> RealmCoordinator::do_get_cached_realm(Realm::Config const& config, std::shared_ptr<Scheduler> scheduler)
+{
+    if (!config.cache)
+        return nullptr;
+
+    if (!scheduler) {
+        scheduler = config.scheduler;
+    }
+
+    if (!scheduler)
+        return nullptr;
+
+    for (auto& cached_realm : m_weak_realm_notifiers) {
+        if (!cached_realm.is_cached_for_scheduler(scheduler))
+>>>>>>> origin/develop12
             continue;
         // can be null if we jumped in between ref count hitting zero and
         // unregister_realm() getting the lock
@@ -219,12 +302,20 @@ std::shared_ptr<Realm> RealmCoordinator::get_cached_realm(Realm::Config const& c
     return nullptr;
 }
 
+<<<<<<< HEAD
 std::shared_ptr<Realm> RealmCoordinator::get_realm(Realm::Config config)
 {
+=======
+std::shared_ptr<Realm> RealmCoordinator::get_realm(Realm::Config config, util::Optional<VersionID> version)
+{
+    if (!config.scheduler)
+        config.scheduler = version ? util::Scheduler::get_frozen(version.value()) : util::Scheduler::make_default();
+>>>>>>> origin/develop12
     // realm must be declared before lock so that the mutex is released before
     // we release the strong reference to realm, as Realm's destructor may want
     // to acquire the same lock
     std::shared_ptr<Realm> realm;
+<<<<<<< HEAD
     std::unique_lock<std::mutex> lock(m_realm_mutex);
     set_config(config);
     if ((realm = get_cached_realm(config, config.execution_context)))
@@ -254,19 +345,66 @@ ThreadSafeReference<Realm> RealmCoordinator::get_unbound_realm()
 void RealmCoordinator::do_get_realm(Realm::Config config, std::shared_ptr<Realm>& realm,
                                     std::unique_lock<std::mutex>& realm_lock, bool bind_to_context)
 {
+=======
+    util::CheckedUniqueLock lock(m_realm_mutex);
+    set_config(config);
+    if ((realm = do_get_cached_realm(config))) {
+        if (version) {
+            REALM_ASSERT(realm->read_transaction_version() == version.value());
+        }
+        return realm;
+    }
+    do_get_realm(std::move(config), realm, version, lock);
+    return realm;
+}
+
+std::shared_ptr<Realm> RealmCoordinator::get_realm(std::shared_ptr<util::Scheduler> scheduler)
+{
+    std::shared_ptr<Realm> realm;
+    util::CheckedUniqueLock lock(m_realm_mutex);
+    auto config = m_config;
+    config.scheduler = scheduler ? scheduler : util::Scheduler::make_default();
+    if ((realm = do_get_cached_realm(config))) {
+        return realm;
+    }
+    do_get_realm(std::move(config), realm, none, lock);
+    return realm;
+}
+
+ThreadSafeReference RealmCoordinator::get_unbound_realm()
+{
+    std::shared_ptr<Realm> realm;
+    util::CheckedUniqueLock lock(m_realm_mutex);
+    do_get_realm(m_config, realm, none, lock);
+    return ThreadSafeReference(realm);
+}
+
+void RealmCoordinator::do_get_realm(Realm::Config config, std::shared_ptr<Realm>& realm,
+                                    util::Optional<VersionID> version,
+                                    CheckedUniqueLock& realm_lock)
+{
+    open_db();
+
+>>>>>>> origin/develop12
     auto schema = std::move(config.schema);
     auto migration_function = std::move(config.migration_function);
     auto initialization_function = std::move(config.initialization_function);
     auto audit_factory = std::move(config.audit_factory);
     config.schema = {};
 
+<<<<<<< HEAD
     bool should_initialize_notifier = !config.immutable() && config.automatic_change_notifications;
     realm = Realm::make_shared_realm(std::move(config), shared_from_this());
     if (!m_notifier && should_initialize_notifier) {
+=======
+    realm = Realm::make_shared_realm(std::move(config), version, shared_from_this());
+    if (!m_notifier && !m_config.immutable() && m_config.automatic_change_notifications) {
+>>>>>>> origin/develop12
         try {
             m_notifier = std::make_unique<ExternalCommitHelper>(*this);
         }
         catch (std::system_error const& ex) {
+<<<<<<< HEAD
             throw RealmFileException(RealmFileException::Kind::AccessError, get_path(), ex.code().message(), "");
         }
     }
@@ -274,11 +412,25 @@ void RealmCoordinator::do_get_realm(Realm::Config config, std::shared_ptr<Realm>
 
     if (realm->config().sync_config)
         create_sync_session(false, false);
+=======
+            throw RealmFileException(RealmFileException::Kind::AccessError,
+                                     get_path(), ex.code().message(), "");
+        }
+    }
+    m_weak_realm_notifiers.emplace_back(realm, config.cache);
+
+    if (realm->config().sync_config)
+        create_sync_session(false);
+>>>>>>> origin/develop12
 
     if (!m_audit_context && audit_factory)
         m_audit_context = audit_factory();
 
+<<<<<<< HEAD
     realm_lock.unlock();
+=======
+    realm_lock.unlock_unchecked();
+>>>>>>> origin/develop12
     if (schema) {
 #if REALM_ENABLE_SYNC && REALM_PLATFORM_JAVA
         // Workaround for https://github.com/realm/realm-java/issues/6619
@@ -320,6 +472,7 @@ void RealmCoordinator::do_get_realm(Realm::Config config, std::shared_ptr<Realm>
 #endif
 }
 
+<<<<<<< HEAD
 void RealmCoordinator::bind_to_context(Realm& realm, AnyExecutionContextID execution_context)
 {
     std::unique_lock<std::mutex> lock(m_realm_mutex);
@@ -327,6 +480,15 @@ void RealmCoordinator::bind_to_context(Realm& realm, AnyExecutionContextID execu
         if (!cached_realm.is_for_realm(&realm))
             continue;
         cached_realm.bind_to_execution_context(execution_context);
+=======
+void RealmCoordinator::bind_to_context(Realm& realm)
+{
+    util::CheckedLockGuard lock(m_realm_mutex);
+    for (auto& cached_realm : m_weak_realm_notifiers) {
+        if (!cached_realm.is_for_realm(&realm))
+            continue;
+        cached_realm.bind_to_scheduler();
+>>>>>>> origin/develop12
         return;
     }
     REALM_TERMINATE("Invalid Realm passed to bind_to_context()");
@@ -338,16 +500,24 @@ std::shared_ptr<AsyncOpenTask> RealmCoordinator::get_synchronized_realm(Realm::C
     if (!config.sync_config)
         throw std::logic_error("This method is only available for fully synchronized Realms.");
 
+<<<<<<< HEAD
     std::unique_lock<std::mutex> lock(m_realm_mutex);
     set_config(config);
     bool exists = File::exists(m_config.path);
     create_sync_session(!config.sync_config->is_partial && !exists, exists);
+=======
+    util::CheckedLockGuard lock(m_realm_mutex);
+    set_config(config);
+    bool exists = File::exists(m_config.path);
+    create_sync_session(!config.sync_config->is_partial && !exists);
+>>>>>>> origin/develop12
     return std::make_shared<AsyncOpenTask>(shared_from_this(), m_sync_session);
 }
 
 void RealmCoordinator::create_session(const Realm::Config& config)
 {
     REALM_ASSERT(config.sync_config);
+<<<<<<< HEAD
     std::unique_lock<std::mutex> lock(m_realm_mutex);
     set_config(config);
     bool exists = File::exists(m_config.path);
@@ -359,6 +529,188 @@ bool RealmCoordinator::get_cached_schema(Schema& schema, uint64_t& schema_versio
                                          uint64_t& transaction) const noexcept
 {
     std::lock_guard<std::mutex> lock(m_schema_cache_mutex);
+=======
+    util::CheckedLockGuard lock(m_realm_mutex);
+    set_config(config);
+    bool exists = File::exists(m_config.path);
+    create_sync_session(!config.sync_config->is_partial && !exists);
+}
+
+void RealmCoordinator::open_with_config(Realm::Config config)
+{
+    CheckedLockGuard lock(m_realm_mutex);
+    set_config(config);
+    open_db();
+}
+
+#endif
+
+namespace realm {
+namespace _impl {
+REALM_NOINLINE void translate_file_exception(StringData path, bool immutable)
+{
+    try {
+        throw;
+    }
+    catch (util::File::PermissionDenied const& ex) {
+        throw RealmFileException(RealmFileException::Kind::PermissionDenied, ex.get_path(),
+                                 util::format("Unable to open a realm at path '%1'. Please use a path where your app has %2 permissions.",
+                                              ex.get_path(), immutable ? "read" : "read-write"),
+                                 ex.what());
+    }
+    catch (util::File::Exists const& ex) {
+        throw RealmFileException(RealmFileException::Kind::Exists, ex.get_path(),
+                                 util::format("File at path '%1' already exists.", ex.get_path()),
+                                 ex.what());
+    }
+    catch (util::File::NotFound const& ex) {
+        throw RealmFileException(RealmFileException::Kind::NotFound, ex.get_path(),
+                                 util::format("Directory at path '%1' does not exist.", ex.get_path()), ex.what());
+    }
+    catch (FileFormatUpgradeRequired const& ex) {
+        throw RealmFileException(RealmFileException::Kind::FormatUpgradeRequired, path,
+                                 "The Realm file format must be allowed to be upgraded "
+                                 "in order to proceed.",
+                                 ex.what());
+    }
+    catch (util::File::AccessError const& ex) {
+        // Errors for `open()` include the path, but other errors don't. We
+        // don't want two copies of the path in the error, so strip it out if it
+        // appears, and then include it in our prefix.
+        std::string underlying = ex.what();
+        RealmFileException::Kind error_kind = RealmFileException::Kind::AccessError;
+        // FIXME: Replace this with a proper specific exception type once Core adds support for it.
+        if (underlying == "Bad or incompatible history type")
+            error_kind = RealmFileException::Kind::BadHistoryError;
+        auto pos = underlying.find(ex.get_path());
+        if (pos != std::string::npos && pos > 0) {
+            // One extra char at each end for the quotes
+            underlying.replace(pos - 1, ex.get_path().size() + 2, "");
+        }
+        throw RealmFileException(error_kind, ex.get_path(),
+                                 util::format("Unable to open a realm at path '%1': %2.", ex.get_path(), underlying), ex.what());
+    }
+    catch (IncompatibleLockFile const& ex) {
+        throw RealmFileException(RealmFileException::Kind::IncompatibleLockFile, path,
+                                 "Realm file is currently open in another process "
+                                 "which cannot share access with this process. "
+                                 "All processes sharing a single file must be the same architecture.",
+                                 ex.what());
+    }
+    catch (UnsupportedFileFormatVersion const& ex) {
+        throw RealmFileException(RealmFileException::Kind::FormatUpgradeRequired, path,
+                                 util::format("Opening Realm files of format version %1 is not supported by this version of Realm", ex.source_version),
+                                 ex.what());
+    }
+}
+} // namespace _impl
+} // namespace realm
+
+void RealmCoordinator::open_db()
+{
+    if (m_db || m_read_only_group)
+        return;
+
+    bool server_synchronization_mode = m_config.sync_config || m_config.force_sync_history;
+    try {
+        if (m_config.immutable()) {
+            if (m_config.realm_data.is_null()) {
+                m_read_only_group = std::make_shared<Group>(m_config.path,
+                                                            m_config.encryption_key.data(),
+                                                            Group::mode_ReadOnly);
+            }
+            else {
+                // Create in-memory read-only realm from existing buffer (without taking ownership of the buffer)
+                m_read_only_group = std::make_unique<Group>(m_config.realm_data, false);
+            }
+            return;
+        }
+
+        if (server_synchronization_mode) {
+#if REALM_ENABLE_SYNC
+            m_history = sync::make_client_replication(m_config.path);
+#else
+            REALM_TERMINATE("Realm was not built with sync enabled");
+#endif
+        }
+        else {
+            m_history = make_in_realm_history(m_config.path);
+        }
+
+        DBOptions options;
+        options.durability = m_config.in_memory
+                           ? DBOptions::Durability::MemOnly
+                           : DBOptions::Durability::Full;
+
+        if (!m_config.fifo_files_fallback_path.empty()) {
+            options.temp_dir = util::normalize_dir(m_config.fifo_files_fallback_path);
+        }
+        options.encryption_key = m_config.encryption_key.data();
+        options.allow_file_format_upgrade = !m_config.disable_format_upgrade
+                                         && m_config.schema_mode != SchemaMode::ResetFile;
+        m_db = DB::create(*m_history, options);
+    }
+    catch (realm::FileFormatUpgradeRequired const&) {
+        if (m_config.schema_mode != SchemaMode::ResetFile) {
+            translate_file_exception(m_config.path, m_config.immutable());
+        }
+        util::File::remove(m_config.path);
+        return open_db();
+    }
+    catch (UnsupportedFileFormatVersion const&) {
+        if (m_config.schema_mode != SchemaMode::ResetFile) {
+            translate_file_exception(m_config.path, m_config.immutable());
+        }
+        util::File::remove(m_config.path);
+        return open_db();
+    }
+#if REALM_ENABLE_SYNC
+    catch (IncompatibleHistories const& ex) {
+        translate_file_exception(m_config.path, m_config.immutable()); // Throws
+    }
+#endif // REALM_ENABLE_SYNC
+    catch (...) {
+        translate_file_exception(m_config.path, m_config.immutable());
+    }
+
+    if (!m_config.should_compact_on_launch_function)
+        return;
+
+    size_t free_space = 0;
+    size_t used_space = 0;
+    if (auto tr = m_db->start_write(true)) {
+        tr->commit();
+        m_db->get_stats(free_space, used_space);
+    }
+    if (free_space > 0 && m_config.should_compact_on_launch_function(free_space + used_space, used_space))
+        m_db->compact();
+}
+
+void RealmCoordinator::close()
+{
+    m_db->close();
+    m_db = nullptr;
+}
+
+std::shared_ptr<Group> RealmCoordinator::begin_read(VersionID version, bool frozen_transaction)
+{
+    open_db();
+    if (m_read_only_group)
+        return m_read_only_group;
+    return (frozen_transaction) ? m_db->start_frozen(version) : m_db->start_read(version);
+}
+
+uint64_t RealmCoordinator::get_schema_version() const noexcept
+{
+    util::CheckedLockGuard lock(m_schema_cache_mutex);
+    return m_schema_version;
+}
+
+bool RealmCoordinator::get_cached_schema(Schema& schema, uint64_t& schema_version,
+                                         uint64_t& transaction) const noexcept
+{
+    util::CheckedLockGuard lock(m_schema_cache_mutex);
+>>>>>>> origin/develop12
     if (!m_cached_schema)
         return false;
     schema = *m_cached_schema;
@@ -370,7 +722,11 @@ bool RealmCoordinator::get_cached_schema(Schema& schema, uint64_t& schema_versio
 void RealmCoordinator::cache_schema(Schema const& new_schema, uint64_t new_schema_version,
                                     uint64_t transaction_version)
 {
+<<<<<<< HEAD
     std::lock_guard<std::mutex> lock(m_schema_cache_mutex);
+=======
+    util::CheckedLockGuard lock(m_schema_cache_mutex);
+>>>>>>> origin/develop12
     if (transaction_version < m_schema_transaction_version_max)
         return;
     if (new_schema.empty() || new_schema_version == ObjectStore::NotVersioned)
@@ -384,14 +740,22 @@ void RealmCoordinator::cache_schema(Schema const& new_schema, uint64_t new_schem
 
 void RealmCoordinator::clear_schema_cache_and_set_schema_version(uint64_t new_schema_version)
 {
+<<<<<<< HEAD
     std::lock_guard<std::mutex> lock(m_schema_cache_mutex);
+=======
+    util::CheckedLockGuard lock(m_schema_cache_mutex);
+>>>>>>> origin/develop12
     m_cached_schema = util::none;
     m_schema_version = new_schema_version;
 }
 
 void RealmCoordinator::advance_schema_cache(uint64_t previous, uint64_t next)
 {
+<<<<<<< HEAD
     std::lock_guard<std::mutex> lock(m_schema_cache_mutex);
+=======
+    util::CheckedLockGuard lock(m_schema_cache_mutex);
+>>>>>>> origin/develop12
     if (!m_cached_schema)
         return;
     REALM_ASSERT(previous <= m_schema_transaction_version_max);
@@ -410,6 +774,7 @@ RealmCoordinator::RealmCoordinator()
 
 RealmCoordinator::~RealmCoordinator()
 {
+<<<<<<< HEAD
     std::lock_guard<std::mutex> coordinator_lock(s_coordinator_mutex);
     for (auto it = s_coordinators_per_path.begin(); it != s_coordinators_per_path.end(); ) {
         if (it->second.expired()) {
@@ -419,6 +784,29 @@ RealmCoordinator::~RealmCoordinator()
             ++it;
         }
     }
+=======
+    {
+        std::lock_guard<std::mutex> coordinator_lock(s_coordinator_mutex);
+        for (auto it = s_coordinators_per_path.begin(); it != s_coordinators_per_path.end(); ) {
+            if (it->second.expired()) {
+                it = s_coordinators_per_path.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
+    }
+    // Waits for the worker thread to join
+    m_notifier = nullptr;
+
+    // Ensure the notifiers aren't holding on to Transactions after we destroy
+    // the History object the DB depends on
+    // No locking needed here because the worker thread is gone
+    for (auto& notifier : m_new_notifiers)
+        notifier->release_data();
+    for (auto& notifier : m_notifiers)
+        notifier->release_data();
+>>>>>>> origin/develop12
 }
 
 void RealmCoordinator::unregister_realm(Realm* realm)
@@ -427,20 +815,37 @@ void RealmCoordinator::unregister_realm(Realm* realm)
     // but if that's disabled we need to ensure that any notifiers from this
     // Realm get cleaned up
     if (!m_config.automatic_change_notifications) {
+<<<<<<< HEAD
         std::unique_lock<std::mutex> lock(m_notifier_mutex);
         clean_up_dead_notifiers();
     }
     {
         std::lock_guard<std::mutex> lock(m_realm_mutex);
+=======
+        util::CheckedLockGuard lock(m_notifier_mutex);
+        clean_up_dead_notifiers();
+    }
+    {
+        util::CheckedLockGuard lock(m_realm_mutex);
+>>>>>>> origin/develop12
         auto new_end = remove_if(begin(m_weak_realm_notifiers), end(m_weak_realm_notifiers),
                                  [=](auto& notifier) { return notifier.expired() || notifier.is_for_realm(realm); });
         m_weak_realm_notifiers.erase(new_end, end(m_weak_realm_notifiers));
     }
 }
 
+<<<<<<< HEAD
 void RealmCoordinator::clear_cache()
 {
     std::vector<WeakRealm> realms_to_close;
+=======
+// Thread-safety analsys doesn't reasonably handle calling functions on different
+// instances of this type
+void RealmCoordinator::clear_cache() NO_THREAD_SAFETY_ANALYSIS
+{
+    std::vector<std::shared_ptr<Realm>> realms_to_close;
+    std::vector<std::shared_ptr<RealmCoordinator>> coordinators;
+>>>>>>> origin/develop12
     {
         std::lock_guard<std::mutex> lock(s_coordinator_mutex);
 
@@ -449,10 +854,18 @@ void RealmCoordinator::clear_cache()
             if (!coordinator) {
                 continue;
             }
+<<<<<<< HEAD
+=======
+            coordinators.push_back(coordinator);
+>>>>>>> origin/develop12
 
             coordinator->m_notifier = nullptr;
 
             // Gather a list of all of the realms which will be removed
+<<<<<<< HEAD
+=======
+            CheckedLockGuard lock(coordinator->m_realm_mutex);
+>>>>>>> origin/develop12
             for (auto& weak_realm_notifier : coordinator->m_weak_realm_notifiers) {
                 if (auto realm = weak_realm_notifier.realm()) {
                     realms_to_close.push_back(realm);
@@ -462,6 +875,7 @@ void RealmCoordinator::clear_cache()
 
         s_coordinators_per_path.clear();
     }
+<<<<<<< HEAD
 
     // Close all of the previously cached Realms. This can't be done while
     // s_coordinator_mutex is held as it may try to re-lock it.
@@ -470,6 +884,14 @@ void RealmCoordinator::clear_cache()
             realm->close();
         }
     }
+=======
+    coordinators.clear();
+
+    // Close all of the previously cached Realms. This can't be done while
+    // s_coordinator_mutex is held as it may try to re-lock it.
+    for (auto& realm : realms_to_close)
+        realm->close();
+>>>>>>> origin/develop12
 }
 
 void RealmCoordinator::clear_all_caches()
@@ -510,27 +932,45 @@ void RealmCoordinator::commit_write(Realm& realm)
     REALM_ASSERT(!m_config.immutable());
     REALM_ASSERT(realm.is_in_transaction());
 
+<<<<<<< HEAD
+=======
+    Transaction& tr = Realm::Internal::get_transaction(realm);
+>>>>>>> origin/develop12
     {
         // Need to acquire this lock before committing or another process could
         // perform a write and notify us before we get the chance to set the
         // skip version
+<<<<<<< HEAD
         std::lock_guard<std::mutex> l(m_notifier_mutex);
 
         transaction::commit(*Realm::Internal::get_shared_group(realm));
+=======
+        util::CheckedLockGuard l(m_notifier_mutex);
+
+        tr.commit_and_continue_as_read();
+>>>>>>> origin/develop12
 
         // Don't need to check m_new_notifiers because those don't skip versions
         bool have_notifiers = std::any_of(m_notifiers.begin(), m_notifiers.end(),
                                           [&](auto&& notifier) { return notifier->is_for_realm(realm); });
         if (have_notifiers) {
+<<<<<<< HEAD
             m_notifier_skip_version = Realm::Internal::get_shared_group(realm)->get_version_of_current_transaction();
+=======
+            m_notifier_skip_version = Realm::Internal::get_transaction(realm).get_version_of_current_transaction();
+>>>>>>> origin/develop12
         }
     }
 
 #if REALM_ENABLE_SYNC
     // Realm could be closed in did_change. So send sync notification first before did_change.
     if (m_sync_session) {
+<<<<<<< HEAD
         auto& sg = Realm::Internal::get_shared_group(realm);
         auto version = LangBindHelper::get_version_of_latest_snapshot(*sg);
+=======
+        auto version = tr.get_version();
+>>>>>>> origin/develop12
         SyncSession::Internal::nonsync_transact_notify(*m_sync_session, version);
     }
 #endif
@@ -543,6 +983,7 @@ void RealmCoordinator::commit_write(Realm& realm)
     }
 }
 
+<<<<<<< HEAD
 void RealmCoordinator::pin_version(VersionID versionid)
 {
     REALM_ASSERT_DEBUG(!m_notifier_mutex.try_lock());
@@ -580,11 +1021,43 @@ void RealmCoordinator::pin_version(VersionID versionid)
 }
 
 void RealmCoordinator::register_notifier(std::shared_ptr<CollectionNotifier> notifier)
+=======
+void RealmCoordinator::enable_wait_for_change()
+{
+    m_db->enable_wait_for_change();
+}
+
+bool RealmCoordinator::wait_for_change(std::shared_ptr<Transaction> tr)
+{
+    return m_db->wait_for_change(tr);
+}
+
+void RealmCoordinator::wait_for_change_release()
+{
+    m_db->wait_for_change_release();
+}
+
+void RealmCoordinator::pin_version(VersionID versionid)
+{
+    if (m_async_error)
+        return;
+    if (!m_advancer_sg || versionid < m_advancer_sg->get_version_of_current_transaction())
+        m_advancer_sg = m_db->start_read(versionid);
+}
+
+// Thread-safety analsys doesn't reasonably handle calling functions on different
+// instances of this type
+void RealmCoordinator::register_notifier(std::shared_ptr<CollectionNotifier> notifier) NO_THREAD_SAFETY_ANALYSIS
+>>>>>>> origin/develop12
 {
     auto version = notifier->version();
     auto& self = Realm::Internal::get_coordinator(*notifier->get_realm());
     {
+<<<<<<< HEAD
         std::lock_guard<std::mutex> lock(self.m_notifier_mutex);
+=======
+        util::CheckedLockGuard lock(self.m_notifier_mutex);
+>>>>>>> origin/develop12
         self.pin_version(version);
         self.m_new_notifiers.push_back(std::move(notifier));
     }
@@ -611,6 +1084,7 @@ void RealmCoordinator::clean_up_dead_notifiers()
         return did_remove;
     };
 
+<<<<<<< HEAD
     if (swap_remove(m_notifiers)) {
         // Make sure we aren't holding on to read versions needlessly if there
         // are no notifiers left, but don't close them entirely as opening shared
@@ -626,6 +1100,14 @@ void RealmCoordinator::clean_up_dead_notifiers()
         if (m_new_notifiers.empty()) {
             m_advancer_sg->end_read();
         }
+=======
+    if (swap_remove(m_notifiers) && m_notifiers.empty()) {
+        m_notifier_sg = nullptr;
+        m_notifier_skip_version = {0, 0};
+    }
+    if (swap_remove(m_new_notifiers) && m_new_notifiers.empty()) {
+        m_advancer_sg = nullptr;
+>>>>>>> origin/develop12
     }
 }
 
@@ -633,7 +1115,11 @@ void RealmCoordinator::on_change()
 {
     run_async_notifiers();
 
+<<<<<<< HEAD
     std::lock_guard<std::mutex> lock(m_realm_mutex);
+=======
+    util::CheckedLockGuard lock(m_realm_mutex);
+>>>>>>> origin/develop12
     for (auto& realm : m_weak_realm_notifiers) {
         realm.notify();
     }
@@ -642,7 +1128,11 @@ void RealmCoordinator::on_change()
 namespace {
 class IncrementalChangeInfo {
 public:
+<<<<<<< HEAD
     IncrementalChangeInfo(SharedGroup& sg,
+=======
+    IncrementalChangeInfo(Transaction& sg,
+>>>>>>> origin/develop12
                           std::vector<std::shared_ptr<_impl::CollectionNotifier>>& notifiers)
     : m_sg(sg)
     {
@@ -675,11 +1165,19 @@ public:
     {
         if (version != m_sg.get_version_of_current_transaction()) {
             transaction::advance(m_sg, *m_current, version);
+<<<<<<< HEAD
             m_info.push_back({
                 m_current->table_modifications_needed,
                 m_current->table_moves_needed,
                 std::move(m_current->lists)});
             m_current = &m_info.back();
+=======
+            m_info.push_back({std::move(m_current->lists)});
+            auto next = &m_info.back();
+            for (auto& table : m_current->tables)
+                next->tables[table.first];
+            m_current = next;
+>>>>>>> origin/develop12
             return true;
         }
         return false;
@@ -706,6 +1204,7 @@ public:
                 prev.tables = cur.tables;
                 continue;
             }
+<<<<<<< HEAD
 
             for (size_t j = 0; j < prev.tables.size() && j < cur.tables.size(); ++j) {
                 prev.tables[j].merge(CollectionChangeBuilder{cur.tables[j]});
@@ -713,11 +1212,23 @@ public:
             prev.tables.reserve(cur.tables.size());
             while (prev.tables.size() < cur.tables.size()) {
                 prev.tables.push_back(cur.tables[prev.tables.size()]);
+=======
+            for (auto& ct : cur.tables) {
+                auto& pt = prev.tables[ct.first];
+                if (pt.empty())
+                    pt = ct.second;
+                else
+                    pt.merge(ObjectChangeSet{ct.second});
+>>>>>>> origin/develop12
             }
         }
 
         // Copy the list change info if there are multiple LinkViews for the same LinkList
+<<<<<<< HEAD
         auto id = [](auto const& list) { return std::tie(list.table_ndx, list.col_ndx, list.row_ndx); };
+=======
+        auto id = [](auto const& list) { return std::tie(list.table_key, list.col_key, list.row_key); };
+>>>>>>> origin/develop12
         for (size_t i = 1; i < m_current->lists.size(); ++i) {
             for (size_t j = i; j > 0; --j) {
                 if (id(m_current->lists[i]) == id(m_current->lists[j - 1])) {
@@ -730,13 +1241,21 @@ public:
 private:
     std::vector<TransactionChangeInfo> m_info;
     TransactionChangeInfo* m_current = nullptr;
+<<<<<<< HEAD
     SharedGroup& m_sg;
+=======
+    Transaction& m_sg;
+>>>>>>> origin/develop12
 };
 } // anonymous namespace
 
 void RealmCoordinator::run_async_notifiers()
 {
+<<<<<<< HEAD
     std::unique_lock<std::mutex> lock(m_notifier_mutex);
+=======
+    util::CheckedUniqueLock lock(m_notifier_mutex);
+>>>>>>> origin/develop12
 
     clean_up_dead_notifiers();
 
@@ -745,8 +1264,13 @@ void RealmCoordinator::run_async_notifiers()
         return;
     }
 
+<<<<<<< HEAD
     if (!m_async_error) {
         open_helper_shared_group();
+=======
+    if (!m_notifier_sg) {
+        m_notifier_sg = m_db->start_read();
+>>>>>>> origin/develop12
     }
 
     if (m_async_error) {
@@ -761,16 +1285,28 @@ void RealmCoordinator::run_async_notifiers()
     // Advance all of the new notifiers to the most recent version, if any
     auto new_notifiers = std::move(m_new_notifiers);
     IncrementalChangeInfo new_notifier_change_info(*m_advancer_sg, new_notifiers);
+<<<<<<< HEAD
 
     if (!new_notifiers.empty()) {
         REALM_ASSERT_3(m_advancer_sg->get_transact_stage(), ==, SharedGroup::transact_Reading);
         REALM_ASSERT_3(m_advancer_sg->get_version_of_current_transaction().version,
+=======
+    auto advancer_sg = std::move(m_advancer_sg);
+
+    if (!new_notifiers.empty()) {
+        REALM_ASSERT(advancer_sg);
+        REALM_ASSERT_3(advancer_sg->get_version_of_current_transaction().version,
+>>>>>>> origin/develop12
                        <=, new_notifiers.front()->version().version);
 
         // The advancer SG can be at an older version than the oldest new notifier
         // if a notifier was added and then removed before it ever got the chance
         // to run, as we don't move the pin forward when removing dead notifiers
+<<<<<<< HEAD
         transaction::advance(*m_advancer_sg, nullptr, new_notifiers.front()->version());
+=======
+        transaction::advance(*advancer_sg, nullptr, new_notifiers.front()->version());
+>>>>>>> origin/develop12
 
         // Advance each of the new notifiers to the latest version, attaching them
         // to the SG at their handover version. This requires a unique
@@ -781,32 +1317,49 @@ void RealmCoordinator::run_async_notifiers()
         // releasing the lock
         for (auto& notifier : new_notifiers) {
             new_notifier_change_info.advance_incremental(notifier->version());
+<<<<<<< HEAD
             notifier->attach_to(*m_advancer_sg);
+=======
+            notifier->attach_to(advancer_sg);
+>>>>>>> origin/develop12
             notifier->add_required_change_info(new_notifier_change_info.current());
         }
         new_notifier_change_info.advance_to_final(VersionID{});
 
+<<<<<<< HEAD
         for (auto& notifier : new_notifiers) {
             notifier->detach();
         }
 
+=======
+>>>>>>> origin/develop12
         // We want to advance the non-new notifiers to the same version as the
         // new notifiers to avoid having to merge changes from any new
         // transaction that happen immediately after this into the new notifier
         // changes
+<<<<<<< HEAD
         version = m_advancer_sg->get_version_of_current_transaction();
         m_advancer_sg->end_read();
+=======
+        version = advancer_sg->get_version_of_current_transaction();
+>>>>>>> origin/develop12
     }
     else {
         // If we have no new notifiers we want to just advance to the latest
         // version, but we have to pick a "latest" version while holding the
         // notifier lock to avoid advancing over a transaction which should be
         // skipped
+<<<<<<< HEAD
         m_advancer_sg->begin_read();
         version = m_advancer_sg->get_version_of_current_transaction();
         m_advancer_sg->end_read();
     }
     REALM_ASSERT_3(m_advancer_sg->get_transact_stage(), ==, SharedGroup::transact_Ready);
+=======
+        // FIXME: this is comically slow
+        version = m_db->start_read()->get_version_of_current_transaction();
+    }
+>>>>>>> origin/develop12
 
     auto skip_version = m_notifier_skip_version;
     m_notifier_skip_version = {0, 0};
@@ -828,10 +1381,16 @@ void RealmCoordinator::run_async_notifiers()
         for (auto& notifier : notifiers)
             notifier->run();
 
+<<<<<<< HEAD
         lock.lock();
         for (auto& notifier : notifiers)
             notifier->prepare_handover();
         lock.unlock();
+=======
+        util::CheckedLockGuard lock(m_notifier_mutex);
+        for (auto& notifier : notifiers)
+            notifier->prepare_handover();
+>>>>>>> origin/develop12
     }
 
     // Advance the non-new notifiers to the same version as we advanced the new
@@ -844,7 +1403,11 @@ void RealmCoordinator::run_async_notifiers()
 
     // Attach the new notifiers to the main SG and move them to the main list
     for (auto& notifier : new_notifiers) {
+<<<<<<< HEAD
         notifier->attach_to(*m_notifier_sg);
+=======
+        notifier->attach_to(m_notifier_sg);
+>>>>>>> origin/develop12
         notifier->run();
     }
 
@@ -856,7 +1419,11 @@ void RealmCoordinator::run_async_notifiers()
 
     // Reacquire the lock while updating the fields that are actually read on
     // other threads
+<<<<<<< HEAD
     lock.lock();
+=======
+    util::CheckedLockGuard lock2(m_notifier_mutex);
+>>>>>>> origin/develop12
     for (auto& notifier : new_notifiers) {
         notifier->prepare_handover();
     }
@@ -867,6 +1434,7 @@ void RealmCoordinator::run_async_notifiers()
     m_notifier_cv.notify_all();
 }
 
+<<<<<<< HEAD
 void RealmCoordinator::open_helper_shared_group()
 {
     if (!m_notifier_sg) {
@@ -886,16 +1454,31 @@ void RealmCoordinator::open_helper_shared_group()
     else if (m_notifiers.empty()) {
         m_notifier_sg->begin_read();
     }
+=======
+bool RealmCoordinator::can_advance(Realm& realm)
+{
+    bool changes = realm.last_seen_transaction_version() != m_db->get_version_of_latest_snapshot();
+    return changes;
+>>>>>>> origin/develop12
 }
 
 void RealmCoordinator::advance_to_ready(Realm& realm)
 {
+<<<<<<< HEAD
     std::unique_lock<std::mutex> lock(m_notifier_mutex);
+=======
+    util::CheckedUniqueLock lock(m_notifier_mutex);
+>>>>>>> origin/develop12
     _impl::NotifierPackage notifiers(m_async_error, notifiers_for_realm(realm), this);
     lock.unlock();
     notifiers.package_and_wait(util::none);
 
+<<<<<<< HEAD
     auto& sg = Realm::Internal::get_shared_group(realm);
+=======
+    // FIXME: we probably won't actually want a strong pointer here
+    auto sg = Realm::Internal::get_transaction_ref(realm);
+>>>>>>> origin/develop12
     if (notifiers) {
         auto version = notifiers.version();
         if (version) {
@@ -910,7 +1493,10 @@ void RealmCoordinator::advance_to_ready(Realm& realm)
             if (*version == current_version) {
                 if (realm.m_binding_context)
                     realm.m_binding_context->will_send_notifications();
+<<<<<<< HEAD
                 notifiers.deliver(*sg);
+=======
+>>>>>>> origin/develop12
                 notifiers.after_advance();
                 if (realm.m_binding_context)
                     realm.m_binding_context->did_send_notifications();
@@ -938,6 +1524,7 @@ std::vector<std::shared_ptr<_impl::CollectionNotifier>> RealmCoordinator::notifi
 
 bool RealmCoordinator::advance_to_latest(Realm& realm)
 {
+<<<<<<< HEAD
     using sgf = SharedGroupFriend;
 
     auto& sg = Realm::Internal::get_shared_group(realm);
@@ -945,6 +1532,15 @@ bool RealmCoordinator::advance_to_latest(Realm& realm)
     _impl::NotifierPackage notifiers(m_async_error, notifiers_for_realm(realm), this);
     lock.unlock();
     notifiers.package_and_wait(sgf::get_version_of_latest_snapshot(*sg));
+=======
+    // FIXME: we probably won't actually want a strong pointer here
+    auto self = shared_from_this();
+    auto sg = Realm::Internal::get_transaction_ref(realm);
+    util::CheckedUniqueLock lock(m_notifier_mutex);
+    _impl::NotifierPackage notifiers(m_async_error, notifiers_for_realm(realm), this);
+    lock.unlock();
+    notifiers.package_and_wait(sg->get_version_of_latest_snapshot());
+>>>>>>> origin/develop12
 
     auto version = sg->get_version_of_current_transaction();
     transaction::advance(sg, realm.m_binding_context.get(), notifiers);
@@ -960,19 +1556,33 @@ void RealmCoordinator::promote_to_write(Realm& realm)
 {
     REALM_ASSERT(!realm.is_in_transaction());
 
+<<<<<<< HEAD
     std::unique_lock<std::mutex> lock(m_notifier_mutex);
     _impl::NotifierPackage notifiers(m_async_error, notifiers_for_realm(realm), this);
     lock.unlock();
 
     auto& sg = Realm::Internal::get_shared_group(realm);
     transaction::begin(sg, realm.m_binding_context.get(), notifiers);
+=======
+    util::CheckedUniqueLock lock(m_notifier_mutex);
+    _impl::NotifierPackage notifiers(m_async_error, notifiers_for_realm(realm), this);
+    lock.unlock();
+
+    // FIXME: we probably won't actually want a strong pointer here
+    auto tr = Realm::Internal::get_transaction_ref(realm);
+    transaction::begin(tr, realm.m_binding_context.get(), notifiers);
+>>>>>>> origin/develop12
 }
 
 void RealmCoordinator::process_available_async(Realm& realm)
 {
     REALM_ASSERT(!realm.is_in_transaction());
 
+<<<<<<< HEAD
     std::unique_lock<std::mutex> lock(m_notifier_mutex);
+=======
+    util::CheckedUniqueLock lock(m_notifier_mutex);
+>>>>>>> origin/develop12
     auto notifiers = notifiers_for_realm(realm);
     if (notifiers.empty())
         return;
@@ -989,8 +1599,13 @@ void RealmCoordinator::process_available_async(Realm& realm)
     }
 
     bool in_read = realm.is_in_read_transaction();
+<<<<<<< HEAD
     auto& sg = Realm::Internal::get_shared_group(realm);
     auto version = sg->get_version_of_current_transaction();
+=======
+    auto& sg = Realm::Internal::get_transaction(realm);
+    auto version = sg.get_version_of_current_transaction();
+>>>>>>> origin/develop12
     auto package = [&](auto& notifier) {
         return !(notifier->has_run() && (!in_read || notifier->version() == version) && notifier->package_for_delivery());
     };
@@ -1005,6 +1620,7 @@ void RealmCoordinator::process_available_async(Realm& realm)
 
     if (realm.m_binding_context) {
         realm.m_binding_context->will_send_notifications();
+<<<<<<< HEAD
         if (!sg) // i.e. the Realm was closed in the callback above
             return;
     }
@@ -1016,6 +1632,12 @@ void RealmCoordinator::process_available_async(Realm& realm)
     }
 
     // but still call the change callbacks
+=======
+        if (realm.is_closed()) // i.e. the Realm was closed in the callback above
+            return;
+    }
+
+>>>>>>> origin/develop12
     for (auto& notifier : notifiers)
         notifier->after_advance();
 
@@ -1025,10 +1647,23 @@ void RealmCoordinator::process_available_async(Realm& realm)
 
 void RealmCoordinator::set_transaction_callback(std::function<void(VersionID, VersionID)> fn)
 {
+<<<<<<< HEAD
     create_sync_session(false, false);
     m_transaction_callback = std::move(fn);
 }
 
+=======
+    create_sync_session(false);
+    util::CheckedLockGuard lock(m_transaction_callback_mutex);
+    m_transaction_callback = std::move(fn);
+}
+
+bool RealmCoordinator::compact()
+{
+    return m_db->compact();
+}
+
+>>>>>>> origin/develop12
 #if REALM_ENABLE_SYNC
 _impl::partial_sync::WorkQueue& RealmCoordinator::partial_sync_work_queue()
 {

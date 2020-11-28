@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKAppLinkReturnToRefererView.h"
+=======
+ #import "FBSDKAppLinkReturnToRefererView.h"
+>>>>>>> origin/develop12
 
 @interface FBSDKAppLinkReturnToRefererView (Internal)
 

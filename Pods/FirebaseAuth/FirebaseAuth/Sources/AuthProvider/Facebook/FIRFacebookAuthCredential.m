@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/AuthProvider/Facebook/FIRFacebookAuthCredential.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRFacebookAuthProvider.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRFacebookAuthProvider.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Backend/RPC/FIRVerifyAssertionRequest.h"
 #import "FirebaseAuth/Sources/Utilities/FIRAuthExceptionUtils.h"

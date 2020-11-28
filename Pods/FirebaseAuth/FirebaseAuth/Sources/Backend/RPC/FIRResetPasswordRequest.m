@@ -33,6 +33,14 @@ static NSString *const kOOBCodeKey = @"oobCode";
  */
 static NSString *const kCurrentPasswordKey = @"newPassword";
 
+<<<<<<< HEAD
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+>>>>>>> origin/develop12
 @implementation FIRResetPasswordRequest
 
 - (nullable instancetype)initWithOobCode:(NSString *)oobCode
@@ -52,6 +60,12 @@ static NSString *const kCurrentPasswordKey = @"newPassword";
   if (_updatedPassword) {
     postBody[kCurrentPasswordKey] = _updatedPassword;
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    postBody[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
   return [postBody copy];
 }
 

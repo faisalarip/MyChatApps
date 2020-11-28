@@ -33,6 +33,14 @@ static NSString *const kTokenKey = @"token";
  */
 static NSString *const kReturnSecureTokenKey = @"returnSecureToken";
 
+<<<<<<< HEAD
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+>>>>>>> origin/develop12
 @implementation FIRVerifyCustomTokenRequest
 
 - (nullable instancetype)initWithToken:(NSString *)token
@@ -51,6 +59,12 @@ static NSString *const kReturnSecureTokenKey = @"returnSecureToken";
   if (_returnSecureToken) {
     body[kReturnSecureTokenKey] = @YES;
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    body[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
   return body;
 }
 

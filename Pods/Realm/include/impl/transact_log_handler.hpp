@@ -27,7 +27,11 @@
 
 namespace realm {
 class BindingContext;
+<<<<<<< HEAD
 class SharedGroup;
+=======
+class Transaction;
+>>>>>>> origin/develop12
 
 namespace _impl {
 class NotifierPackage;
@@ -40,12 +44,18 @@ struct UnsupportedSchemaChange : std::logic_error {
 namespace transaction {
 // Advance the read transaction version, with change notifications sent to delegate
 // Must not be called from within a write transaction.
+<<<<<<< HEAD
 void advance(const std::unique_ptr<SharedGroup>& sg, BindingContext* binding_context, NotifierPackage&);
 void advance(SharedGroup& sg, BindingContext* binding_context, VersionID);
+=======
+void advance(const std::shared_ptr<Transaction>& sg, BindingContext* binding_context, NotifierPackage&);
+void advance(Transaction& sg, BindingContext* binding_context, VersionID);
+>>>>>>> origin/develop12
 
 // Begin a write transaction
 // If the read transaction version is not up to date, will first advance to the
 // most recent read transaction and sent notifications to delegate
+<<<<<<< HEAD
 void begin(const std::unique_ptr<SharedGroup>& sg, BindingContext* binding_context, NotifierPackage&);
 void begin_without_validation(SharedGroup& sg);
 
@@ -58,6 +68,17 @@ void cancel(SharedGroup& sg, BindingContext* binding_context);
 
 // Advance the read transaction version, with change information gathered in info
 void advance(SharedGroup& sg, TransactionChangeInfo& info, VersionID version=VersionID{});
+=======
+void begin(const std::shared_ptr<Transaction>& sg,
+           BindingContext* binding_context, NotifierPackage&);
+
+// Cancel a write transaction and roll back all changes, with change notifications
+// for reverting to the old values sent to delegate
+void cancel(Transaction& sg, BindingContext* binding_context);
+
+// Advance the read transaction version, with change information gathered in info
+void advance(Transaction& sg, TransactionChangeInfo& info, VersionID version=VersionID{});
+>>>>>>> origin/develop12
 } // namespace transaction
 } // namespace _impl
 } // namespace realm

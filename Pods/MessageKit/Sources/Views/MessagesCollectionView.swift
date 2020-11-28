@@ -22,6 +22,10 @@
  SOFTWARE.
  */
 
+<<<<<<< HEAD
+=======
+import Foundation
+>>>>>>> origin/develop12
 import UIKit
 
 open class MessagesCollectionView: UICollectionView {
@@ -40,6 +44,13 @@ open class MessagesCollectionView: UICollectionView {
         return messagesCollectionViewFlowLayout.isTypingIndicatorViewHidden
     }
 
+<<<<<<< HEAD
+=======
+    /// Display the date of message by swiping left.
+    /// The default value of this property is `false`.
+    internal var showMessageTimestampOnSwipeLeft: Bool = false
+
+>>>>>>> origin/develop12
     private var indexPathForLastItem: IndexPath? {
         let lastSection = numberOfSections - 1
         guard lastSection >= 0, numberOfItems(inSection: lastSection) > 0 else { return nil }
@@ -57,7 +68,11 @@ open class MessagesCollectionView: UICollectionView {
 
     public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
+<<<<<<< HEAD
         backgroundColor = .backgroundColor
+=======
+        backgroundColor = .collectionViewBackground
+>>>>>>> origin/develop12
         registerReusableViews()
         setupGestureRecognizers()
     }
@@ -79,6 +94,10 @@ open class MessagesCollectionView: UICollectionView {
         register(AudioMessageCell.self)
         register(ContactMessageCell.self)
         register(TypingIndicatorCell.self)
+<<<<<<< HEAD
+=======
+        register(LinkPreviewMessageCell.self)
+>>>>>>> origin/develop12
         register(MessageReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
         register(MessageReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter)
     }

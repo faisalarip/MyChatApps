@@ -29,9 +29,14 @@ struct ValueExpression
 {
     const parser::Expression* value;
     query_builder::Arguments* arguments;
+<<<<<<< HEAD
     std::function<Table *()> table_getter;
 
     ValueExpression(Query& query, query_builder::Arguments* args, const parser::Expression* v);
+=======
+
+    ValueExpression(query_builder::Arguments* args, const parser::Expression* v);
+>>>>>>> origin/develop12
     bool is_null();
     template <typename RetType>
     RetType value_of_type_for_query();

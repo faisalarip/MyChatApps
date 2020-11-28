@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/Backend/RPC/FIRGetOOBConfirmationCodeRequest.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRActionCodeSettings.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRActionCodeSettings.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuth_Internal.h"
 #import "FirebaseAuth/Sources/Utilities/FIRAuthErrorUtils.h"
@@ -106,6 +110,14 @@ static NSString *const kVerifyEmailRequestTypeValue = @"VERIFY_EMAIL";
  */
 static NSString *const kVerifyBeforeUpdateEmailRequestTypeValue = @"VERIFY_AND_CHANGE_EMAIL";
 
+<<<<<<< HEAD
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+>>>>>>> origin/develop12
 @interface FIRGetOOBConfirmationCodeRequest ()
 
 /** @fn initWithRequestType:email:APIKey:
@@ -279,6 +291,12 @@ static NSString *const kVerifyBeforeUpdateEmailRequestTypeValue = @"VERIFY_AND_C
   if (_dynamicLinkDomain) {
     body[kDynamicLinkDomainKey] = _dynamicLinkDomain;
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    body[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
 
   return body;
 }

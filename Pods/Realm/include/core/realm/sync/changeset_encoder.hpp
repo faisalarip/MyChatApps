@@ -71,7 +71,11 @@ private:
     void append_value(float);
     void append_value(double);
     void append_value(InternString);
+<<<<<<< HEAD
     void append_value(sync::ObjectID);
+=======
+    void append_value(GlobalKey);
+>>>>>>> origin/develop12
     void append_value(Timestamp);
 
     Buffer m_buffer;

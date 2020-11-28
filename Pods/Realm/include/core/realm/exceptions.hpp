@@ -60,6 +60,7 @@ public:
 };
 
 
+<<<<<<< HEAD
 /// The FileFormatUpgradeRequired exception can be thrown by the SharedGroup
 /// constructor when opening a database that uses a deprecated file format
 /// and/or a deprecated history schema, and the user has indicated he does not
@@ -68,6 +69,17 @@ public:
 /// for read or write operations.
 class FileFormatUpgradeRequired : public ExceptionWithBacktrace<std::exception> {
 public:
+=======
+/// The UnsupportedFileFormatVersion exception is thrown by DB::open()
+/// constructor when opening a database that uses a deprecated file format
+/// and/or a deprecated history schema which this version of Realm cannot
+/// upgrade from.
+class UnsupportedFileFormatVersion : public ExceptionWithBacktrace<std::exception> {
+public:
+    UnsupportedFileFormatVersion(int source_version);
+    /// The unsupported version of the file.
+    int source_version = 0;
+>>>>>>> origin/develop12
     const char* message() const noexcept override;
 };
 
@@ -102,6 +114,19 @@ public:
     /// runtime_error::what() returns the msg provided in the constructor.
 };
 
+<<<<<<< HEAD
+=======
+/// Thrown when a key can not be used (either not found or already existing
+/// when trying to create a new object)
+class InvalidKey : public std::runtime_error {
+public:
+    InvalidKey(const std::string& msg)
+        : std::runtime_error(msg)
+    {
+    }
+};
+
+>>>>>>> origin/develop12
 // SerialisationError intentionally does not inherit ExceptionWithBacktrace
 // because the query-based-sync permissions queries generated on the server
 // use a LinksToNode which is not currently serialisable (this limitation can
@@ -121,6 +146,27 @@ public:
     /// runtime_error::what() returns the msg provided in the constructor.
 };
 
+<<<<<<< HEAD
+=======
+class DuplicatePrimaryKeyValueException : public std::logic_error {
+public:
+    DuplicatePrimaryKeyValueException(std::string object_type, std::string property);
+
+    std::string const& object_type() const
+    {
+        return m_object_type;
+    }
+    std::string const& property() const
+    {
+        return m_property;
+    }
+
+private:
+    std::string m_object_type;
+    std::string m_property;
+};
+
+>>>>>>> origin/develop12
 
 /// The \c LogicError exception class is intended to be thrown only when
 /// applications (or bindings) violate rules that are stated (or ought to have
@@ -161,6 +207,11 @@ public:
         binary_too_big,
         table_name_too_long,
         column_name_too_long,
+<<<<<<< HEAD
+=======
+        column_name_in_use,
+        invalid_column_name,
+>>>>>>> origin/develop12
         table_index_out_of_range,
         row_index_out_of_range,
         column_index_out_of_range,
@@ -247,7 +298,14 @@ public:
         column_does_not_exist,
 
         /// You can not add index on a subtable of a subtable
+<<<<<<< HEAD
         subtable_of_subtable_index
+=======
+        subtable_of_subtable_index,
+
+        /// You try to instantiate a list object not matching column type
+        list_type_mismatch
+>>>>>>> origin/develop12
     };
 
     LogicError(ErrorKind message);
@@ -284,9 +342,20 @@ inline const char* DescriptorMismatch::message() const noexcept
     return "Table descriptor mismatch";
 }
 
+<<<<<<< HEAD
 inline const char* FileFormatUpgradeRequired::message() const noexcept
 {
     return "Database upgrade required but prohibited";
+=======
+inline UnsupportedFileFormatVersion::UnsupportedFileFormatVersion(int version)
+: source_version(version)
+{
+}
+
+inline const char* UnsupportedFileFormatVersion::message() const noexcept
+{
+    return "Database has an unsupported version and cannot be upgraded";
+>>>>>>> origin/develop12
 }
 
 inline const char* MultipleSyncAgents::message() const noexcept
@@ -307,7 +376,11 @@ inline MaximumFileSizeExceeded::MaximumFileSizeExceeded(const std::string& msg)
 }
 
 inline OutOfDiskSpace::OutOfDiskSpace(const std::string& msg)
+<<<<<<< HEAD
 : std::runtime_error(msg)
+=======
+    : std::runtime_error(msg)
+>>>>>>> origin/develop12
 {
 }
 

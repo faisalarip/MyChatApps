@@ -210,13 +210,18 @@
 #endif
 
 
+<<<<<<< HEAD
 #if defined ANDROID
+=======
+#if defined ANDROID || defined __ANDROID_API__
+>>>>>>> origin/develop12
 #define REALM_ANDROID 1
 #else
 #define REALM_ANDROID 0
 #endif
 
 #if defined _WIN32
+<<<<<<< HEAD
 #  include <winapifamily.h>
 #  if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 #    define REALM_WINDOWS 1
@@ -225,6 +230,16 @@
 #    define REALM_WINDOWS 0
 #    define REALM_UWP 1
 #  endif
+=======
+#include <winapifamily.h>
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+#define REALM_WINDOWS 1
+#define REALM_UWP 0
+#elif WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#define REALM_WINDOWS 0
+#define REALM_UWP 1
+#endif
+>>>>>>> origin/develop12
 #else
 #define REALM_WINDOWS 0
 #define REALM_UWP 0
@@ -240,8 +255,15 @@
 #if TARGET_OS_IPHONE == 1
 /* Device (iPhone or iPad) or simulator. */
 #define REALM_IOS 1
+<<<<<<< HEAD
 #else
 #define REALM_IOS 0
+=======
+#define REALM_IOS_DEVICE !TARGET_OS_SIMULATOR
+#else
+#define REALM_IOS 0
+#define REALM_IOS_DEVICE 0
+>>>>>>> origin/develop12
 #endif
 #if TARGET_OS_WATCH == 1
 /* Device (Apple Watch) or simulator. */
@@ -258,10 +280,15 @@
 #else
 #define REALM_PLATFORM_APPLE 0
 #define REALM_IOS 0
+<<<<<<< HEAD
+=======
+#define REALM_IOS_DEVICE 0
+>>>>>>> origin/develop12
 #define REALM_WATCHOS 0
 #define REALM_TVOS 0
 #endif
 
+<<<<<<< HEAD
 // asl_log is deprecated in favor of os_log as of the following versions:
 // macos(10.12), ios(10.0), watchos(3.0), tvos(10.0)
 // versions are defined in /usr/include/Availability.h
@@ -285,6 +312,8 @@
 #define REALM_APPLE_OS_LOG 0
 #endif
 
+=======
+>>>>>>> origin/develop12
 #if REALM_ANDROID || REALM_IOS || REALM_WATCHOS || REALM_TVOS || REALM_UWP
 #define REALM_MOBILE 1
 #else
@@ -297,7 +326,11 @@
 #endif
 
 #if !REALM_IOS && !REALM_WATCHOS && !REALM_TVOS && !defined(_WIN32) && !REALM_ANDROID
+<<<<<<< HEAD
 #define REALM_ASYNC_DAEMON
+=======
+// #define REALM_ASYNC_DAEMON FIXME Async commits not supported
+>>>>>>> origin/develop12
 #endif
 
 // We're in i686 mode

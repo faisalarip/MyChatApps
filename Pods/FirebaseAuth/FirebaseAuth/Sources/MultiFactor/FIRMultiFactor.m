@@ -13,10 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if TARGET_OS_IOS
 
 #import <FirebaseAuth/FIRMultiFactor.h>
+=======
+#import <TargetConditionals.h>
+#if TARGET_OS_IOS
+
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactor.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthDataResult_Internal.h"
 #import "FirebaseAuth/Sources/Auth/FIRAuth_Internal.h"
@@ -28,7 +35,11 @@
 #import "FirebaseAuth/Sources/User/FIRUser_Internal.h"
 
 #if TARGET_OS_IOS
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRPhoneMultiFactorAssertion.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneMultiFactorAssertion.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/AuthProvider/Phone/FIRPhoneAuthCredential_Internal.h"
 #import "FirebaseAuth/Sources/MultiFactor/Phone/FIRPhoneMultiFactorAssertion+Internal.h"
@@ -60,7 +71,10 @@ static NSString *kUserCodingKey = @"user";
              verificationCode:phoneAssertion.authCredential.verificationCode];
   FIRFinalizeMFAEnrollmentRequest *request =
       [[FIRFinalizeMFAEnrollmentRequest alloc] initWithIDToken:self.user.rawAccessToken
+<<<<<<< HEAD
                                                    MFAProvider:phoneAssertion.factorID
+=======
+>>>>>>> origin/develop12
                                                    displayName:displayName
                                               verificationInfo:finalizeMFAPhoneRequestInfo
                                           requestConfiguration:self.user.requestConfiguration];

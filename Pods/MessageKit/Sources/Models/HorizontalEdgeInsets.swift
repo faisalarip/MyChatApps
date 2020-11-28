@@ -23,6 +23,10 @@
  */
 
 import Foundation
+<<<<<<< HEAD
+=======
+import UIKit
+>>>>>>> origin/develop12
 
 /// A varient of `UIEdgeInsets` that only has horizontal inset properties
 public struct HorizontalEdgeInsets: Equatable {

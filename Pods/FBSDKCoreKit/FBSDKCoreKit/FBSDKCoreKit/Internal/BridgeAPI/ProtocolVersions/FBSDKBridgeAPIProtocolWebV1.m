@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 
 #import <UIKit/UIKit.h>
@@ -37,6 +38,24 @@
 @implementation FBSDKBridgeAPIProtocolWebV1
 
 #pragma mark - FBSDKBridgeAPIProtocol
+=======
+ #import "FBSDKBridgeAPIProtocolWebV1.h"
+
+ #import <UIKit/UIKit.h>
+
+ #import "FBSDKBase64.h"
+ #import "FBSDKBridgeAPIRequest.h"
+ #import "FBSDKError.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKSettings.h"
+
+ #define FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY @"action_id"
+ #define FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY @"bridge_args"
+
+@implementation FBSDKBridgeAPIProtocolWebV1
+
+ #pragma mark - FBSDKBridgeAPIProtocol
+>>>>>>> origin/develop12
 
 - (NSURL *)requestURLWithActionID:(NSString *)actionID
                            scheme:(NSString *)scheme
@@ -47,10 +66,17 @@
 {
   NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:parameters];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@"touch" forKey:@"display"];
+<<<<<<< HEAD
   NSString *bridgeArgs = [FBSDKBasicUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY: actionID }
                                                           error:NULL
                                            invalidObjectHandler:NULL];
   NSDictionary *redirectQueryParameters = @{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY: bridgeArgs };
+=======
+  NSString *bridgeArgs = [FBSDKBasicUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY : actionID }
+                                                          error:NULL
+                                           invalidObjectHandler:NULL];
+  NSDictionary *redirectQueryParameters = @{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY : bridgeArgs };
+>>>>>>> origin/develop12
   NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"bridge"
                                                        path:methodName
                                             queryParameters:redirectQueryParameters
@@ -73,6 +99,7 @@
   }
   NSInteger errorCode = [FBSDKTypeUtility integerValue:queryParameters[@"error_code"]];
   switch (errorCode) {
+<<<<<<< HEAD
     case 0:{
       // good to go, handle the other codes and bail
       break;
@@ -84,6 +111,19 @@
       break;
     }
     default:{
+=======
+    case 0: {
+      // good to go, handle the other codes and bail
+      break;
+    }
+    case 4201: {
+      return @{
+        @"completionGesture" : @"cancel",
+      };
+      break;
+    }
+    default: {
+>>>>>>> origin/develop12
       if (errorRef != NULL) {
         *errorRef = [FBSDKError errorWithCode:errorCode
                                       message:[FBSDKTypeUtility stringValue:queryParameters[@"error_message"]]];

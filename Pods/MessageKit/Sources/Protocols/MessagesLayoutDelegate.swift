@@ -23,6 +23,10 @@
  */
 
 import Foundation
+<<<<<<< HEAD
+=======
+import UIKit
+>>>>>>> origin/develop12
 
 /// A protocol used by the `MessagesCollectionViewFlowLayout` object to determine
 /// the size and layout of a `MessageCollectionViewCell` and its contents.

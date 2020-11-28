@@ -14,7 +14,12 @@
 
 #import "FirebaseStorage/Sources/FIRStorageGetMetadataTask.h"
 
+<<<<<<< HEAD
 #import <FirebaseStorage/FIRStorageConstants.h>
+=======
+#import "FirebaseStorage/Sources/Public/FirebaseStorage/FIRStorageConstants.h"
+
+>>>>>>> origin/develop12
 #import "FirebaseStorage/Sources/FIRStorageMetadata_Private.h"
 #import "FirebaseStorage/Sources/FIRStorageTask_Private.h"
 #import "FirebaseStorage/Sources/FIRStorageUtils.h"

@@ -19,7 +19,16 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import <FirebaseCore/FIRComponent.h>
+=======
+// The has_include is a workaround so the old IID needed for the FIS tests can find the headers.
+#if __has_include("FirebaseCore/Sources/Private/FIRComponent.h")
+#import "FirebaseCore/Sources/Private/FIRComponent.h"
+#else
+#import <FirebaseCore/FIRComponent.h>
+#endif
+>>>>>>> origin/develop12
 
 @class FIRApp;
 

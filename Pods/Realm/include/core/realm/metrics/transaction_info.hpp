@@ -32,10 +32,14 @@ class Metrics;
 
 class TransactionInfo {
 public:
+<<<<<<< HEAD
     enum TransactionType {
         read_transaction,
         write_transaction
     };
+=======
+    enum TransactionType { read_transaction, write_transaction };
+>>>>>>> origin/develop12
     TransactionInfo(TransactionType type);
     TransactionInfo(const TransactionInfo&) = default;
     ~TransactionInfo() noexcept;

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "FIRInstallationsIIDStore.h"
+=======
+#import "FirebaseInstallations/Source/Library/IIDMigration/FIRInstallationsIIDStore.h"
+>>>>>>> origin/develop12
 
 #if __has_include(<FBLPromises/FBLPromises.h>)
 #import <FBLPromises/FBLPromises.h>
@@ -23,7 +27,11 @@
 #endif
 
 #import <CommonCrypto/CommonDigest.h>
+<<<<<<< HEAD
 #import "FIRInstallationsErrorUtil.h"
+=======
+#import "FirebaseInstallations/Source/Library/Errors/FIRInstallationsErrorUtil.h"
+>>>>>>> origin/develop12
 
 static NSString *const kFIRInstallationsIIDKeyPairPublicTagPrefix =
     @"com.google.iid.keypair.public-";

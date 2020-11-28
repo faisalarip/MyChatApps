@@ -68,6 +68,7 @@ extension Realm {
         /// Error thrown by Realm if there is a schema version mismatch, so that a migration is required.
         public static let schemaMismatch: Code = .schemaMismatch
 
+<<<<<<< HEAD
         /// Error thrown by Realm when attempting to open an incompatible synchronized Realm file.
         ///
         /// This error occurs when the Realm file was created with an older version of Realm and an automatic
@@ -77,6 +78,8 @@ extension Realm {
         /// Realm configuration.
         public static let incompatibleSyncedFile: Code = .incompatibleSyncedFile
 
+=======
+>>>>>>> origin/develop12
         /// :nodoc:
         public var code: Code {
             return (_nsError as! RLMError).code

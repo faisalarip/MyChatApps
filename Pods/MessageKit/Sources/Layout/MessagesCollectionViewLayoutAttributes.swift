@@ -50,9 +50,21 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
     public var messageBottomLabelAlignment = LabelAlignment(textAlignment: .center, textInsets: .zero)
     public var messageBottomLabelSize: CGSize = .zero
 
+<<<<<<< HEAD
     public var accessoryViewSize: CGSize = .zero
     public var accessoryViewPadding: HorizontalEdgeInsets = .zero
     public var accessoryViewPosition: AccessoryPosition = .messageCenter
+=======
+    public var messageTimeLabelSize: CGSize = .zero
+
+    public var accessoryViewSize: CGSize = .zero
+    public var accessoryViewPadding: HorizontalEdgeInsets = .zero
+    public var accessoryViewPosition: AccessoryPosition = .messageCenter
+
+    public var linkPreviewFonts = LinkPreviewFonts(titleFont: .preferredFont(forTextStyle: .footnote),
+                                                   teaserFont: .preferredFont(forTextStyle: .caption2),
+                                                   domainFont: .preferredFont(forTextStyle: .caption1))
+>>>>>>> origin/develop12
     
     // MARK: - Methods
 
@@ -70,6 +82,10 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
         copy.cellTopLabelSize = cellTopLabelSize
         copy.cellBottomLabelAlignment = cellBottomLabelAlignment
         copy.cellBottomLabelSize = cellBottomLabelSize
+<<<<<<< HEAD
+=======
+        copy.messageTimeLabelSize = messageTimeLabelSize
+>>>>>>> origin/develop12
         copy.messageTopLabelAlignment = messageTopLabelAlignment
         copy.messageTopLabelSize = messageTopLabelSize
         copy.messageBottomLabelAlignment = messageBottomLabelAlignment
@@ -77,6 +93,10 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
         copy.accessoryViewSize = accessoryViewSize
         copy.accessoryViewPadding = accessoryViewPadding
         copy.accessoryViewPosition = accessoryViewPosition
+<<<<<<< HEAD
+=======
+        copy.linkPreviewFonts = linkPreviewFonts
+>>>>>>> origin/develop12
         return copy
         // swiftlint:enable force_cast
     }
@@ -95,6 +115,10 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
                 && attributes.cellTopLabelSize == cellTopLabelSize
                 && attributes.cellBottomLabelAlignment == cellBottomLabelAlignment
                 && attributes.cellBottomLabelSize == cellBottomLabelSize
+<<<<<<< HEAD
+=======
+                && attributes.messageTimeLabelSize == messageTimeLabelSize
+>>>>>>> origin/develop12
                 && attributes.messageTopLabelAlignment == messageTopLabelAlignment
                 && attributes.messageTopLabelSize == messageTopLabelSize
                 && attributes.messageBottomLabelAlignment == messageBottomLabelAlignment
@@ -102,6 +126,10 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
                 && attributes.accessoryViewSize == accessoryViewSize
                 && attributes.accessoryViewPadding == accessoryViewPadding
                 && attributes.accessoryViewPosition == accessoryViewPosition
+<<<<<<< HEAD
+=======
+                && attributes.linkPreviewFonts == linkPreviewFonts
+>>>>>>> origin/develop12
         } else {
             return false
         }

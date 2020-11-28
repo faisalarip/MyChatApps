@@ -18,15 +18,23 @@
 
 #import "FBSDKCrashObserver.h"
 
+<<<<<<< HEAD
 #import "FBSDKCrashHandler.h"
+=======
+>>>>>>> origin/develop12
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
+<<<<<<< HEAD
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTypeUtility.h"
+=======
+#import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKCrashObserver
 

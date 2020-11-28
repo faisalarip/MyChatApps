@@ -25,8 +25,17 @@
 #import "FBSDKLoginConstants.h"
 
 #if !TARGET_OS_TV
+<<<<<<< HEAD
 #import "FBSDKLoginButton.h"
 #import "FBSDKLoginManager.h"
 #import "FBSDKLoginManagerLoginResult.h"
 #import "FBSDKLoginTooltipView.h"
+=======
+ #import "FBSDKLoginButton.h"
+ #import "FBSDKLoginManager.h"
+ #import "FBSDKLoginManagerLoginResult.h"
+ #import "FBSDKLoginTooltipView.h"
+ #import "FBSDKReferralManager.h"
+ #import "FBSDKReferralManagerResult.h"
+>>>>>>> origin/develop12
 #endif

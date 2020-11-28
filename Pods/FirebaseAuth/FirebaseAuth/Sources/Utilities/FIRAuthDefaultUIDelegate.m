@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if !TARGET_OS_OSX
 
 #import <GoogleUtilities/GULAppEnvironmentUtil.h>
 #import <UIKit/UIKit.h>
+=======
+#import <TargetConditionals.h>
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
+
+#import <UIKit/UIKit.h>
+#import "GoogleUtilities/Environment/Private/GULAppEnvironmentUtil.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Utilities/FIRAuthDefaultUIDelegate.h"
 
@@ -92,7 +100,15 @@ NS_ASSUME_NONNULL_BEGIN
     }
   } else {
     UIApplication *application = [applicationClass sharedApplication];
+<<<<<<< HEAD
     topViewController = application.keyWindow.rootViewController;
+=======
+// iOS 13 deprecation
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    topViewController = application.keyWindow.rootViewController;
+#pragma clang diagnostic pop
+>>>>>>> origin/develop12
   }
 #else
   UIApplication *application = [applicationClass sharedApplication];

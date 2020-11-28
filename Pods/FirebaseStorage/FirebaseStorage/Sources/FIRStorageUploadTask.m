@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+<<<<<<< HEAD
 #import <FirebaseStorage/FIRStorageUploadTask.h>
+=======
+#import "FirebaseStorage/Sources/Public/FirebaseStorage/FIRStorageUploadTask.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseStorage/Sources/FIRStorageConstants_Private.h"
 #import "FirebaseStorage/Sources/FIRStorageMetadata_Private.h"
@@ -20,7 +24,15 @@
 #import "FirebaseStorage/Sources/FIRStorageTask_Private.h"
 #import "FirebaseStorage/Sources/FIRStorageUploadTask_Private.h"
 
+<<<<<<< HEAD
 #import <GTMSessionFetcher/GTMSessionUploadFetcher.h>
+=======
+#if SWIFT_PACKAGE
+@import GTMSessionFetcherCore;
+#else
+#import <GTMSessionFetcher/GTMSessionUploadFetcher.h>
+#endif
+>>>>>>> origin/develop12
 
 @implementation FIRStorageUploadTask
 
@@ -193,11 +205,22 @@
   }
 
   NSError *fileReachabilityError;
+<<<<<<< HEAD
   if (![_fileURL checkResourceIsReachableAndReturnError:&fileReachabilityError]) {
     if (outError != NULL) {
       NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:2];
       userInfo[NSLocalizedDescriptionKey] =
           [NSString stringWithFormat:@"File at URL: %@ is not reachable.", _fileURL.absoluteString];
+=======
+  if (![_fileURL checkResourceIsReachableAndReturnError:&fileReachabilityError] ||
+      ![self fileURLisFile:_fileURL]) {
+    if (outError != NULL) {
+      NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:2];
+      userInfo[NSLocalizedDescriptionKey] = [NSString
+          stringWithFormat:@"File at URL: %@ is not reachable. "
+                           @"Ensure file URL is not a directory, symbolic link, or invalid url.",
+                           _fileURL.absoluteString];
+>>>>>>> origin/develop12
 
       if (fileReachabilityError) {
         userInfo[NSUnderlyingErrorKey] = fileReachabilityError;
@@ -257,4 +280,15 @@
   }];
 }
 
+<<<<<<< HEAD
+=======
+#pragma mark - Private Helpers
+
+- (BOOL)fileURLisFile:(NSURL *)fileURL {
+  NSNumber *isFile = [NSNumber numberWithBool:NO];
+  [fileURL getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
+  return [isFile boolValue];
+}
+
+>>>>>>> origin/develop12
 @end

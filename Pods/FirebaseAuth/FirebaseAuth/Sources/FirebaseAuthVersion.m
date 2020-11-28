@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FirebaseAuthVersion.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FirebaseAuthVersion.h"
+>>>>>>> origin/develop12
 
 // Convert the macro to a string
 #define STR(x) STR_EXPAND(x)

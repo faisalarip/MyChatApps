@@ -19,9 +19,15 @@
 #import "FBSDKKeychainStore.h"
 
 #import "FBSDKDynamicFrameworkLoader.h"
+<<<<<<< HEAD
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
+=======
+#import "FBSDKInternalUtility.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKKeychainStore
 
@@ -58,6 +64,10 @@
 
   return dict;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 #pragma clang diagnostic pop
 
 - (BOOL)setString:(NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
@@ -96,6 +106,7 @@
     NSMutableDictionary *attributesToUpdate = [NSMutableDictionary dictionary];
     [attributesToUpdate setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
 
+<<<<<<< HEAD
       status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
       if (status == errSecItemNotFound) {
 #if !TARGET_OS_TV
@@ -105,6 +116,17 @@
           }
         }
 #endif
+=======
+    status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
+    if (status == errSecItemNotFound) {
+    #if !TARGET_OS_TV
+      if (@available(macOS 10.9, iOS 8, *)) {
+        if (accessibility) {
+          [query setObject:(__bridge id)(accessibility) forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessible]];
+        }
+      }
+    #endif
+>>>>>>> origin/develop12
       [query setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
 
       status = fbsdkdfl_SecItemAdd((__bridge CFDictionaryRef)query, NULL);

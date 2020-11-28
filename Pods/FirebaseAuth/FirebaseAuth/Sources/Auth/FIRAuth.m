@@ -22,6 +22,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FirebaseAuth.h>
 #import <FirebaseCore/FIRAppInternal.h>
 #import <FirebaseCore/FIRComponent.h>
@@ -32,6 +33,13 @@
 #import <GoogleUtilities/GULAppDelegateSwizzler.h>
 #import <GoogleUtilities/GULAppEnvironmentUtil.h>
 #import <GoogleUtilities/GULSceneDelegateSwizzler.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FirebaseAuth.h"
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+#import "GoogleUtilities/AppDelegateSwizzler/Private/GULAppDelegateSwizzler.h"
+#import "GoogleUtilities/Environment/Private/GULAppEnvironmentUtil.h"
+#import "GoogleUtilities/SceneDelegateSwizzler/Private/GULSceneDelegateSwizzler.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthDataResult_Internal.h"
 #import "FirebaseAuth/Sources/Auth/FIRAuthDispatcher.h"
@@ -522,6 +530,10 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
         if (!storedUserAccessGroup) {
           FIRUser *user;
           if ([strongSelf getUser:&user error:&error]) {
+<<<<<<< HEAD
+=======
+            strongSelf.tenantID = user.tenantID;
+>>>>>>> origin/develop12
             [strongSelf updateCurrentUser:user byForce:NO savingToDisk:NO error:&error];
             self->_lastNotifiedUserToken = user.rawAccessToken;
           } else {
@@ -529,7 +541,11 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
                         @"Error loading saved user when starting up: %@", error);
           }
         } else {
+<<<<<<< HEAD
           [strongSelf useUserAccessGroup:storedUserAccessGroup error:&error];
+=======
+          [strongSelf internalUseUserAccessGroup:storedUserAccessGroup error:&error];
+>>>>>>> origin/develop12
           if (error) {
             FIRLogError(kFIRLoggerAuth, @"I-AUT000001",
                         @"Error loading saved user when starting up: %@", error);
@@ -1466,6 +1482,29 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
   });
 }
 
+<<<<<<< HEAD
+=======
+- (void)useEmulatorWithHost:(NSString *)host port:(NSInteger)port {
+  NSAssert(host.length > 0, @"Cannot connect to nil or empty host");
+
+  NSString *formattedHost;
+  if ([host containsString:@":"]) {
+    // Host is an IPv6 address and should be formatted with surrounding brackets.
+    formattedHost = [NSString stringWithFormat:@"[%@]", host];
+  } else {
+    formattedHost = host;
+  }
+
+  dispatch_sync(FIRAuthGlobalWorkQueue(), ^{
+    self->_requestConfiguration.emulatorHostAndPort =
+        [NSString stringWithFormat:@"%@:%ld", formattedHost, (long)port];
+#if TARGET_OS_IOS
+    self->_settings.appVerificationDisabledForTesting = YES;
+#endif
+  });
+}
+
+>>>>>>> origin/develop12
 - (nullable NSString *)languageCode {
   return _requestConfiguration.languageCode;
 }
@@ -1520,10 +1559,20 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
   [self canHandleNotification:userInfo];
 }
 
+<<<<<<< HEAD
+=======
+// iOS 10 deprecation
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+>>>>>>> origin/develop12
 - (void)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo {
   [self canHandleNotification:userInfo];
 }
+<<<<<<< HEAD
+=======
+#pragma clang diagnostic pop
+>>>>>>> origin/develop12
 
 - (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
@@ -1531,12 +1580,22 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
   return [self canHandleURL:url];
 }
 
+<<<<<<< HEAD
+=======
+// iOS 10 deprecation
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+>>>>>>> origin/develop12
 - (BOOL)application:(UIApplication *)application
               openURL:(NSURL *)url
     sourceApplication:(nullable NSString *)sourceApplication
            annotation:(id)annotation {
   return [self canHandleURL:url];
 }
+<<<<<<< HEAD
+=======
+#pragma clang diagnostic pop
+>>>>>>> origin/develop12
 
 - (void)setAPNSToken:(NSData *)token type:(FIRAuthAPNSTokenType)type {
   dispatch_sync(FIRAuthGlobalWorkQueue(), ^{
@@ -1972,6 +2031,18 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
     [self possiblyPostAuthStateChangeNotification];
     return YES;
   }
+<<<<<<< HEAD
+=======
+  if (user) {
+    if ((user.tenantID || self.tenantID) && ![self.tenantID isEqualToString:user.tenantID]) {
+      if (error) {
+        *error = [FIRAuthErrorUtils tenantIDMismatchError];
+      }
+      return NO;
+    }
+  }
+
+>>>>>>> origin/develop12
   BOOL success = YES;
   if (saveToDisk) {
     success = [self saveUser:user error:error];
@@ -1997,6 +2068,7 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
     if (!user) {
       success = [_keychainServices removeDataForKey:userKey error:outError];
     } else {
+<<<<<<< HEAD
       // Encode the user object.
       NSMutableData *archiveData = [NSMutableData data];
       NSKeyedArchiver *archiver =
@@ -2004,6 +2076,27 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
       [archiver encodeObject:user forKey:userKey];
       [archiver finishEncoding];
 
+=======
+#if TARGET_OS_WATCH
+      NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:false];
+#else
+      // Encode the user object.
+      NSMutableData *archiveData = [NSMutableData data];
+// iOS 12 deprecation
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+      NSKeyedArchiver *archiver =
+          [[NSKeyedArchiver alloc] initForWritingWithMutableData:archiveData];
+#pragma clang diagnostic pop
+#endif  // TARGET_OS_WATCH
+      [archiver encodeObject:user forKey:userKey];
+      [archiver finishEncoding];
+
+#if TARGET_OS_WATCH
+      NSData *archiveData = archiver.encodedData;
+#endif  // TARGET_OS_WATCH
+
+>>>>>>> origin/develop12
       // Save the user object's encoded value.
       success = [_keychainServices setData:archiveData forKey:userKey error:outError];
     }
@@ -2046,8 +2139,25 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
       *outUser = nil;
       return YES;
     }
+<<<<<<< HEAD
     NSKeyedUnarchiver *unarchiver =
         [[NSKeyedUnarchiver alloc] initForReadingWithData:encodedUserData];
+=======
+#if TARGET_OS_WATCH
+    NSKeyedUnarchiver *unarchiver =
+        [[NSKeyedUnarchiver alloc] initForReadingFromData:encodedUserData error:error];
+    if (error && *error) {
+      return NO;
+    }
+#else
+// iOS 12 deprecation
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    NSKeyedUnarchiver *unarchiver =
+        [[NSKeyedUnarchiver alloc] initForReadingWithData:encodedUserData];
+#pragma clang diagnostic pop
+#endif  // TARGET_OS_WATCH
+>>>>>>> origin/develop12
     FIRUser *user = [unarchiver decodeObjectOfClass:[FIRUser class] forKey:userKey];
     user.auth = self;
     *outUser = user;
@@ -2169,8 +2279,13 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
 
 #pragma mark - Keychain sharing
 
+<<<<<<< HEAD
 - (BOOL)useUserAccessGroup:(NSString *_Nullable)accessGroup
                      error:(NSError *_Nullable *_Nullable)outError {
+=======
+- (BOOL)internalUseUserAccessGroup:(NSString *_Nullable)accessGroup
+                             error:(NSError *_Nullable *_Nullable)outError {
+>>>>>>> origin/develop12
   BOOL success;
   success = [self.storedUserManager setStoredUserAccessGroup:accessGroup error:outError];
   if (!success) {
@@ -2196,6 +2311,17 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
   return YES;
 }
 
+<<<<<<< HEAD
+=======
+- (BOOL)useUserAccessGroup:(NSString *_Nullable)accessGroup
+                     error:(NSError *_Nullable *_Nullable)outError {
+  // self.storedUserManager is initialized asynchronously. Make sure it is done.
+  dispatch_sync(FIRAuthGlobalWorkQueue(), ^{
+                });
+  return [self internalUseUserAccessGroup:accessGroup error:outError];
+}
+
+>>>>>>> origin/develop12
 - (nullable FIRUser *)getStoredUserForAccessGroup:(NSString *_Nullable)accessGroup
                                             error:(NSError *_Nullable *_Nullable)outError {
   FIRUser *user;
@@ -2206,8 +2332,25 @@ static NSMutableDictionary *gKeychainServiceNameForAppName;
       return nil;
     }
 
+<<<<<<< HEAD
     NSKeyedUnarchiver *unarchiver =
         [[NSKeyedUnarchiver alloc] initForReadingWithData:encodedUserData];
+=======
+#if TARGET_OS_WATCH
+    NSKeyedUnarchiver *unarchiver =
+        [[NSKeyedUnarchiver alloc] initForReadingFromData:encodedUserData error:outError];
+    if (outError && *outError) {
+      return nil;
+    }
+#else
+// iOS 12 deprecation
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    NSKeyedUnarchiver *unarchiver =
+        [[NSKeyedUnarchiver alloc] initForReadingWithData:encodedUserData];
+#pragma clang diagnostic pop
+#endif  // TARGET_OS_WATCH
+>>>>>>> origin/develop12
     user = [unarchiver decodeObjectOfClass:[FIRUser class] forKey:userKey];
   } else {
     user = [self.storedUserManager getStoredUserForAccessGroup:self.userAccessGroup

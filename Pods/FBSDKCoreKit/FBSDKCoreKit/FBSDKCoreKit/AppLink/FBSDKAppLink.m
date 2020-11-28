@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKAppLink_Internal.h"
+=======
+ #import "FBSDKAppLink_Internal.h"
+>>>>>>> origin/develop12
 
 NSString *const FBSDKAppLinkDataParameterName = @"al_applink_data";
 NSString *const FBSDKAppLinkTargetKeyName = @"target_url";
@@ -38,7 +42,11 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
 @property (nonatomic, copy) NSArray<FBSDKAppLinkTarget *> *targets;
 @property (nonatomic, strong) NSURL *webURL;
 
+<<<<<<< HEAD
 @property (nonatomic, assign, getter=isBackToReferrer) BOOL backToReferrer;
+=======
+@property (nonatomic, getter = isBackToReferrer, assign) BOOL backToReferrer;
+>>>>>>> origin/develop12
 
 @end
 
@@ -47,16 +55,27 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
 + (instancetype)appLinkWithSourceURL:(NSURL *)sourceURL
                              targets:(NSArray<FBSDKAppLinkTarget *> *)targets
                               webURL:(NSURL *)webURL
+<<<<<<< HEAD
                     isBackToReferrer:(BOOL)isBackToReferrer {
     FBSDKAppLink *link = [[self alloc] initWithIsBackToReferrer:isBackToReferrer];
     link.sourceURL = sourceURL;
     link.targets = [targets copy];
     link.webURL = webURL;
     return link;
+=======
+                    isBackToReferrer:(BOOL)isBackToReferrer
+{
+  FBSDKAppLink *link = [[self alloc] initWithIsBackToReferrer:isBackToReferrer];
+  link.sourceURL = sourceURL;
+  link.targets = [targets copy];
+  link.webURL = webURL;
+  return link;
+>>>>>>> origin/develop12
 }
 
 + (instancetype)appLinkWithSourceURL:(NSURL *)sourceURL
                              targets:(NSArray<FBSDKAppLinkTarget *> *)targets
+<<<<<<< HEAD
                               webURL:(NSURL *)webURL {
     return [self appLinkWithSourceURL:sourceURL
                               targets:targets
@@ -69,6 +88,22 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
         _backToReferrer = backToReferrer;
     }
     return self;
+=======
+                              webURL:(NSURL *)webURL
+{
+  return [self appLinkWithSourceURL:sourceURL
+                            targets:targets
+                             webURL:webURL
+                   isBackToReferrer:NO];
+}
+
+- (FBSDKAppLink *)initWithIsBackToReferrer:(BOOL)backToReferrer
+{
+  if ((self = [super init])) {
+    _backToReferrer = backToReferrer;
+  }
+  return self;
+>>>>>>> origin/develop12
 }
 
 @end

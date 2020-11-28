@@ -94,7 +94,11 @@ open class TypingBubble: UIView {
         addSubview(cornerBubble)
         addSubview(contentBubble)
         contentBubble.addSubview(typingIndicator)
+<<<<<<< HEAD
         backgroundColor = .incomingGray
+=======
+        backgroundColor = .incomingMessageBackground
+>>>>>>> origin/develop12
     }
     
     // MARK: - Layout

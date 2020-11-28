@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/AuthProvider/Email/FIREmailPasswordAuthCredential.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIREmailAuthProvider.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIREmailAuthProvider.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Backend/RPC/FIRVerifyAssertionRequest.h"
 #import "FirebaseAuth/Sources/Utilities/FIRAuthExceptionUtils.h"

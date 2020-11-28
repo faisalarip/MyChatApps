@@ -106,6 +106,10 @@ static BOOL isErrorReportEnabled = NO;
                                       message:message
                               underlyingError:underlyingError];
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 + (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
                                        name:(NSString *)name
                                       value:(id)value
@@ -141,7 +145,11 @@ static BOOL isErrorReportEnabled = NO;
 {
   if (!message) {
     message =
+<<<<<<< HEAD
         [[NSString alloc] initWithFormat:@"Invalid item (%@) found in collection for %@: %@", item, name, collection];
+=======
+    [[NSString alloc] initWithFormat:@"Invalid item (%@) found in collection for %@: %@", item, name, collection];
+>>>>>>> origin/develop12
   }
   NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
   [FBSDKTypeUtility dictionary:userInfo setObject:name forKey:FBSDKErrorArgumentNameKey];

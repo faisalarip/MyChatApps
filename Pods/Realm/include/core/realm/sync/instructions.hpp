@@ -35,7 +35,10 @@
 #include <realm/sync/object_id.hpp>
 #include <realm/impl/input_stream.hpp>
 #include <realm/table_ref.hpp>
+<<<<<<< HEAD
 #include <realm/link_view_fwd.hpp>
+=======
+>>>>>>> origin/develop12
 
 namespace realm {
 namespace sync {
@@ -150,7 +153,11 @@ struct InternString {
 
 struct Instruction::Payload {
     struct Link {
+<<<<<<< HEAD
         sync::ObjectID target; // can be nothing = null
+=======
+        GlobalKey target; // can be nothing = null
+>>>>>>> origin/develop12
         InternString target_table;
     };
 
@@ -193,7 +200,11 @@ struct Instruction::Payload {
 };
 
 struct Instruction::ObjectInstructionBase {
+<<<<<<< HEAD
     sync::ObjectID object;
+=======
+    GlobalKey object;
+>>>>>>> origin/develop12
 };
 
 struct Instruction::FieldInstructionBase

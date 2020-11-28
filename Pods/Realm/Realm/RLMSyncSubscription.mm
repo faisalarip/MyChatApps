@@ -81,10 +81,17 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
         if (prop->type == PropertyType::Object) {
             check(begin != end, "key path must end in a LinkingObjects property and '%1.%2' is of type '%3'",
                   objectSchema->name, key, string_for_property_type(prop->type));
+<<<<<<< HEAD
             ret.emplace_back(prop->table_column);
         }
         else {
             ret.emplace_back(objectSchema->property_for_name(prop->link_origin_property_name)->table_column,
+=======
+            ret.emplace_back(prop->column_key);
+        }
+        else {
+            ret.emplace_back(objectSchema->property_for_name(prop->link_origin_property_name)->column_key,
+>>>>>>> origin/develop12
                              ObjectStore::table_for_object_type(group, objectSchema->name));
         }
     }
@@ -115,7 +122,11 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
                                                 realm->_realm->schema(),
                                                 &results.get_object_schema()));
             }
+<<<<<<< HEAD
             opt.inclusions = IncludeDescriptor{*ObjectStore::table_for_object_type(realm.group, results.get_object_type()), keypaths};
+=======
+            opt.inclusions = IncludeDescriptor{ObjectStore::table_for_object_type(realm.group, results.get_object_type()), keypaths};
+>>>>>>> origin/develop12
         }
         _subscription = partial_sync::subscribe(options.limit ? results.limit(options.limit) : results, std::move(opt));
     }
@@ -202,6 +213,7 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
         return;
     }
 
+<<<<<<< HEAD
     auto row = _obj.row();
     REALM_SET_IF_CHANGED(self.query, RLMStringDataToNSString(row.get_string(row.get_column_index("query"))));
     REALM_SET_IF_CHANGED(self.createdAt, RLMTimestampToNSDate(row.get_timestamp(row.get_column_index("created_at"))));
@@ -210,6 +222,16 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
 #undef REALM_SET_IF_CHANGED
 
     auto ttl = row.get<util::Optional<int64_t>>(row.get_column_index("time_to_live"));
+=======
+    auto row = _obj.obj();
+    REALM_SET_IF_CHANGED(self.query, RLMStringDataToNSString(row.get<StringData>("query")));
+    REALM_SET_IF_CHANGED(self.createdAt, RLMTimestampToNSDate(row.get<Timestamp>("created_at")));
+    REALM_SET_IF_CHANGED(self.updatedAt, RLMTimestampToNSDate(row.get<Timestamp>("updated_at")));
+    REALM_SET_IF_CHANGED(self.expiresAt, RLMTimestampToNSDate(row.get<Timestamp>("expires_at")));
+#undef REALM_SET_IF_CHANGED
+
+    auto ttl = row.get<util::Optional<int64_t>>("time_to_live");
+>>>>>>> origin/develop12
     if (ttl && _timeToLive != *ttl / 1000.0) {
         self.timeToLive = *ttl / 1000.0;
     }
@@ -235,6 +257,7 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
 }
 
 - (NSString *)name {
+<<<<<<< HEAD
     return _row.is_attached() ? RLMStringDataToNSString(_row.get_string(_row.get_column_index("name"))) : nil;
 }
 
@@ -254,6 +277,27 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
         return nil;
     }
     StringData err = _row.get_string(_row.get_column_index("error_message"));
+=======
+    return _row.is_valid() ? RLMStringDataToNSString(_row.get<StringData>("name")) : nil;
+}
+
+- (NSString *)query {
+    return _row.is_valid() ? RLMStringDataToNSString(_row.get<StringData>("query")) : nil;
+}
+
+- (RLMSyncSubscriptionState)state {
+    if (!_row.is_valid()) {
+        return RLMSyncSubscriptionStateInvalidated;
+    }
+    return (RLMSyncSubscriptionState)_row.get<int64_t>("status");
+}
+
+- (NSError *)error {
+    if (!_row.is_valid()) {
+        return nil;
+    }
+    StringData err = _row.get<StringData>("error_message");
+>>>>>>> origin/develop12
     if (!err.size()) {
         return nil;
     }
@@ -263,6 +307,7 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
 }
 
 - (NSDate *)createdAt {
+<<<<<<< HEAD
     return _row.is_attached() ? RLMTimestampToNSDate(_row.get_timestamp(_row.get_column_index("created_at"))) : nil;
 }
 
@@ -283,6 +328,25 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
         return NAN;
     }
     return _row.get_int(columnIndex) / 1000.0;
+=======
+    return _row.is_valid() ? RLMTimestampToNSDate(_row.get<Timestamp>("created_at")) : nil;
+}
+
+- (NSDate *)updatedAt {
+    return _row.is_valid() ? RLMTimestampToNSDate(_row.get<Timestamp>("updated_at")) : nil;
+}
+
+- (NSDate *)expiresAt {
+    return _row.is_valid() ? RLMTimestampToNSDate(_row.get<Timestamp>("expires_at")) : nil;
+}
+
+- (NSTimeInterval)timeToLive {
+    if (!_row.is_valid()) {
+        return NAN;
+    }
+    auto ttl = _row.get<util::Optional<int64_t>>("time_to_live");
+    return ttl ? *ttl / 1000.0 : NAN;
+>>>>>>> origin/develop12
 }
 
 - (NSString *)descriptionWithMaxDepth:(NSUInteger)depth {
@@ -290,11 +354,19 @@ static std::vector<LinkPathPart> parseKeypath(StringData keypath, Group const& g
         return @"<Maximum depth exceeded>";
     }
 
+<<<<<<< HEAD
     auto objectType = _row.get_string(_row.get_column_index("matches_property"));
     objectType = objectType.substr(0, objectType.size() - strlen("_matches"));
     return [NSString stringWithFormat:@"RLMSyncSubscription {\n\tname = %@\n\tobjectType = %@\n\tquery = %@\n\tstatus = %@\n\terror = %@\n\tcreatedAt = %@\n\tupdatedAt = %@\n\texpiresAt = %@\n\ttimeToLive = %@\n}",
             self.name, RLMStringDataToNSString(objectType),
             RLMStringDataToNSString(_row.get_string(_row.get_column_index("query"))),
+=======
+    auto objectType = _row.get<StringData>("matches_property");
+    objectType = objectType.substr(0, objectType.size() - strlen("_matches"));
+    return [NSString stringWithFormat:@"RLMSyncSubscription {\n\tname = %@\n\tobjectType = %@\n\tquery = %@\n\tstatus = %@\n\terror = %@\n\tcreatedAt = %@\n\tupdatedAt = %@\n\texpiresAt = %@\n\ttimeToLive = %@\n}",
+            self.name, RLMStringDataToNSString(objectType),
+            RLMStringDataToNSString(_row.get<StringData>("query")),
+>>>>>>> origin/develop12
             @(self.state), self.error, self.createdAt, self.updatedAt, self.expiresAt, @(self.timeToLive)];
 }
 
@@ -350,7 +422,11 @@ static ObjectSchema& addPublicNames(ObjectSchema& os) {
 // it points to, so for a ClassInfo that's not part of the schema we need a
 // wrapper object that owns them
 RLMResultsSetInfo::RLMResultsSetInfo(__unsafe_unretained RLMRealm *const realm)
+<<<<<<< HEAD
 : osObjectSchema(realm->_realm->read_group(), partial_sync::result_sets_type_name)
+=======
+: osObjectSchema(realm->_realm->read_group(), partial_sync::result_sets_type_name, {})
+>>>>>>> origin/develop12
 , rlmObjectSchema([RLMObjectSchema objectSchemaForObjectStoreSchema:addPublicNames(osObjectSchema)])
 , info(realm, rlmObjectSchema, &osObjectSchema)
 {
@@ -376,7 +452,11 @@ RLMClassInfo& RLMResultsSetInfo::get(__unsafe_unretained RLMRealm *const realm) 
     // The server automatically adds a few subscriptions for the permissions
     // types which we want to hide. They're just an implementation detail and
     // deleting them won't work out well for the user.
+<<<<<<< HEAD
     auto query = table->where().ends_with(table->get_column_index("matches_property"), "_matches");
+=======
+    auto query = table->where().ends_with(table->get_column_key("matches_property"), "_matches");
+>>>>>>> origin/develop12
     return [self resultsWithObjectInfo:RLMResultsSetInfo::get(realm)
                                results:Results(realm->_realm, std::move(query))];
 }
@@ -427,6 +507,7 @@ RLMClassInfo& RLMResultsSetInfo::get(__unsafe_unretained RLMRealm *const realm) 
     if (!info.table()) {
         @throw RLMException(@"-[RLMRealm subcriptionWithName:] can only be called on a Realm using query-based sync");
     }
+<<<<<<< HEAD
     auto row = info.table()->find_first(info.table()->get_column_index("name"),
                                         RLMStringDataWithNSString(name));
     if (row == npos) {
@@ -434,6 +515,15 @@ RLMClassInfo& RLMResultsSetInfo::get(__unsafe_unretained RLMRealm *const realm) 
     }
     RLMObjectBase *acc = RLMCreateManagedAccessor(info.rlmObjectSchema.accessorClass, &info);
     acc->_row = info.table()->get(row);
+=======
+    auto row = info.table()->find_first(info.table()->get_column_key("name"),
+                                        RLMStringDataWithNSString(name));
+    if (!row) {
+        return nil;
+    }
+    RLMObjectBase *acc = RLMCreateManagedAccessor(info.rlmObjectSchema.accessorClass, &info);
+    acc->_row = info.table()->get_object(row);
+>>>>>>> origin/develop12
     return (RLMSyncSubscription *)acc;
 }
 @end

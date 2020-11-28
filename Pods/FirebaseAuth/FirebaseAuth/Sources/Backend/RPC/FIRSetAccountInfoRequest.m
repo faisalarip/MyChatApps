@@ -113,6 +113,14 @@ static NSString *const kDeleteProvidersKey = @"deleteProvider";
  */
 static NSString *const kReturnSecureTokenKey = @"returnSecureToken";
 
+<<<<<<< HEAD
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+>>>>>>> origin/develop12
 @implementation FIRSetAccountInfoRequest
 
 - (nullable instancetype)initWithRequestConfiguration:
@@ -171,6 +179,12 @@ static NSString *const kReturnSecureTokenKey = @"returnSecureToken";
   if (_returnSecureToken) {
     postBody[kReturnSecureTokenKey] = @YES;
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    postBody[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
   return [postBody copy];
 }
 

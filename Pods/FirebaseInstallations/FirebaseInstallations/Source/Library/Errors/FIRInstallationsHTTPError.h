@@ -41,7 +41,10 @@ typedef NS_ENUM(NSInteger, FIRInstallationsHTTPCodes) {
 typedef NS_ENUM(NSInteger, FIRInstallationsRegistrationHTTPCode) {
   FIRInstallationsRegistrationHTTPCodeSuccess = 201,
   FIRInstallationsRegistrationHTTPCodeInvalidArgument = 400,
+<<<<<<< HEAD
   FIRInstallationsRegistrationHTTPCodeInvalidAPIKey = 401,
+=======
+>>>>>>> origin/develop12
   FIRInstallationsRegistrationHTTPCodeAPIKeyToProjectIDMismatch = 403,
   FIRInstallationsRegistrationHTTPCodeProjectNotFound = 404,
   FIRInstallationsRegistrationHTTPCodeTooManyRequests = 429,

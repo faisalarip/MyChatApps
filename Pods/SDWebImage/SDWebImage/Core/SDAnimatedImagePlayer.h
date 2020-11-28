@@ -22,7 +22,11 @@
 /// Current loop count since its latest animating. This value is KVO Compliance.
 @property (nonatomic, readonly) NSUInteger currentLoopCount;
 
+<<<<<<< HEAD
 /// Total frame count for niamted image rendering. Defaults is animated image's frame count.
+=======
+/// Total frame count for animated image rendering. Defaults is animated image's frame count.
+>>>>>>> origin/develop12
 /// @note For progressive animation, you can update this value when your provider receive more frames.
 @property (nonatomic, assign) NSUInteger totalFrameCount;
 
@@ -49,13 +53,21 @@
 
 /// Create a player with animated image provider. If the provider's `animatedImageFrameCount` is less than 1, returns nil.
 /// The provider can be any protocol implementation, like `SDAnimatedImage`, `SDImageGIFCoder`, etc.
+<<<<<<< HEAD
 /// @note This provider can represent mutable content, like prorgessive animated loading. But you need to update the frame count by yourself
+=======
+/// @note This provider can represent mutable content, like progressive animated loading. But you need to update the frame count by yourself
+>>>>>>> origin/develop12
 /// @param provider The animated provider
 - (nullable instancetype)initWithProvider:(nonnull id<SDAnimatedImageProvider>)provider;
 
 /// Create a player with animated image provider. If the provider's `animatedImageFrameCount` is less than 1, returns nil.
 /// The provider can be any protocol implementation, like `SDAnimatedImage` or `SDImageGIFCoder`, etc.
+<<<<<<< HEAD
 /// @note This provider can represent mutable content, like prorgessive animated loading. But you need to update the frame count by yourself
+=======
+/// @note This provider can represent mutable content, like progressive animated loading. But you need to update the frame count by yourself
+>>>>>>> origin/develop12
 /// @param provider The animated provider
 + (nullable instancetype)playerWithProvider:(nonnull id<SDAnimatedImageProvider>)provider;
 
@@ -65,13 +77,21 @@
 /// The handler block when one loop count finished.
 @property (nonatomic, copy, nullable) void (^animationLoopHandler)(NSUInteger loopCount);
 
+<<<<<<< HEAD
 /// Return the status whehther animation is playing.
+=======
+/// Return the status whether animation is playing.
+>>>>>>> origin/develop12
 @property (nonatomic, readonly) BOOL isPlaying;
 
 /// Start the animation. Or resume the previously paused animation.
 - (void)startPlaying;
 
+<<<<<<< HEAD
 /// Pause the aniamtion. Keep the current frame index and loop count.
+=======
+/// Pause the animation. Keep the current frame index and loop count.
+>>>>>>> origin/develop12
 - (void)pausePlaying;
 
 /// Stop the animation. Reset the current frame index and loop count.
@@ -83,7 +103,11 @@
 /// @param loopCount The loop count
 - (void)seekToFrameAtIndex:(NSUInteger)index loopCount:(NSUInteger)loopCount;
 
+<<<<<<< HEAD
 /// Clear the frame cache buffer. The frame cache buffer size can be controled by `maxBufferSize`.
+=======
+/// Clear the frame cache buffer. The frame cache buffer size can be controlled by `maxBufferSize`.
+>>>>>>> origin/develop12
 /// By default, when stop or pause the animation, the frame buffer is still kept to ready for the next restart
 - (void)clearFrameBuffer;
 

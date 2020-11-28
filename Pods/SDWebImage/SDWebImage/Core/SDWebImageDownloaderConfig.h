@@ -91,7 +91,11 @@ typedef NS_ENUM(NSInteger, SDWebImageDownloaderExecutionOrder) {
 
 /**
  * Set password using for HTTP Basic authentication.
+<<<<<<< HEAD
  * Defautls to nil.
+=======
+ * Defaults to nil.
+>>>>>>> origin/develop12
  */
 @property (nonatomic, copy, nullable) NSString *password;
 

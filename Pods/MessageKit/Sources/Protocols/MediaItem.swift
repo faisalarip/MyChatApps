@@ -23,6 +23,10 @@
  */
 
 import Foundation
+<<<<<<< HEAD
+=======
+import UIKit
+>>>>>>> origin/develop12
 
 /// A protocol used to represent the data for a media message.
 public protocol MediaItem {

@@ -14,6 +14,7 @@
 
 #import "FirebaseStorage/Sources/FIRStorageComponent.h"
 
+<<<<<<< HEAD
 #import <FirebaseStorage/FIRStorage.h>
 
 #import <FirebaseAuthInterop/FIRAuthInterop.h>
@@ -22,6 +23,12 @@
 #import <FirebaseCore/FIRComponentContainer.h>
 #import <FirebaseCore/FIRDependency.h>
 #import <FirebaseCore/FIRLibrary.h>
+=======
+#import "FirebaseStorage/Sources/Public/FirebaseStorage/FIRStorage.h"
+
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+#import "Interop/Auth/Public/FIRAuthInterop.h"
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 

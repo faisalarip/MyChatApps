@@ -2,7 +2,11 @@
 //  NSMutableAttributedString+Extensions.swift
 //  InputBarAccessoryView
 //
+<<<<<<< HEAD
 //  Copyright © 2017-2019 Nathan Tannar.
+=======
+//  Copyright © 2017-2020 Nathan Tannar.
+>>>>>>> origin/develop12
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +34,11 @@ import UIKit
 internal extension NSMutableAttributedString {
  
     @discardableResult
+<<<<<<< HEAD
     func bold(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor = .black) -> NSMutableAttributedString {
+=======
+    func bold(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor) -> NSMutableAttributedString {
+>>>>>>> origin/develop12
         let attrs: [NSAttributedString.Key:AnyObject] = [
             NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: fontSize),
             NSAttributedString.Key.foregroundColor : textColor
@@ -41,7 +49,11 @@ internal extension NSMutableAttributedString {
     }
     
     @discardableResult
+<<<<<<< HEAD
     func medium(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor = .black) -> NSMutableAttributedString {
+=======
+    func medium(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor) -> NSMutableAttributedString {
+>>>>>>> origin/develop12
         let attrs: [NSAttributedString.Key:AnyObject] = [
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: fontSize, weight: UIFont.Weight.medium),
             NSAttributedString.Key.foregroundColor : textColor
@@ -52,7 +64,11 @@ internal extension NSMutableAttributedString {
     }
     
     @discardableResult
+<<<<<<< HEAD
     func italic(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor = .black) -> NSMutableAttributedString {
+=======
+    func italic(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor) -> NSMutableAttributedString {
+>>>>>>> origin/develop12
         let attrs: [NSAttributedString.Key:AnyObject] = [
             NSAttributedString.Key.font : UIFont.italicSystemFont(ofSize: fontSize),
             NSAttributedString.Key.foregroundColor : textColor
@@ -63,7 +79,11 @@ internal extension NSMutableAttributedString {
     }
     
     @discardableResult
+<<<<<<< HEAD
     func normal(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor = .black) -> NSMutableAttributedString {
+=======
+    func normal(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize, textColor: UIColor) -> NSMutableAttributedString {
+>>>>>>> origin/develop12
         let attrs:[NSAttributedString.Key:AnyObject] = [
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: fontSize),
             NSAttributedString.Key.foregroundColor : textColor
@@ -73,6 +93,45 @@ internal extension NSMutableAttributedString {
         return self
     }
 
+<<<<<<< HEAD
+=======
+    @discardableResult
+    func bold(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize) -> NSMutableAttributedString {
+        if #available(iOS 13, *) {
+            return bold(text, fontSize: fontSize, textColor: .label)
+        } else {
+            return bold(text, fontSize: fontSize, textColor: .black)
+        }
+    }
+
+    @discardableResult
+    func medium(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize) -> NSMutableAttributedString {
+        if #available(iOS 13, *) {
+            return medium(text, fontSize: fontSize, textColor: .label)
+        } else {
+            return medium(text, fontSize: fontSize, textColor: .black)
+        }
+    }
+
+    @discardableResult
+    func italic(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize) -> NSMutableAttributedString {
+        if #available(iOS 13, *) {
+            return italic(text, fontSize: fontSize, textColor: .label)
+        } else {
+            return italic(text, fontSize: fontSize, textColor: .black)
+
+        }
+    }
+
+    @discardableResult
+    func normal(_ text: String, fontSize: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize) -> NSMutableAttributedString {
+        if #available(iOS 13, *) {
+            return normal(text, fontSize: fontSize, textColor: .label)
+        } else {
+            return normal(text, fontSize: fontSize, textColor: .black)
+        }
+    }
+>>>>>>> origin/develop12
 }
 
 internal extension NSAttributedString {

@@ -24,17 +24,29 @@
 #include <realm/string_data.hpp>
 #include <realm/data_type.hpp>
 #include <realm/binary_data.hpp>
+<<<<<<< HEAD
 #include <realm/olddatetime.hpp>
 #include <realm/mixed.hpp>
+=======
+>>>>>>> origin/develop12
 #include <realm/util/buffer.hpp>
 #include <realm/util/string_buffer.hpp>
 #include <realm/impl/input_stream.hpp>
 
 #include <realm/group.hpp>
+<<<<<<< HEAD
 #include <realm/descriptor.hpp>
 #include <realm/link_view.hpp>
 
 namespace realm {
+=======
+#include <realm/list.hpp>
+
+namespace realm {
+
+struct GlobalKey;
+
+>>>>>>> origin/develop12
 namespace _impl {
 
 /// Transaction log instruction encoding
@@ -43,6 +55,7 @@ enum Instruction {
     instr_InsertGroupLevelTable = 1,
     instr_EraseGroupLevelTable = 2, // Remove columnless table from group
     instr_RenameGroupLevelTable = 3,
+<<<<<<< HEAD
     instr_MoveGroupLevelTable = 4, // UNSUPPORTED/UNUSED. FIXME: remove in next breaking change
     instr_SelectTable = 5,
     instr_Set = 6,
@@ -81,18 +94,55 @@ enum Instruction {
     instr_LinkListClear = 38,   // Ramove all entries from a link list
     instr_LinkListSetAll = 39,  // Assign to link list entry
     instr_AddRowWithKey = 40,   // Insert a row with a given key
+=======
+
+    instr_SelectTable = 10,
+    instr_CreateObject = 11,
+    instr_RemoveObject = 12,
+    instr_Set = 13,
+    instr_SetDefault = 14,
+    instr_ClearTable = 15, // Remove all rows in selected table
+
+    instr_InsertColumn = 20, // Insert new column into to selected descriptor
+    instr_EraseColumn = 21,  // Remove column from selected descriptor
+    instr_RenameColumn = 22, // Rename column in selected descriptor
+    instr_SetLinkType = 23,  // Strong/weak
+
+    instr_SelectList = 30,
+    instr_ListInsert = 31, // Insert list entry
+    instr_ListSet = 32,    // Assign to list entry
+    instr_ListMove = 33,   // Move an entry within a link list
+    instr_ListSwap = 34,   // Swap two entries within a list
+    instr_ListErase = 35,  // Remove an entry from a list
+    instr_ListClear = 36,  // Remove all entries from a list
+>>>>>>> origin/develop12
 };
 
 class TransactLogStream {
 public:
+<<<<<<< HEAD
+=======
+    virtual ~TransactLogStream()
+    {
+    }
+
+>>>>>>> origin/develop12
     /// Ensure contiguous free space in the transaction log
     /// buffer. This method must update `out_free_begin`
     /// and `out_free_end` such that they refer to a chunk
     /// of free space whose size is at least \a n.
     ///
+<<<<<<< HEAD
     /// \param n The required amount of contiguous free space. Must be
     /// small (probably not greater than 1024)
     /// \param n Must be small (probably not greater than 1024)
+=======
+    /// \param size The required amount of contiguous free space. Must be
+    /// small (probably not greater than 1024)
+    /// \param out_free_begin must point to current write position which must be inside earlier
+    /// allocated area. Will be updated to point to new writing position.
+    /// \param out_free_end Will be updated to point to end of allocated area.
+>>>>>>> origin/develop12
     virtual void transact_log_reserve(size_t size, char** out_free_begin, char** out_free_end) = 0;
 
     /// Copy the specified data into the transaction log buffer. This
@@ -111,8 +161,16 @@ public:
     void transact_log_reserve(size_t size, char** out_free_begin, char** out_free_end) override;
     void transact_log_append(const char* data, size_t size, char** out_free_begin, char** out_free_end) override;
 
+<<<<<<< HEAD
     const char* transact_log_data() const;
 
+=======
+    const char* get_data() const;
+    char* get_data();
+    size_t get_size();
+
+private:
+>>>>>>> origin/develop12
     util::Buffer<char> m_buffer;
 };
 
@@ -124,6 +182,7 @@ public:
     /// to find on the `InstructionHandler`.
 
     // No selection needed:
+<<<<<<< HEAD
     bool select_table(size_t, size_t, const size_t*)
     {
         return true;
@@ -145,11 +204,35 @@ public:
         return true;
     }
     bool rename_group_level_table(size_t, StringData)
+=======
+    bool select_table(TableKey)
+    {
+        return true;
+    }
+    bool select_list(ColKey, ObjKey)
+    {
+        return true;
+    }
+    bool select_link_list(ColKey, ObjKey)
+    {
+        return true;
+    }
+    bool insert_group_level_table(TableKey)
+    {
+        return true;
+    }
+    bool erase_group_level_table(TableKey)
+    {
+        return true;
+    }
+    bool rename_group_level_table(TableKey)
+>>>>>>> origin/develop12
     {
         return true;
     }
 
     // Must have table selected:
+<<<<<<< HEAD
     bool insert_empty_rows(size_t, size_t, size_t, bool)
     {
         return true;
@@ -171,6 +254,13 @@ public:
         return true;
     }
     bool merge_rows(size_t, size_t)
+=======
+    bool create_object(ObjKey)
+    {
+        return true;
+    }
+    bool remove_object(ObjKey)
+>>>>>>> origin/develop12
     {
         return true;
     }
@@ -178,6 +268,7 @@ public:
     {
         return true;
     }
+<<<<<<< HEAD
     bool set_int(size_t, size_t, int_fast64_t, Instruction, size_t)
     {
         return true;
@@ -243,11 +334,23 @@ public:
         return true;
     }
     bool optimize_table()
+=======
+    bool modify_object(ColKey, ObjKey)
+    {
+        return true;
+    }
+    bool list_set(size_t)
+    {
+        return true;
+    }
+    bool list_insert(size_t)
+>>>>>>> origin/develop12
     {
         return true;
     }
 
     // Must have descriptor selected:
+<<<<<<< HEAD
     bool insert_link_column(size_t, DataType, StringData, size_t, size_t)
     {
         return true;
@@ -277,11 +380,27 @@ public:
         return true;
     }
     bool set_link_type(size_t, LinkType)
+=======
+    bool insert_column(ColKey)
+    {
+        return true;
+    }
+    bool erase_column(ColKey)
+    {
+        return true;
+    }
+    bool rename_column(ColKey)
+    {
+        return true;
+    }
+    bool set_link_type(ColKey)
+>>>>>>> origin/develop12
     {
         return true;
     }
 
     // Must have linklist selected:
+<<<<<<< HEAD
     bool link_list_set(size_t, size_t, size_t)
     {
         return true;
@@ -307,6 +426,21 @@ public:
         return true;
     }
     bool link_list_clear(size_t)
+=======
+    bool list_move(size_t, size_t)
+    {
+        return true;
+    }
+    bool list_swap(size_t, size_t)
+    {
+        return true;
+    }
+    bool list_erase(size_t)
+    {
+        return true;
+    }
+    bool list_clear(size_t)
+>>>>>>> origin/develop12
     {
         return true;
     }
@@ -326,6 +460,7 @@ public:
     /// to find on the `InstructionHandler`.
 
     // No selection needed:
+<<<<<<< HEAD
     bool select_table(size_t group_level_ndx, size_t levels, const size_t* path);
     bool select_descriptor(size_t levels, const size_t* path);
     bool select_link_list(size_t col_ndx, size_t row_ndx, size_t link_target_group_level_ndx);
@@ -380,6 +515,34 @@ public:
     bool link_list_erase(size_t link_ndx, size_t prior_size);
     bool link_list_nullify(size_t link_ndx, size_t prior_size);
     bool link_list_clear(size_t old_list_size);
+=======
+    bool select_table(TableKey key);
+    bool insert_group_level_table(TableKey table_key);
+    bool erase_group_level_table(TableKey table_key);
+    bool rename_group_level_table(TableKey table_key);
+
+    /// Must have table selected.
+    bool create_object(ObjKey);
+    bool remove_object(ObjKey);
+    bool modify_object(ColKey col_key, ObjKey key);
+
+    bool clear_table(size_t old_table_size);
+
+    // Must have descriptor selected:
+    bool insert_column(ColKey col_key);
+    bool erase_column(ColKey col_key);
+    bool rename_column(ColKey col_key);
+    bool set_link_type(ColKey col_key);
+
+    // Must have linklist selected:
+    bool select_list(ColKey col_key, ObjKey key);
+    bool list_set(size_t list_ndx);
+    bool list_insert(size_t ndx);
+    bool list_move(size_t from_link_ndx, size_t to_link_ndx);
+    bool list_swap(size_t link1_ndx, size_t link2_ndx);
+    bool list_erase(size_t list_ndx);
+    bool list_clear(size_t old_list_size);
+>>>>>>> origin/develop12
 
     /// End of methods expected by parser.
 
@@ -392,6 +555,7 @@ public:
     }
 
 private:
+<<<<<<< HEAD
     using IntegerList = std::tuple<IntegerColumnIterator, IntegerColumnIterator>;
     using UnsignedList = std::tuple<const size_t*, const size_t*>;
 
@@ -401,6 +565,11 @@ private:
     static constexpr int max_enc_bytes_per_double = sizeof(double);
     static constexpr int max_enc_bytes_per_num =
         max_enc_bytes_per_int < max_enc_bytes_per_double ? max_enc_bytes_per_double : max_enc_bytes_per_int;
+=======
+    // Make sure this is in agreement with the actual integer encoding
+    // scheme (see encode_int()).
+    static constexpr int max_enc_bytes_per_int = 10;
+>>>>>>> origin/develop12
 // Space is reserved in chunks to avoid excessive over allocation.
 #ifdef REALM_DEBUG
     static constexpr int max_numbers_per_chunk = 2; // Increase the chance of chunking in debug mode
@@ -408,6 +577,7 @@ private:
     static constexpr int max_numbers_per_chunk = 8;
 #endif
 
+<<<<<<< HEAD
     // This value is used in Set* instructions in place of the 'type' field in
     // the stream to indicate that the value of the Set* instruction is NULL,
     // which doesn't have a type.
@@ -416,6 +586,8 @@ private:
         return -1;
     }
 
+=======
+>>>>>>> origin/develop12
     TransactLogStream& m_stream;
 
     // These two delimit a contiguous region of free space in a
@@ -460,9 +632,12 @@ private:
     template <class... L>
     void append_simple_instr(L... numbers);
 
+<<<<<<< HEAD
     template <class... L>
     void append_mixed_instr(Instruction instr, const Mixed& value, L... numbers);
 
+=======
+>>>>>>> origin/develop12
     template <class T>
     static char* encode_int(char*, T value);
     friend class TransactLogParser;
@@ -470,6 +645,7 @@ private:
 
 class TransactLogConvenientEncoder {
 public:
+<<<<<<< HEAD
     virtual void insert_group_level_table(size_t table_ndx, size_t num_tables, StringData name);
     virtual void erase_group_level_table(size_t table_ndx, size_t num_tables);
     virtual void rename_group_level_table(size_t table_ndx, StringData new_name);
@@ -522,6 +698,68 @@ public:
     virtual void link_list_swap(const LinkView&, size_t link_ndx_1, size_t link_ndx_2);
     virtual void link_list_erase(const LinkView&, size_t link_ndx);
     virtual void link_list_clear(const LinkView&);
+=======
+    virtual ~TransactLogConvenientEncoder();
+    virtual void add_class(StringData table_name);
+    virtual void add_class_with_primary_key(StringData table_name, DataType pk_type, StringData pk_field,
+                                            bool nullable);
+    virtual void insert_group_level_table(TableKey table_key, size_t num_tables, StringData name);
+    virtual void erase_group_level_table(TableKey table_key, size_t num_tables);
+    virtual void rename_group_level_table(TableKey table_key, StringData new_name);
+    virtual void insert_column(const Table*, ColKey col_key, DataType type, StringData name, LinkTargetInfo& link,
+                               bool nullable = false, bool listtype = false, LinkType link_type = link_Weak);
+    virtual void erase_column(const Table*, ColKey col_key);
+    virtual void rename_column(const Table*, ColKey col_key, StringData name);
+
+    virtual void set_int(const Table*, ColKey col_key, ObjKey key, int_fast64_t value,
+                         Instruction variant = instr_Set);
+    virtual void add_int(const Table*, ColKey col_key, ObjKey key, int_fast64_t value);
+    virtual void set_bool(const Table*, ColKey col_key, ObjKey key, bool value, Instruction variant = instr_Set);
+    virtual void set_float(const Table*, ColKey col_key, ObjKey key, float value, Instruction variant = instr_Set);
+    virtual void set_double(const Table*, ColKey col_key, ObjKey key, double value, Instruction variant = instr_Set);
+    virtual void set_string(const Table*, ColKey col_key, ObjKey key, StringData value,
+                            Instruction variant = instr_Set);
+    virtual void set_binary(const Table*, ColKey col_key, ObjKey key, BinaryData value,
+                            Instruction variant = instr_Set);
+    virtual void set_timestamp(const Table*, ColKey col_key, ObjKey key, Timestamp value,
+                               Instruction variant = instr_Set);
+    virtual void set_link(const Table*, ColKey col_key, ObjKey key, ObjKey value, Instruction variant = instr_Set);
+    virtual void set_null(const Table*, ColKey col_key, ObjKey key, Instruction variant = instr_Set);
+    virtual void insert_substring(const Table*, ColKey col_key, ObjKey key, size_t pos, StringData);
+    virtual void erase_substring(const Table*, ColKey col_key, ObjKey key, size_t pos, size_t size);
+
+    virtual void list_set_int(const ConstLstBase& list, size_t list_ndx, int64_t value);
+    virtual void list_set_bool(const ConstLstBase& list, size_t list_ndx, bool value);
+    virtual void list_set_float(const ConstLstBase& list, size_t list_ndx, float value);
+    virtual void list_set_double(const ConstLstBase& list, size_t list_ndx, double value);
+    virtual void list_set_string(const Lst<String>& list, size_t list_ndx, StringData value);
+    virtual void list_set_binary(const Lst<Binary>& list, size_t list_ndx, BinaryData value);
+    virtual void list_set_timestamp(const Lst<Timestamp>& list, size_t list_ndx, Timestamp value);
+
+    virtual void list_insert_int(const ConstLstBase& list, size_t list_ndx, int64_t value);
+    virtual void list_insert_bool(const ConstLstBase& list, size_t list_ndx, bool value);
+    virtual void list_insert_float(const ConstLstBase& list, size_t list_ndx, float value);
+    virtual void list_insert_double(const ConstLstBase& list, size_t list_ndx, double value);
+    virtual void list_insert_string(const Lst<String>& list, size_t list_ndx, StringData value);
+    virtual void list_insert_binary(const Lst<Binary>& list, size_t list_ndx, BinaryData value);
+    virtual void list_insert_timestamp(const Lst<Timestamp>& list, size_t list_ndx, Timestamp value);
+
+    virtual void create_object(const Table*, GlobalKey);
+    virtual void create_object(const Table*, ObjKey);
+    virtual void create_object_with_primary_key(const Table*, GlobalKey, Mixed);
+    virtual void remove_object(const Table*, ObjKey);
+    virtual void set_link_type(const Table*, ColKey col_key, LinkType);
+    virtual void clear_table(const Table*, size_t prior_num_rows);
+
+    virtual void list_set_null(const ConstLstBase&, size_t ndx);
+    virtual void list_insert_null(const ConstLstBase&, size_t ndx);
+    virtual void list_set_link(const Lst<ObjKey>&, size_t link_ndx, ObjKey value);
+    virtual void list_insert_link(const Lst<ObjKey>&, size_t link_ndx, ObjKey value);
+    virtual void list_move(const ConstLstBase&, size_t from_link_ndx, size_t to_link_ndx);
+    virtual void list_swap(const ConstLstBase&, size_t link_ndx_1, size_t link_ndx_2);
+    virtual void list_erase(const ConstLstBase&, size_t link_ndx);
+    virtual void list_clear(const ConstLstBase&);
+>>>>>>> origin/develop12
 
     //@{
 
@@ -532,6 +770,7 @@ public:
     /// (reactor pattern) to be explicitly notified about the implicit
     /// nullifications.
 
+<<<<<<< HEAD
     virtual void nullify_link(const Table*, size_t col_ndx, size_t ndx);
     virtual void link_list_nullify(const LinkView&, size_t link_ndx);
 
@@ -541,6 +780,13 @@ public:
     void on_spec_destroyed(const Spec*) noexcept;
     void on_link_list_destroyed(const LinkView&) noexcept;
 
+=======
+    virtual void nullify_link(const Table*, ColKey col_key, ObjKey key);
+    virtual void link_list_nullify(const Lst<ObjKey>&, size_t link_ndx);
+
+    //@}
+
+>>>>>>> origin/develop12
 protected:
     TransactLogConvenientEncoder(TransactLogStream& encoder);
 
@@ -555,6 +801,7 @@ protected:
     }
 
 private:
+<<<<<<< HEAD
     TransactLogEncoder m_encoder;
     // These are mutable because they are caches.
     mutable util::Buffer<size_t> m_subtab_path_buf;
@@ -574,6 +821,43 @@ private:
     void do_select_table(const Table*);
     void do_select_desc(const Descriptor&);
     void do_select_link_list(const LinkView&);
+=======
+    struct LinkListId {
+        TableKey table_key;
+        ObjKey object_key;
+        ColKey col_id;
+
+        LinkListId() = default;
+        LinkListId(const ConstLstBase& list)
+            : table_key(list.get_table()->get_key())
+            , object_key(list.get_key())
+            , col_id(list.get_col_key())
+        {
+        }
+        LinkListId(TableKey t, ObjKey k, ColKey c)
+            : table_key(t)
+            , object_key(k)
+            , col_id(c)
+        {
+        }
+        bool operator!=(const LinkListId& other)
+        {
+            return object_key != other.object_key || table_key != other.table_key || col_id != other.col_id;
+        }
+    };
+    TransactLogEncoder m_encoder;
+    mutable const Table* m_selected_table = nullptr;
+    mutable LinkListId m_selected_list;
+
+    void unselect_all() noexcept;
+    void select_table(const Table*); // unselects link list
+    void select_list(const ConstLstBase&);
+
+    void do_select_table(const Table*);
+    void do_select_list(const ConstLstBase&);
+
+    void do_set(const Table*, ColKey col_key, ObjKey key, Instruction variant = instr_Set);
+>>>>>>> origin/develop12
 
     friend class TransactReverser;
 };
@@ -587,9 +871,12 @@ public:
     ~TransactLogParser() noexcept;
 
     /// See `TransactLogEncoder` for a list of methods that the `InstructionHandler` must define.
+<<<<<<< HEAD
     /// parse() promises that the path passed by reference to
     /// InstructionHandler::select_descriptor() will remain valid
     /// during subsequent calls to all descriptor modifying functions.
+=======
+>>>>>>> origin/develop12
     template <class InstructionHandler>
     void parse(InputStream&, InstructionHandler&);
 
@@ -611,8 +898,11 @@ private:
     // that all of the instructions are in memory.
     const char* m_input_end;
     util::StringBuffer m_string_buffer;
+<<<<<<< HEAD
     static const int m_max_levels = 1024;
     util::Buffer<size_t> m_path;
+=======
+>>>>>>> origin/develop12
 
     REALM_NORETURN void parser_error() const;
 
@@ -623,6 +913,7 @@ private:
     template <class T>
     T read_int();
 
+<<<<<<< HEAD
     void read_bytes(char* data, size_t size);
     BinaryData read_buffer(util::StringBuffer&, size_t size);
 
@@ -635,15 +926,20 @@ private:
     Timestamp read_timestamp();
     void read_mixed(Mixed*);
 
+=======
+>>>>>>> origin/develop12
     // Advance m_input_begin and m_input_end to reflect the next block of instructions
     // Returns false if no more input was available
     bool next_input_buffer();
 
     // return true if input was available
     bool read_char(char&); // throws
+<<<<<<< HEAD
 
     bool is_valid_data_type(int type);
     bool is_valid_link_type(int type);
+=======
+>>>>>>> origin/develop12
 };
 
 
@@ -658,15 +954,26 @@ public:
 
 /// Implementation:
 
+<<<<<<< HEAD
 inline void TransactLogBufferStream::transact_log_reserve(size_t n, char** inout_new_begin, char** out_new_end)
+=======
+inline void TransactLogBufferStream::transact_log_reserve(size_t size, char** inout_new_begin, char** out_new_end)
+>>>>>>> origin/develop12
 {
     char* data = m_buffer.data();
     REALM_ASSERT(*inout_new_begin >= data);
     REALM_ASSERT(*inout_new_begin <= (data + m_buffer.size()));
+<<<<<<< HEAD
     size_t size = *inout_new_begin - data;
     m_buffer.reserve_extra(size, n);
     data = m_buffer.data(); // May have changed
     *inout_new_begin = data + size;
+=======
+    size_t used_size = *inout_new_begin - data;
+    m_buffer.reserve_extra(used_size, size);
+    data = m_buffer.data(); // May have changed
+    *inout_new_begin = data + used_size;
+>>>>>>> origin/develop12
     *out_new_end = data + m_buffer.size();
 }
 
@@ -677,11 +984,28 @@ inline void TransactLogBufferStream::transact_log_append(const char* data, size_
     *out_new_begin = realm::safe_copy_n(data, size, *out_new_begin);
 }
 
+<<<<<<< HEAD
 inline const char* TransactLogBufferStream::transact_log_data() const
+=======
+inline const char* TransactLogBufferStream::get_data() const
 {
     return m_buffer.data();
 }
 
+inline char* TransactLogBufferStream::get_data()
+>>>>>>> origin/develop12
+{
+    return m_buffer.data();
+}
+
+<<<<<<< HEAD
+=======
+inline size_t TransactLogBufferStream::get_size()
+{
+    return m_buffer.size();
+}
+
+>>>>>>> origin/develop12
 inline TransactLogEncoder::TransactLogEncoder(TransactLogStream& stream)
     : m_stream(stream)
 {
@@ -795,6 +1119,7 @@ char* TransactLogEncoder::encode_int(char* ptr, T value)
 }
 
 template <class T>
+<<<<<<< HEAD
 char* TransactLogEncoder::encode(char* ptr, T value)
 {
     auto value_2 = value + 0; // Perform integral promotion
@@ -886,11 +1211,41 @@ inline char* TransactLogEncoder::encode<TransactLogEncoder::UnsignedList>(char* 
         ptr = encode_int(ptr, *i++);
 
     return ptr;
+=======
+inline char* TransactLogEncoder::encode(char* ptr, T inst)
+{
+    return encode_int<T>(ptr, inst);
+}
+
+template <>
+inline char* TransactLogEncoder::encode<TableKey>(char* ptr, TableKey key)
+{
+    return encode_int<int64_t>(ptr, key.value);
+}
+
+template <>
+inline char* TransactLogEncoder::encode<ColKey>(char* ptr, ColKey key)
+{
+    return encode_int<int64_t>(ptr, key.value);
+}
+
+template <>
+inline char* TransactLogEncoder::encode<ObjKey>(char* ptr, ObjKey key)
+{
+    return encode_int<int64_t>(ptr, key.value);
+}
+
+template <>
+inline char* TransactLogEncoder::encode<Instruction>(char* ptr, Instruction inst)
+{
+    return encode_int<int64_t>(ptr, inst);
+>>>>>>> origin/develop12
 }
 
 template <class T>
 size_t TransactLogEncoder::max_size(T)
 {
+<<<<<<< HEAD
     return max_enc_bytes_per_num;
 }
 
@@ -904,6 +1259,9 @@ template <>
 inline size_t TransactLogEncoder::max_size(bool)
 {
     return 1;
+=======
+    return max_enc_bytes_per_int;
+>>>>>>> origin/develop12
 }
 
 template <>
@@ -912,6 +1270,7 @@ inline size_t TransactLogEncoder::max_size(Instruction)
     return 1;
 }
 
+<<<<<<< HEAD
 template <>
 inline size_t TransactLogEncoder::max_size(DataType)
 {
@@ -940,6 +1299,8 @@ inline size_t TransactLogEncoder::max_size<TransactLogEncoder::UnsignedList>(Uns
     return max_enc_bytes_per_num * (end - begin);
 }
 
+=======
+>>>>>>> origin/develop12
 template <class... L>
 void TransactLogEncoder::append_simple_instr(L... numbers)
 {
@@ -948,6 +1309,7 @@ void TransactLogEncoder::append_simple_instr(L... numbers)
     encode_list(ptr, numbers...);
 }
 
+<<<<<<< HEAD
 template <class... L>
 void TransactLogEncoder::append_mixed_instr(Instruction instr, const Mixed& value, L... numbers)
 {
@@ -1007,12 +1369,19 @@ inline void TransactLogConvenientEncoder::unselect_all() noexcept
     m_selected_spec = nullptr;
     // no race with on_link_list_destroyed since both are setting to nullptr
     m_selected_link_list = nullptr;
+=======
+inline void TransactLogConvenientEncoder::unselect_all() noexcept
+{
+    m_selected_table = nullptr;
+    m_selected_list = LinkListId();
+>>>>>>> origin/develop12
 }
 
 inline void TransactLogConvenientEncoder::select_table(const Table* table)
 {
     if (table != m_selected_table)
         do_select_table(table); // Throws
+<<<<<<< HEAD
     m_selected_spec = nullptr;
     // no race with on_link_list_destroyed since both are setting to nullptr
     m_selected_link_list = nullptr;
@@ -1545,6 +1914,325 @@ inline void TransactLogConvenientEncoder::set_link_type(const Table* t, size_t c
 
 
 inline bool TransactLogEncoder::clear_table(size_t old_size)
+=======
+    m_selected_list = LinkListId();
+}
+
+inline void TransactLogConvenientEncoder::select_list(const ConstLstBase& list)
+{
+    if (LinkListId(list) != m_selected_list) {
+        do_select_list(list); // Throws
+    }
+}
+
+inline bool TransactLogEncoder::insert_group_level_table(TableKey table_key)
+{
+    append_simple_instr(instr_InsertGroupLevelTable, table_key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::insert_group_level_table(TableKey table_key, size_t, StringData)
+{
+    unselect_all();
+    m_encoder.insert_group_level_table(table_key); // Throws
+}
+
+inline bool TransactLogEncoder::erase_group_level_table(TableKey table_key)
+{
+    append_simple_instr(instr_EraseGroupLevelTable, table_key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::erase_group_level_table(TableKey table_key, size_t)
+{
+    unselect_all();
+    m_encoder.erase_group_level_table(table_key); // Throws
+}
+
+inline bool TransactLogEncoder::rename_group_level_table(TableKey table_key)
+{
+    append_simple_instr(instr_RenameGroupLevelTable, table_key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::rename_group_level_table(TableKey table_key, StringData)
+{
+    unselect_all();
+    m_encoder.rename_group_level_table(table_key); // Throws
+}
+
+inline bool TransactLogEncoder::insert_column(ColKey col_key)
+{
+    append_simple_instr(instr_InsertColumn, col_key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::insert_column(const Table* t, ColKey col_key, DataType, StringData,
+                                                        LinkTargetInfo&, bool, bool, LinkType)
+{
+    select_table(t); // Throws
+    m_encoder.insert_column(col_key); // Throws
+}
+
+inline bool TransactLogEncoder::erase_column(ColKey col_key)
+{
+    append_simple_instr(instr_EraseColumn, col_key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::erase_column(const Table* t, ColKey col_key)
+{
+    select_table(t); // Throws
+    m_encoder.erase_column(col_key); // Throws
+}
+
+inline bool TransactLogEncoder::rename_column(ColKey col_key)
+{
+    append_simple_instr(instr_RenameColumn, col_key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::rename_column(const Table* t, ColKey col_key, StringData)
+{
+    select_table(t);                  // Throws
+    m_encoder.rename_column(col_key); // Throws
+}
+
+
+inline bool TransactLogEncoder::modify_object(ColKey col_key, ObjKey key)
+{
+    append_simple_instr(instr_Set, col_key, key); // Throws
+    return true;
+}
+
+
+inline void TransactLogConvenientEncoder::do_set(const Table* t, ColKey col_key, ObjKey key, Instruction variant)
+{
+    if (variant != Instruction::instr_SetDefault) {
+        select_table(t);                       // Throws
+        m_encoder.modify_object(col_key, key); // Throws
+    }
+}
+
+
+inline void TransactLogConvenientEncoder::set_int(const Table* t, ColKey col_key, ObjKey key, int_fast64_t,
+                                                  Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+
+inline void TransactLogConvenientEncoder::add_int(const Table* t, ColKey col_key, ObjKey key, int_fast64_t)
+{
+    do_set(t, col_key, key); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_bool(const Table* t, ColKey col_key, ObjKey key, bool,
+                                                   Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_float(const Table* t, ColKey col_key, ObjKey key, float,
+                                                    Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_double(const Table* t, ColKey col_key, ObjKey key, double,
+                                                     Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_string(const Table* t, ColKey col_key, ObjKey key, StringData,
+                                                     Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_binary(const Table* t, ColKey col_key, ObjKey key, BinaryData,
+                                                     Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_timestamp(const Table* t, ColKey col_key, ObjKey key, Timestamp,
+                                                        Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_link(const Table* t, ColKey col_key, ObjKey key, ObjKey,
+                                                   Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::set_null(const Table* t, ColKey col_key, ObjKey key, Instruction variant)
+{
+    do_set(t, col_key, key, variant); // Throws
+}
+
+inline void TransactLogConvenientEncoder::nullify_link(const Table* t, ColKey col_key, ObjKey key)
+{
+    select_table(t); // Throws
+    m_encoder.modify_object(col_key, key); // Throws
+}
+
+inline void TransactLogConvenientEncoder::insert_substring(const Table* t, ColKey col_key, ObjKey key, size_t,
+                                                           StringData value)
+{
+    if (value.size() > 0) {
+        do_set(t, col_key, key); // Throws
+    }
+}
+
+inline void TransactLogConvenientEncoder::erase_substring(const Table* t, ColKey col_key, ObjKey key, size_t,
+                                                          size_t size)
+{
+    if (size > 0) {
+        do_set(t, col_key, key); // Throws
+    }
+}
+
+inline bool TransactLogEncoder::list_set(size_t list_ndx)
+{
+    append_simple_instr(instr_ListSet, list_ndx); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::list_set_int(const ConstLstBase& list, size_t list_ndx, int64_t)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_set_bool(const ConstLstBase& list, size_t list_ndx, bool)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_set_float(const ConstLstBase& list, size_t list_ndx, float)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_set_double(const ConstLstBase& list, size_t list_ndx, double)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_set_string(const Lst<String>& list, size_t list_ndx, StringData)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_set_binary(const Lst<Binary>& list, size_t list_ndx, BinaryData)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_set_timestamp(const Lst<Timestamp>& list, size_t list_ndx, Timestamp)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline bool TransactLogEncoder::list_insert(size_t list_ndx)
+{
+    append_simple_instr(instr_ListInsert, list_ndx); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::list_insert_int(const ConstLstBase& list, size_t list_ndx, int64_t)
+{
+    select_list(list);               // Throws
+    m_encoder.list_insert(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_bool(const ConstLstBase& list, size_t list_ndx, bool)
+{
+    select_list(list);               // Throws
+    m_encoder.list_insert(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_float(const ConstLstBase& list, size_t list_ndx, float)
+{
+    select_list(list);               // Throws
+    m_encoder.list_insert(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_double(const ConstLstBase& list, size_t list_ndx, double)
+{
+    select_list(list);               // Throws
+    m_encoder.list_insert(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_string(const Lst<String>& list, size_t list_ndx, StringData)
+{
+    select_list(list);               // Throws
+    m_encoder.list_insert(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_binary(const Lst<Binary>& list, size_t list_ndx, BinaryData)
+{
+    select_list(list);               // Throws
+    m_encoder.list_insert(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_timestamp(const Lst<Timestamp>& list, size_t list_ndx,
+                                                                Timestamp)
+{
+    select_list(list);               // Throws
+    m_encoder.list_insert(list_ndx); // Throws
+}
+
+inline bool TransactLogEncoder::create_object(ObjKey key)
+{
+    append_simple_instr(instr_CreateObject, key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::create_object(const Table* t, ObjKey key)
+{
+    select_table(t);              // Throws
+    m_encoder.create_object(key); // Throws
+}
+
+inline bool TransactLogEncoder::remove_object(ObjKey key)
+{
+    append_simple_instr(instr_RemoveObject, key); // Throws
+    return true;
+}
+
+
+inline void TransactLogConvenientEncoder::remove_object(const Table* t, ObjKey key)
+{
+    select_table(t);              // Throws
+    m_encoder.remove_object(key); // Throws
+}
+
+inline bool TransactLogEncoder::set_link_type(ColKey col_key)
+{
+    append_simple_instr(instr_SetLinkType, col_key); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::set_link_type(const Table* t, ColKey col_key, LinkType)
+{
+    select_table(t);                  // Throws
+    m_encoder.set_link_type(col_key); // Throws
+}
+
+
+inline bool TransactLogEncoder::clear_table(size_t old_size)
+>>>>>>> origin/develop12
 {
     append_simple_instr(instr_ClearTable, old_size); // Throws
     return true;
@@ -1556,6 +2244,7 @@ inline void TransactLogConvenientEncoder::clear_table(const Table* t, size_t pri
     m_encoder.clear_table(prior_num_rows); // Throws
 }
 
+<<<<<<< HEAD
 inline bool TransactLogEncoder::optimize_table()
 {
     append_simple_instr(instr_OptimizeTable); // Throws
@@ -1689,6 +2378,82 @@ inline void TransactLogConvenientEncoder::on_link_list_destroyed(const LinkView&
 }
 
 
+=======
+inline void TransactLogConvenientEncoder::list_set_null(const ConstLstBase& list, size_t list_ndx)
+{
+    select_list(list);            // Throws
+    m_encoder.list_set(list_ndx); // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_null(const ConstLstBase& list, size_t list_ndx)
+{
+    select_list(list);                                 // Throws
+    m_encoder.list_insert(list_ndx);                   // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_set_link(const Lst<ObjKey>& list, size_t link_ndx, ObjKey)
+{
+    select_list(list);                      // Throws
+    m_encoder.list_set(link_ndx);           // Throws
+}
+
+inline void TransactLogConvenientEncoder::list_insert_link(const Lst<ObjKey>& list, size_t link_ndx, ObjKey)
+{
+    select_list(list);                                      // Throws
+    m_encoder.list_insert(link_ndx);                        // Throws
+}
+
+inline void TransactLogConvenientEncoder::link_list_nullify(const Lst<ObjKey>& list, size_t link_ndx)
+{
+    select_list(list);            // Throws
+    m_encoder.list_erase(link_ndx); // Throws
+}
+
+inline bool TransactLogEncoder::list_move(size_t from_link_ndx, size_t to_link_ndx)
+{
+    REALM_ASSERT(from_link_ndx != to_link_ndx);
+    append_simple_instr(instr_ListMove, from_link_ndx, to_link_ndx); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::list_move(const ConstLstBase& list, size_t from_link_ndx,
+                                                    size_t to_link_ndx)
+{
+    select_list(list);                               // Throws
+    m_encoder.list_move(from_link_ndx, to_link_ndx); // Throws
+}
+
+inline bool TransactLogEncoder::list_swap(size_t link1_ndx, size_t link2_ndx)
+{
+    append_simple_instr(instr_ListSwap, link1_ndx, link2_ndx); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::list_swap(const ConstLstBase& list, size_t link1_ndx, size_t link2_ndx)
+{
+    select_list(list);                         // Throws
+    m_encoder.list_swap(link1_ndx, link2_ndx); // Throws
+}
+
+inline bool TransactLogEncoder::list_erase(size_t list_ndx)
+{
+    append_simple_instr(instr_ListErase, list_ndx); // Throws
+    return true;
+}
+
+inline void TransactLogConvenientEncoder::list_erase(const ConstLstBase& list, size_t link_ndx)
+{
+    select_list(list);              // Throws
+    m_encoder.list_erase(link_ndx); // Throws
+}
+
+inline bool TransactLogEncoder::list_clear(size_t old_list_size)
+{
+    append_simple_instr(instr_ListClear, old_list_size); // Throws
+    return true;
+}
+
+>>>>>>> origin/develop12
 inline TransactLogParser::TransactLogParser()
     : m_input_buffer(1024) // Throws
 {
@@ -1725,13 +2490,18 @@ inline bool TransactLogParser::has_next() noexcept
 template <class InstructionHandler>
 void TransactLogParser::parse_one(InstructionHandler& handler)
 {
+<<<<<<< HEAD
     char instr_ch = 0;
+=======
+    char instr_ch = 0; // silence a warning
+>>>>>>> origin/develop12
     if (!read_char(instr_ch))
         parser_error(); // Throws
     //    std::cerr << "parsing " << util::promote(instr) << " @ " << std::hex << long(m_input_begin) << std::dec <<
     //    "\n";
     Instruction instr = Instruction(instr_ch);
     switch (instr) {
+<<<<<<< HEAD
         case instr_SetDefault:
         case instr_SetUnique:
         case instr_Set: {
@@ -1909,11 +2679,39 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
             size_t row_ndx = read_int<size_t>();           // Throws
             size_t new_row_ndx = read_int<size_t>();       // Throws
             if (!handler.merge_rows(row_ndx, new_row_ndx)) // Throws
+=======
+        case instr_Set: {
+            ColKey col_key = ColKey(read_int<int64_t>()); // Throws
+            ObjKey key(read_int<int64_t>());             // Throws
+            if (!handler.modify_object(col_key, key))    // Throws
+                parser_error();
+            return;
+        }
+        case instr_SetDefault:
+            // Should not appear in the transaction log
+            parser_error();
+        case instr_ListSet: {
+            size_t list_ndx = read_int<size_t>();
+            if (!handler.list_set(list_ndx)) // Throws
+                parser_error();
+            return;
+        }
+        case instr_CreateObject: {
+            ObjKey key(read_int<int64_t>()); // Throws
+            if (!handler.create_object(key)) // Throws
+                parser_error();
+            return;
+        }
+        case instr_RemoveObject: {
+            ObjKey key(read_int<int64_t>()); // Throws
+            if (!handler.remove_object(key)) // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
         case instr_SelectTable: {
             int levels = read_int<int>(); // Throws
+<<<<<<< HEAD
             if (levels < 0 || levels > m_max_levels)
                 parser_error();
             m_path.reserve(0, 2 * levels); // Throws
@@ -1926,6 +2724,11 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
                 path[2 * i + 1] = row_ndx;
             }
             if (!handler.select_table(group_level_ndx, levels, path)) // Throws
+=======
+            REALM_ASSERT(levels == 0);
+            TableKey key = TableKey(read_int<uint32_t>());
+            if (!handler.select_table(key)) // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
@@ -1935,6 +2738,7 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
                 parser_error();
             return;
         }
+<<<<<<< HEAD
         case instr_LinkListSet: {
             size_t link_ndx = read_int<size_t>();                    // Throws
             size_t value = read_int<size_t>();                       // Throws
@@ -2019,10 +2823,49 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
         case instr_RemoveSearchIndex: {
             size_t col_ndx = read_int<size_t>();       // Throws
             if (!handler.remove_search_index(col_ndx)) // Throws
+=======
+        case instr_ListInsert: {
+            size_t list_ndx = read_int<size_t>();
+            if (!handler.list_insert(list_ndx)) // Throws
+                parser_error();
+            return;
+        }
+        case instr_ListMove: {
+            size_t from_link_ndx = read_int<size_t>();               // Throws
+            size_t to_link_ndx = read_int<size_t>();                 // Throws
+            if (!handler.list_move(from_link_ndx, to_link_ndx))      // Throws
+                parser_error();
+            return;
+        }
+        case instr_ListSwap: {
+            size_t link1_ndx = read_int<size_t>();             // Throws
+            size_t link2_ndx = read_int<size_t>();             // Throws
+            if (!handler.list_swap(link1_ndx, link2_ndx))      // Throws
+                parser_error();
+            return;
+        }
+        case instr_ListErase: {
+            size_t link_ndx = read_int<size_t>();               // Throws
+            if (!handler.list_erase(link_ndx))                  // Throws
+                parser_error();
+            return;
+        }
+        case instr_ListClear: {
+            size_t old_list_size = read_int<size_t>();   // Throws
+            if (!handler.list_clear(old_list_size))      // Throws
+                parser_error();
+            return;
+        }
+        case instr_SelectList: {
+            ColKey col_key = ColKey(read_int<int64_t>());                            // Throws
+            ObjKey key = ObjKey(read_int<int64_t>());                                // Throws
+            if (!handler.select_list(col_key, key))                                  // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
         case instr_SetLinkType: {
+<<<<<<< HEAD
             size_t col_ndx = read_int<size_t>(); // Throws
             int link_type = read_int<int>();     // Throws
             if (!is_valid_link_type(link_type))
@@ -2061,10 +2904,21 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
             StringData name = read_string(m_string_buffer);    // Throws
             if (!handler.insert_link_column(col_ndx, DataType(type), name, link_target_table_ndx,
                                             backlink_col_ndx)) // Throws
+=======
+            ColKey col_key = ColKey(read_int<int64_t>()); // Throws
+            if (!handler.set_link_type(col_key))          // Throws
+                parser_error();
+            return;
+        }
+        case instr_InsertColumn: {
+            ColKey col_key = ColKey(read_int<int64_t>()); // Throws
+            if (!handler.insert_column(col_key))         // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
         case instr_EraseColumn: {
+<<<<<<< HEAD
             size_t col_ndx = read_int<size_t>(); // Throws
             if (!handler.erase_column(col_ndx))  // Throws
                 parser_error();
@@ -2075,10 +2929,15 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
             size_t link_target_table_ndx = read_int<size_t>();                                // Throws
             size_t backlink_col_ndx = read_int<size_t>();                                     // Throws
             if (!handler.erase_link_column(col_ndx, link_target_table_ndx, backlink_col_ndx)) // Throws
+=======
+            ColKey col_key = ColKey(read_int<int64_t>()); // Throws
+            if (!handler.erase_column(col_key))          // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
         case instr_RenameColumn: {
+<<<<<<< HEAD
             size_t col_ndx = read_int<size_t>();            // Throws
             StringData name = read_string(m_string_buffer); // Throws
             if (!handler.rename_column(col_ndx, name))      // Throws
@@ -2096,25 +2955,40 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
                 path[i] = col_ndx;
             }
             if (!handler.select_descriptor(levels, path)) // Throws
+=======
+            ColKey col_key = ColKey(read_int<int64_t>());    // Throws
+            if (!handler.rename_column(col_key))            // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
         case instr_InsertGroupLevelTable: {
+<<<<<<< HEAD
             size_t table_ndx = read_int<size_t>();                              // Throws
             size_t num_tables = read_int<size_t>();                             // Throws
             StringData name = read_string(m_string_buffer);                     // Throws
             if (!handler.insert_group_level_table(table_ndx, num_tables, name)) // Throws
+=======
+            TableKey table_key = TableKey(read_int<uint32_t>()); // Throws
+            if (!handler.insert_group_level_table(table_key))  // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
         case instr_EraseGroupLevelTable: {
+<<<<<<< HEAD
             size_t table_ndx = read_int<size_t>();                             // Throws
             size_t prior_num_tables = read_int<size_t>();                      // Throws
             if (!handler.erase_group_level_table(table_ndx, prior_num_tables)) // Throws
+=======
+            TableKey table_key = TableKey(read_int<uint32_t>());               // Throws
+            if (!handler.erase_group_level_table(table_key))                   // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
         case instr_RenameGroupLevelTable: {
+<<<<<<< HEAD
             size_t table_ndx = read_int<size_t>();                      // Throws
             StringData new_name = read_string(m_string_buffer);         // Throws
             if (!handler.rename_group_level_table(table_ndx, new_name)) // Throws
@@ -2130,6 +3004,10 @@ void TransactLogParser::parse_one(InstructionHandler& handler)
         }
         case instr_OptimizeTable: {
             if (!handler.optimize_table()) // Throws
+=======
+            TableKey table_key = TableKey(read_int<uint32_t>());        // Throws
+            if (!handler.rename_group_level_table(table_key))           // Throws
+>>>>>>> origin/develop12
                 parser_error();
             return;
         }
@@ -2180,6 +3058,7 @@ bad_transact_log:
     throw BadTransactLog();
 }
 
+<<<<<<< HEAD
 
 inline void TransactLogParser::read_bytes(char* data, size_t size)
 {
@@ -2328,6 +3207,8 @@ inline void TransactLogParser::read_mixed(Mixed* mixed)
 }
 
 
+=======
+>>>>>>> origin/develop12
 inline bool TransactLogParser::next_input_buffer()
 {
     return m_input->next_block(m_input_begin, m_input_end);
@@ -2343,6 +3224,7 @@ inline bool TransactLogParser::read_char(char& c)
 }
 
 
+<<<<<<< HEAD
 inline bool TransactLogParser::is_valid_data_type(int type)
 {
     switch (DataType(type)) {
@@ -2381,10 +3263,19 @@ public:
     {
         sync_table();
         m_encoder.select_table(group_level_ndx, levels, path);
+=======
+class TransactReverser {
+public:
+    bool select_table(TableKey key)
+    {
+        sync_table();
+        m_encoder.select_table(key);
+>>>>>>> origin/develop12
         m_pending_ts_instr = get_inst();
         return true;
     }
 
+<<<<<<< HEAD
     bool select_descriptor(size_t levels, const size_t* path)
     {
         sync_descriptor();
@@ -2397,24 +3288,42 @@ public:
     {
         sync_table();
         m_encoder.erase_group_level_table(table_ndx, num_tables + 1);
+=======
+    bool insert_group_level_table(TableKey table_key)
+    {
+        sync_table();
+        m_encoder.erase_group_level_table(table_key);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool erase_group_level_table(size_t table_ndx, size_t num_tables)
     {
         sync_table();
         m_encoder.insert_group_level_table(table_ndx, num_tables - 1, "");
+=======
+    bool erase_group_level_table(TableKey table_key)
+    {
+        sync_table();
+        m_encoder.insert_group_level_table(table_key);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool rename_group_level_table(size_t, StringData)
+=======
+    bool rename_group_level_table(TableKey)
+>>>>>>> origin/develop12
     {
         sync_table();
         return true;
     }
 
+<<<<<<< HEAD
     bool optimize_table()
     {
         return true; // No-op
@@ -2457,10 +3366,16 @@ public:
     bool move_row(size_t from_ndx, size_t to_ndx)
     {
         m_encoder.move_row(to_ndx, from_ndx);
+=======
+    bool create_object(ObjKey key)
+    {
+        m_encoder.remove_object(key); // Throws
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool merge_rows(size_t row_ndx, size_t new_row_ndx)
     {
         // There is no instruction we can generate here to change back.
@@ -2470,31 +3385,55 @@ public:
         m_encoder.merge_rows(row_ndx, row_ndx);
         append_instruction();
         m_encoder.merge_rows(new_row_ndx, new_row_ndx);
+=======
+    bool remove_object(ObjKey key)
+    {
+        m_encoder.create_object(key); // Throws
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool set_int(size_t col_ndx, size_t row_ndx, int_fast64_t value, Instruction variant, size_t prior_num_rows)
     {
         m_encoder.set_int(col_ndx, row_ndx, value, variant, prior_num_rows);
+=======
+    bool modify_object(ColKey col_key, ObjKey key)
+    {
+        m_encoder.modify_object(col_key, key);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool add_int(size_t col_ndx, size_t row_ndx, int_fast64_t value)
     {
         m_encoder.add_int(col_ndx, row_ndx, -value);
+=======
+    bool list_set(size_t ndx)
+    {
+        m_encoder.list_set(ndx);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool set_bool(size_t col_ndx, size_t row_ndx, bool value, Instruction variant)
     {
         m_encoder.set_bool(col_ndx, row_ndx, value, variant);
+=======
+    bool list_insert(size_t ndx)
+    {
+        m_encoder.list_erase(ndx);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool set_float(size_t col_ndx, size_t row_ndx, float value, Instruction variant)
     {
         m_encoder.set_float(col_ndx, row_ndx, value, variant);
@@ -2617,17 +3556,44 @@ public:
     bool insert_column(size_t col_idx, DataType, StringData, bool)
     {
         m_encoder.erase_column(col_idx);
+=======
+    bool clear_table(size_t old_size)
+    {
+        while (old_size--) {
+            m_encoder.create_object(null_key);
+            append_instruction();
+        }
+        return true;
+    }
+
+    bool set_link_type(ColKey key)
+    {
+        m_encoder.set_link_type(key);
+        return true;
+    }
+
+    bool insert_column(ColKey col_key)
+    {
+        m_encoder.erase_column(col_key);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool erase_column(size_t col_idx)
     {
         m_encoder.insert_column(col_idx, DataType(), "");
+=======
+    bool erase_column(ColKey col_key)
+    {
+        m_encoder.insert_column(col_key);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool rename_column(size_t, StringData)
     {
         return true; // No-op
@@ -2651,24 +3617,56 @@ public:
     bool link_list_insert(size_t link_ndx, size_t, size_t prior_size)
     {
         m_encoder.link_list_erase(link_ndx, prior_size + 1);
+=======
+    bool rename_column(ColKey col_key)
+    {
+        m_encoder.rename_column(col_key);
+        return true;
+    }
+
+    bool select_list(ColKey col_key, ObjKey key)
+    {
+        sync_list();
+        m_encoder.select_list(col_key, key);
+        m_pending_ls_instr = get_inst();
+        return true;
+    }
+
+    bool list_move(size_t from_link_ndx, size_t to_link_ndx)
+    {
+        m_encoder.list_move(from_link_ndx, to_link_ndx);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool link_list_move(size_t from_link_ndx, size_t to_link_ndx)
     {
         m_encoder.link_list_move(from_link_ndx, to_link_ndx);
+=======
+    bool list_swap(size_t link1_ndx, size_t link2_ndx)
+    {
+        m_encoder.list_swap(link1_ndx, link2_ndx);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool link_list_swap(size_t link1_ndx, size_t link2_ndx)
     {
         m_encoder.link_list_swap(link1_ndx, link2_ndx);
+=======
+    bool list_erase(size_t list_ndx)
+    {
+        m_encoder.list_insert(list_ndx);
+>>>>>>> origin/develop12
         append_instruction();
         return true;
     }
 
+<<<<<<< HEAD
     bool link_list_erase(size_t link_ndx, size_t prior_size)
     {
         m_encoder.link_list_insert(link_ndx, 0, prior_size - 1);
@@ -2677,17 +3675,25 @@ public:
     }
 
     bool link_list_clear(size_t old_list_size)
+=======
+    bool list_clear(size_t old_list_size)
+>>>>>>> origin/develop12
     {
         // Append in reverse order because the reversed log is itself applied
         // in reverse, and this way it generates all back-insertions rather than
         // all front-insertions
         for (size_t i = old_list_size; i > 0; --i) {
+<<<<<<< HEAD
             m_encoder.link_list_insert(i - 1, 0, old_list_size - i);
+=======
+            m_encoder.list_insert(i - 1);
+>>>>>>> origin/develop12
             append_instruction();
         }
         return true;
     }
 
+<<<<<<< HEAD
     bool nullify_link(size_t col_ndx, size_t row_ndx, size_t target_group_level_ndx)
     {
         size_t value = 0;
@@ -2706,6 +3712,8 @@ public:
         return true;
     }
 
+=======
+>>>>>>> origin/develop12
 private:
     _impl::TransactLogBufferStream m_buffer;
     _impl::TransactLogEncoder m_encoder{m_buffer};
@@ -2716,8 +3724,12 @@ private:
     std::vector<Instr> m_instructions;
     size_t current_instr_start = 0;
     Instr m_pending_ts_instr{0, 0};
+<<<<<<< HEAD
     Instr m_pending_ds_instr{0, 0};
     Instr m_pending_lv_instr{0, 0};
+=======
+    Instr m_pending_ls_instr{0, 0};
+>>>>>>> origin/develop12
 
     Instr get_inst()
     {
@@ -2730,8 +3742,13 @@ private:
 
     size_t transact_log_size() const
     {
+<<<<<<< HEAD
         REALM_ASSERT_3(m_encoder.write_position(), >=, m_buffer.transact_log_data());
         return m_encoder.write_position() - m_buffer.transact_log_data();
+=======
+        REALM_ASSERT_3(m_encoder.write_position(), >=, m_buffer.get_data());
+        return m_encoder.write_position() - m_buffer.get_data();
+>>>>>>> origin/develop12
     }
 
     void append_instruction()
@@ -2752,6 +3769,7 @@ private:
         }
     }
 
+<<<<<<< HEAD
     void sync_linkview()
     {
         sync_select(m_pending_lv_instr);
@@ -2761,11 +3779,20 @@ private:
     {
         sync_linkview();
         sync_select(m_pending_ds_instr);
+=======
+    void sync_list()
+    {
+        sync_select(m_pending_ls_instr);
+>>>>>>> origin/develop12
     }
 
     void sync_table()
     {
+<<<<<<< HEAD
         sync_descriptor();
+=======
+        sync_list();
+>>>>>>> origin/develop12
         sync_select(m_pending_ts_instr);
     }
 
@@ -2778,10 +3805,17 @@ public:
     ReversedNoCopyInputStream(TransactReverser& reverser)
         : m_instr_order(reverser.m_instructions)
     {
+<<<<<<< HEAD
         // push any pending select_table or select_descriptor into the buffer
         reverser.sync_table();
 
         m_buffer = reverser.m_buffer.transact_log_data();
+=======
+        // push any pending select_table into the buffer
+        reverser.sync_table();
+
+        m_buffer = reverser.m_buffer.get_data();
+>>>>>>> origin/develop12
         m_current = m_instr_order.size();
     }
 

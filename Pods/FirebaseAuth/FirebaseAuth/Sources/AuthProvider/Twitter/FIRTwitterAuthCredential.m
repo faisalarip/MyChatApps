@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/AuthProvider/Twitter/FIRTwitterAuthCredential.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRTwitterAuthProvider.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRTwitterAuthProvider.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Backend/RPC/FIRVerifyAssertionRequest.h"
 #import "FirebaseAuth/Sources/Utilities/FIRAuthExceptionUtils.h"

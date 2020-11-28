@@ -15,11 +15,19 @@
 #import "GoogleUtilities/Network/Private/GULNetwork.h"
 #import "GoogleUtilities/Network/Private/GULNetworkMessageCode.h"
 
+<<<<<<< HEAD
 #import <GoogleUtilities/GULLogger.h>
 #import <GoogleUtilities/GULNSData+zlib.h>
 #import <GoogleUtilities/GULReachabilityChecker.h>
 #import "GoogleUtilities/Network/Private/GULMutableDictionary.h"
 #import "GoogleUtilities/Network/Private/GULNetworkConstants.h"
+=======
+#import "GoogleUtilities/Logger/Private/GULLogger.h"
+#import "GoogleUtilities/NSData+zlib/Private/GULNSDataInternal.h"
+#import "GoogleUtilities/Network/Private/GULMutableDictionary.h"
+#import "GoogleUtilities/Network/Private/GULNetworkConstants.h"
+#import "GoogleUtilities/Reachability/Private/GULReachabilityChecker.h"
+>>>>>>> origin/develop12
 
 /// Constant string for request header Content-Encoding.
 static NSString *const kGULNetworkContentCompressionKey = @"Content-Encoding";

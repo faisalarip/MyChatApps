@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "FIRInstallationsItem.h"
 
 #import "FIRInstallationsStoredAuthToken.h"
 #import "FIRInstallationsStoredItem.h"
+=======
+#import "FirebaseInstallations/Source/Library/FIRInstallationsItem.h"
+
+#import "FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStoredAuthToken.h"
+#import "FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStoredItem.h"
+>>>>>>> origin/develop12
 
 @implementation FIRInstallationsItem
 

@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKURL.h"
+=======
+ #import "FBSDKURL.h"
+>>>>>>> origin/develop12
 
 @interface FBSDKURL (Internal)
 + (FBSDKURL *)URLForRenderBackToReferrerBarURL:(NSURL *)url;

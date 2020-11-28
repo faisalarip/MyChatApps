@@ -26,13 +26,32 @@
 #include <realm/util/features.h>
 #include <realm/util/terminate.hpp>
 #include <realm/util/assert.hpp>
+<<<<<<< HEAD
+=======
+#include <realm/util/file.hpp>
+#include <realm/exceptions.hpp>
+#include <realm/util/safe_int_ops.hpp>
+#include <realm/node_header.hpp>
+#include <realm/util/file_mapper.hpp>
+
+// Temporary workaround for
+// https://developercommunity.visualstudio.com/content/problem/994075/64-bit-atomic-load-ices-cl-1924-with-o2-ob1.html
+#if defined REALM_ARCHITECTURE_X86_32 && defined REALM_WINDOWS
+#define REALM_WORKAROUND_MSVC_BUG REALM_NOINLINE
+#else
+#define REALM_WORKAROUND_MSVC_BUG
+#endif
+>>>>>>> origin/develop12
 
 namespace realm {
 
 class Allocator;
 
+<<<<<<< HEAD
 class Replication;
 
+=======
+>>>>>>> origin/develop12
 using ref_type = size_t;
 
 int_fast64_t from_ref(ref_type) noexcept;
@@ -47,8 +66,13 @@ public:
     MemRef(char* addr, ref_type ref, Allocator& alloc) noexcept;
     MemRef(ref_type ref, Allocator& alloc) noexcept;
 
+<<<<<<< HEAD
     char* get_addr();
     ref_type get_ref();
+=======
+    char* get_addr() const;
+    ref_type get_ref() const;
+>>>>>>> origin/develop12
     void set_ref(ref_type ref);
     void set_addr(char* addr);
 
@@ -110,6 +134,13 @@ public:
     /// this interface.
     bool is_read_only(ref_type) const noexcept;
 
+<<<<<<< HEAD
+=======
+    void set_read_only(bool ro)
+    {
+        m_is_read_only = ro;
+    }
+>>>>>>> origin/develop12
     /// Returns a simple allocator that can be used with free-standing
     /// Realm objects (such as a free-standing table). A
     /// free-standing object is one that is not part of a Group, and
@@ -136,6 +167,7 @@ public:
     }
 #endif
 
+<<<<<<< HEAD
     Replication* get_replication() noexcept;
 
 protected:
@@ -145,6 +177,32 @@ protected:
 
     ref_type m_debug_watch = 0;
 
+=======
+    struct MappedFile;
+
+protected:
+    constexpr static int section_shift = 26;
+
+    std::atomic<size_t> m_baseline; // Separation line between immutable and mutable refs.
+
+    ref_type m_debug_watch = 0;
+
+    // The following logically belongs in the slab allocator, but is placed
+    // here to optimize a critical path:
+
+    // The ref translation splits the full ref-space (both below and above baseline)
+    // into equal chunks.
+    struct RefTranslation {
+        char* mapping_addr;
+#if REALM_ENABLE_ENCRYPTION
+        util::EncryptedFileMapping* encrypted_mapping;
+#endif
+    };
+    // This pointer may be changed concurrently with access, so make sure it is
+    // atomic!
+    std::atomic<RefTranslation*> m_ref_translation_ptr;
+
+>>>>>>> origin/develop12
     /// The specified size must be divisible by 8, and must not be
     /// zero.
     ///
@@ -162,7 +220,11 @@ protected:
     virtual MemRef do_realloc(ref_type, char* addr, size_t old_size, size_t new_size) = 0;
 
     /// Release the specified chunk of memory.
+<<<<<<< HEAD
     virtual void do_free(ref_type, char* addr) noexcept = 0;
+=======
+    virtual void do_free(ref_type, char* addr) = 0;
+>>>>>>> origin/develop12
 
     /// Map the specified \a ref to the corresponding memory
     /// address. Note that if is_read_only(ref) returns true, then the
@@ -172,6 +234,7 @@ protected:
     virtual char* do_translate(ref_type ref) const noexcept = 0;
 
     Allocator() noexcept;
+<<<<<<< HEAD
 
     // FIXME: This really doesn't belong in an allocator, but it is the best
     // place for now, because every table has a pointer leading here. It would
@@ -226,6 +289,145 @@ inline bool Allocator::should_propagate_version(uint_fast64_t& local_version) no
         return false;
     }
 }
+=======
+    size_t get_section_index(size_t pos) const noexcept;
+    inline size_t get_section_base(size_t index) const noexcept;
+
+
+    // The following counters are used to ensure accessor refresh,
+    // and allows us to report many errors related to attempts to
+    // access data which is no longer current.
+    //
+    // * storage_versioning: monotonically increasing counter
+    //   bumped whenever the underlying storage layout is changed,
+    //   or if the owning accessor have been detached.
+    // * content_versioning: monotonically increasing counter
+    //   bumped whenever the data is changed. Used to detect
+    //   if queries are stale.
+    // * instance_versioning: monotonically increasing counter
+    //   used to detect if the allocator (and owning structure, e.g. Table)
+    //   is recycled. Mismatch on this counter will cause accesors
+    //   lower in the hierarchy to throw if access is attempted.
+    std::atomic<uint_fast64_t> m_content_versioning_counter;
+
+    std::atomic<uint_fast64_t> m_storage_versioning_counter;
+
+    std::atomic<uint_fast64_t> m_instance_versioning_counter;
+
+    inline uint_fast64_t get_storage_version(uint64_t instance_version)
+    {
+        if (instance_version != m_instance_versioning_counter) {
+            throw LogicError(LogicError::detached_accessor);
+        }
+        return m_storage_versioning_counter.load(std::memory_order_acquire);
+    }
+
+    inline uint_fast64_t get_storage_version()
+    {
+        return m_storage_versioning_counter.load(std::memory_order_acquire);
+    }
+
+    inline void bump_storage_version() noexcept
+    {
+        m_storage_versioning_counter.fetch_add(1, std::memory_order_acq_rel);
+    }
+
+    REALM_WORKAROUND_MSVC_BUG inline uint_fast64_t get_content_version() noexcept
+    {
+        return m_content_versioning_counter.load(std::memory_order_acquire);
+    }
+
+    inline uint_fast64_t bump_content_version() noexcept
+    {
+        return m_content_versioning_counter.fetch_add(1, std::memory_order_acq_rel) + 1;
+    }
+
+    REALM_WORKAROUND_MSVC_BUG inline uint_fast64_t get_instance_version() noexcept
+    {
+        return m_instance_versioning_counter.load(std::memory_order_relaxed);
+    }
+
+    inline void bump_instance_version() noexcept
+    {
+        m_instance_versioning_counter.fetch_add(1, std::memory_order_relaxed);
+    }
+
+private:
+    bool m_is_read_only = false; // prevent any alloc or free operations
+
+    friend class Table;
+    friend class ClusterTree;
+    friend class Group;
+    friend class WrappedAllocator;
+    friend class ConstObj;
+    friend class Obj;
+    friend class ConstLstBase;
+};
+
+
+class WrappedAllocator : public Allocator {
+public:
+    WrappedAllocator(Allocator& underlying_allocator)
+        : m_alloc(&underlying_allocator)
+    {
+        m_baseline.store(m_alloc->m_baseline, std::memory_order_relaxed);
+        m_debug_watch = 0;
+        m_ref_translation_ptr.store(m_alloc->m_ref_translation_ptr);
+    }
+
+    ~WrappedAllocator()
+    {
+    }
+
+    void switch_underlying_allocator(Allocator& underlying_allocator)
+    {
+        m_alloc = &underlying_allocator;
+        m_baseline.store(m_alloc->m_baseline, std::memory_order_relaxed);
+        m_debug_watch = 0;
+        m_ref_translation_ptr.store(m_alloc->m_ref_translation_ptr);
+    }
+
+    void update_from_underlying_allocator(bool writable)
+    {
+        switch_underlying_allocator(*m_alloc);
+        set_read_only(!writable);
+    }
+
+private:
+    Allocator* m_alloc;
+    MemRef do_alloc(const size_t size) override
+    {
+        auto result = m_alloc->do_alloc(size);
+        bump_storage_version();
+        m_baseline.store(m_alloc->m_baseline, std::memory_order_relaxed);
+        m_ref_translation_ptr.store(m_alloc->m_ref_translation_ptr);
+        return result;
+    }
+    virtual MemRef do_realloc(ref_type ref, char* addr, size_t old_size, size_t new_size) override
+    {
+        auto result = m_alloc->do_realloc(ref, addr, old_size, new_size);
+        bump_storage_version();
+        m_baseline.store(m_alloc->m_baseline, std::memory_order_relaxed);
+        m_ref_translation_ptr.store(m_alloc->m_ref_translation_ptr);
+        return result;
+    }
+
+    virtual void do_free(ref_type ref, char* addr) noexcept override
+    {
+        return m_alloc->do_free(ref, addr);
+    }
+
+    virtual char* do_translate(ref_type ref) const noexcept override
+    {
+        return m_alloc->translate(ref);
+    }
+
+    virtual void verify() const override
+    {
+        m_alloc->verify();
+    }
+};
+>>>>>>> origin/develop12
 
 
 // Implementation:
@@ -295,7 +497,11 @@ inline MemRef::MemRef(ref_type ref, Allocator& alloc) noexcept
 #endif
 }
 
+<<<<<<< HEAD
 inline char* MemRef::get_addr()
+=======
+inline char* MemRef::get_addr() const
+>>>>>>> origin/develop12
 {
 #if REALM_ENABLE_MEMDEBUG
     // Asserts if the ref has been freed
@@ -304,7 +510,11 @@ inline char* MemRef::get_addr()
     return m_addr;
 }
 
+<<<<<<< HEAD
 inline ref_type MemRef::get_ref()
+=======
+inline ref_type MemRef::get_ref() const
+>>>>>>> origin/develop12
 {
 #if REALM_ENABLE_MEMDEBUG
     // Asserts if the ref has been freed
@@ -329,6 +539,11 @@ inline void MemRef::set_addr(char* addr)
 
 inline MemRef Allocator::alloc(size_t size)
 {
+<<<<<<< HEAD
+=======
+    if (m_is_read_only)
+        throw realm::LogicError(realm::LogicError::wrong_transact_state);
+>>>>>>> origin/develop12
     return do_alloc(size);
 }
 
@@ -338,6 +553,11 @@ inline MemRef Allocator::realloc_(ref_type ref, const char* addr, size_t old_siz
     if (ref == m_debug_watch)
         REALM_TERMINATE("Allocator watch: Ref was reallocated");
 #endif
+<<<<<<< HEAD
+=======
+    if (m_is_read_only)
+        throw realm::LogicError(realm::LogicError::wrong_transact_state);
+>>>>>>> origin/develop12
     return do_realloc(ref, const_cast<char*>(addr), old_size, new_size);
 }
 
@@ -347,6 +567,11 @@ inline void Allocator::free_(ref_type ref, const char* addr) noexcept
     if (ref == m_debug_watch)
         REALM_TERMINATE("Allocator watch: Ref was freed");
 #endif
+<<<<<<< HEAD
+=======
+    REALM_ASSERT(!m_is_read_only);
+
+>>>>>>> origin/develop12
     return do_free(ref, const_cast<char*>(addr));
 }
 
@@ -355,31 +580,74 @@ inline void Allocator::free_(MemRef mem) noexcept
     free_(mem.get_ref(), mem.get_addr());
 }
 
+<<<<<<< HEAD
 inline char* Allocator::translate(ref_type ref) const noexcept
 {
     return do_translate(ref);
+=======
+inline size_t Allocator::get_section_base(size_t index) const noexcept
+{
+    return index << section_shift; // 64MB chunks
+}
+
+inline size_t Allocator::get_section_index(size_t pos) const noexcept
+{
+    return pos >> section_shift; // 64Mb chunks
+>>>>>>> origin/develop12
 }
 
 inline bool Allocator::is_read_only(ref_type ref) const noexcept
 {
     REALM_ASSERT_DEBUG(ref != 0);
+<<<<<<< HEAD
     REALM_ASSERT_DEBUG(m_baseline != 0); // Attached SlabAlloc
     return ref < m_baseline;
+=======
+    // REALM_ASSERT_DEBUG(m_baseline != 0); // Attached SlabAlloc
+    return ref < m_baseline.load(std::memory_order_relaxed);
+>>>>>>> origin/develop12
 }
 
 inline Allocator::Allocator() noexcept
 {
+<<<<<<< HEAD
     m_table_versioning_counter = 0;
     m_latest_observed_counter = 0;
+=======
+    m_content_versioning_counter = 0;
+    m_storage_versioning_counter = 0;
+    m_instance_versioning_counter = 0;
+    m_ref_translation_ptr = nullptr;
+>>>>>>> origin/develop12
 }
 
 inline Allocator::~Allocator() noexcept
 {
 }
 
+<<<<<<< HEAD
 inline Replication* Allocator::get_replication() noexcept
 {
     return m_replication;
+=======
+inline char* Allocator::translate(ref_type ref) const noexcept
+{
+    if (auto ref_translation_ptr = m_ref_translation_ptr.load(std::memory_order_acquire)) {
+        char* base_addr;
+        size_t idx = get_section_index(ref);
+        base_addr = ref_translation_ptr[idx].mapping_addr;
+        size_t offset = ref - get_section_base(idx);
+        auto addr = base_addr + offset;
+#if REALM_ENABLE_ENCRYPTION
+        realm::util::encryption_read_barrier(addr, NodeHeader::header_size,
+                                             ref_translation_ptr[idx].encrypted_mapping,
+                                             NodeHeader::get_byte_size_from_header);
+#endif
+        return addr;
+    }
+    else
+        return do_translate(ref);
+>>>>>>> origin/develop12
 }
 
 } // namespace realm

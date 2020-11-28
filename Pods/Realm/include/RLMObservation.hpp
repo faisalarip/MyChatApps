@@ -20,7 +20,11 @@
 
 #import "binding_context.hpp"
 
+<<<<<<< HEAD
 #import <realm/row.hpp>
+=======
+#import <realm/obj.hpp>
+>>>>>>> origin/develop12
 #import <realm/table.hpp>
 
 #import <unordered_map>
@@ -50,6 +54,7 @@ namespace realm {
 class RLMObservationInfo {
 public:
     RLMObservationInfo(id object);
+<<<<<<< HEAD
     RLMObservationInfo(RLMClassInfo &objectSchema, std::size_t row, id object);
     ~RLMObservationInfo();
 
@@ -58,17 +63,35 @@ public:
     }
 
     NSString *columnName(size_t col) const noexcept;
+=======
+    RLMObservationInfo(RLMClassInfo &objectSchema, realm::ObjKey row, id object);
+    ~RLMObservationInfo();
+
+    realm::ConstObj const& getRow() const {
+        return row;
+    }
+
+    NSString *columnName(realm::ColKey col) const noexcept;
+>>>>>>> origin/develop12
 
     // Send willChange/didChange notifications to all observers for this object/row
     // Sends the array versions if indexes is non-nil, normal versions otherwise
     void willChange(NSString *key, NSKeyValueChange kind=NSKeyValueChangeSetting, NSIndexSet *indexes=nil) const;
     void didChange(NSString *key, NSKeyValueChange kind=NSKeyValueChangeSetting, NSIndexSet *indexes=nil) const;
 
+<<<<<<< HEAD
     bool isForRow(size_t ndx) const {
         return row && row.get_index() == ndx;
     }
 
     void recordObserver(realm::Row& row, RLMClassInfo *objectInfo, RLMObjectSchema *objectSchema, NSString *keyPath);
+=======
+    bool isForRow(realm::ObjKey key) const {
+        return row.get_key() == key;
+    }
+
+    void recordObserver(realm::Obj& row, RLMClassInfo *objectInfo, RLMObjectSchema *objectSchema, NSString *keyPath);
+>>>>>>> origin/develop12
     void removeObserver();
     bool hasObservers() const { return observerCount > 0; }
 
@@ -94,7 +117,11 @@ private:
     RLMObservationInfo *prev = nullptr;
 
     // Row being observed
+<<<<<<< HEAD
     realm::Row row;
+=======
+    realm::ConstObj row;
+>>>>>>> origin/develop12
     RLMClassInfo *objectSchema = nullptr;
 
     // Object doing the observing
@@ -110,7 +137,11 @@ private:
     // are added and so that they can still be accessed after row is detached
     NSMutableDictionary *cachedObjects;
 
+<<<<<<< HEAD
     void setRow(realm::Table &table, size_t newRow);
+=======
+    void setRow(realm::Table const& table, realm::ObjKey newRow);
+>>>>>>> origin/develop12
 
     template<typename F>
     void forEach(F&& f) const {
@@ -140,7 +171,11 @@ private:
 // Get the the observation info chain for the given row
 // Will simply return info if it's non-null, and will search ojectSchema's array
 // for a matching one otherwise, and return null if there are none
+<<<<<<< HEAD
 RLMObservationInfo *RLMGetObservationInfo(RLMObservationInfo *info, size_t row, RLMClassInfo& objectSchema);
+=======
+RLMObservationInfo *RLMGetObservationInfo(RLMObservationInfo *info, realm::ObjKey row, RLMClassInfo& objectSchema);
+>>>>>>> origin/develop12
 
 // delete all objects from a single table with change notifications
 void RLMClearTable(RLMClassInfo &realm);

@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRAuthErrors.h>
 #import <Foundation/Foundation.h>
+=======
+#import <Foundation/Foundation.h>
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthErrors.h"
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -456,6 +461,22 @@ typedef NS_ENUM(NSInteger, FIRAuthInternalErrorCode) {
   FIRAuthInternalErrorCodeInvalidProviderID = FIRAuthPublicErrorCodeFlag |
                                               FIRAuthErrorCodeInvalidProviderID,
 
+<<<<<<< HEAD
+=======
+  /** @var FIRAuthInternalErrorCodeTenantIDMismatch
+      @brief Indicates an error occurred when an attempt is made to update the current user with a
+          tenantId that differs from the current FirebaseAuth instance's tenantId.
+   */
+  FIRAuthInternalErrorCodeTenantIDMismatch = FIRAuthPublicErrorCodeFlag |
+                                             FIRAuthErrorCodeTenantIDMismatch,
+
+  /** @var FIRAuthInternalErrorCodeUnsupportedTenantOperation
+      @brief Indicates an error occurred when operation is not supported in a multi-tenant context.
+   */
+  FIRAuthInternalErrorCodeUnsupportedTenantOperation = FIRAuthPublicErrorCodeFlag |
+                                                       FIRAuthErrorCodeUnsupportedTenantOperation,
+
+>>>>>>> origin/develop12
   /** Indicates that the Firebase Dynamic Link domain used is either not configured or is
      unauthorized for the current project.
    */

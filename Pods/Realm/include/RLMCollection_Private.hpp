@@ -28,7 +28,11 @@ namespace realm {
     struct NotificationToken;
 }
 class RLMClassInfo;
+<<<<<<< HEAD
 @class RLMFastEnumerator;
+=======
+@class RLMFastEnumerator, RLMManagedArray;
+>>>>>>> origin/develop12
 
 @protocol RLMFastEnumerable
 @property (nonatomic, readonly) RLMRealm *realm;
@@ -64,19 +68,32 @@ NSUInteger RLMFastEnumerate(NSFastEnumerationState *state, NSUInteger len, id<RL
 - (RLMRealm *)realm;
 @end
 
+<<<<<<< HEAD
 @interface RLMCancellationToken : RLMNotificationToken
 - (instancetype)initWithToken:(realm::NotificationToken)token realm:(RLMRealm *)realm;
 @end
 
+=======
+>>>>>>> origin/develop12
 @interface RLMCollectionChange ()
 - (instancetype)initWithChanges:(realm::CollectionChangeSet)indices;
 @end
 
+<<<<<<< HEAD
 template<typename Collection>
 RLMNotificationToken *RLMAddNotificationBlock(id objcCollection,
                                               Collection& collection,
                                               void (^block)(id, RLMCollectionChange *, NSError *),
                                               bool suppressInitialChange=false);
+=======
+realm::List& RLMGetBackingCollection(RLMManagedArray *);
+realm::Results& RLMGetBackingCollection(RLMResults *);
+
+template<typename RLMCollection>
+RLMNotificationToken *RLMAddNotificationBlock(RLMCollection *collection,
+                                              void (^block)(id, RLMCollectionChange *, NSError *),
+                                              dispatch_queue_t queue);
+>>>>>>> origin/develop12
 
 template<typename Collection>
 NSArray *RLMCollectionValueForKey(Collection& collection, NSString *key, RLMClassInfo& info);

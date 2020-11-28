@@ -16,7 +16,14 @@
 #import "SDInternalMacros.h"
 #import "objc/runtime.h"
 
+<<<<<<< HEAD
 @interface SDAnimatedImageView () <CALayerDelegate> {
+=======
+@interface UIImageView () <CALayerDelegate>
+@end
+
+@interface SDAnimatedImageView () {
+>>>>>>> origin/develop12
     BOOL _initFinished; // Extra flag to mark the `commonInit` is called
     NSRunLoopMode _runLoopMode;
     NSUInteger _maxBufferSize;
@@ -135,7 +142,11 @@
             } else {
                 provider = (id<SDAnimatedImage>)image;
             }
+<<<<<<< HEAD
             // Create animted player
+=======
+            // Create animated player
+>>>>>>> origin/develop12
             self.player = [SDAnimatedImagePlayer playerWithProvider:provider];
         } else {
             // Update Frame Count
@@ -469,6 +480,14 @@
     if (currentFrame) {
         layer.contentsScale = currentFrame.scale;
         layer.contents = (__bridge id)currentFrame.CGImage;
+<<<<<<< HEAD
+=======
+    } else {
+        // If we have no animation frames, call super implementation. iOS 14+ UIImageView use this delegate method for rendering.
+        if ([UIImageView instancesRespondToSelector:@selector(displayLayer:)]) {
+            [super displayLayer:layer];
+        }
+>>>>>>> origin/develop12
     }
 }
 

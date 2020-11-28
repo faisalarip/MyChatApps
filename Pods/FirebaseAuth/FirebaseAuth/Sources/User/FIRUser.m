@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRAuth.h>
 #import <FirebaseAuth/FIREmailAuthProvider.h>
 #import <FirebaseAuth/FIRFederatedAuthProvider.h>
 #import <FirebaseCore/FIRLogger.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuth.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIREmailAuthProvider.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRFederatedAuthProvider.h"
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthDataResult_Internal.h"
 #import "FirebaseAuth/Sources/Auth/FIRAuthGlobalWorkQueue.h"
@@ -60,7 +67,11 @@
 #import "FirebaseAuth/Sources/Utilities/FIRAuthWebUtils.h"
 
 #if TARGET_OS_IOS
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRPhoneAuthProvider.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneAuthProvider.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/AuthProvider/Phone/FIRPhoneAuthCredential_Internal.h"
 #endif
@@ -129,6 +140,14 @@ static NSString *const kMetadataCodingKey = @"metadata";
 
 static NSString *const kMultiFactorCodingKey = @"multiFactor";
 
+<<<<<<< HEAD
+=======
+/** @var kTenantIDKey
+    @brief The key used to encode the tenantID instance variable for NSSecureCoding.
+ */
+static NSString *const kTenantIDCodingKey = @"tenantID";
+
+>>>>>>> origin/develop12
 /** @var kMissingUsersErrorMessage
     @brief The error message when there is no users array in the getAccountInfo response.
  */
@@ -220,6 +239,14 @@ static void callInMainThreadWithAuthDataResultAndError(
  */
 @property(nonatomic, readwrite) BOOL anonymous;
 
+<<<<<<< HEAD
+=======
+/** @property tenantID
+    @brief The tenant ID of the current user. nil if none is available.
+ */
+@property(nonatomic, readwrite, nullable) NSString *tenantID;
+
+>>>>>>> origin/develop12
 @end
 
 @implementation FIRUser {
@@ -269,6 +296,10 @@ static void callInMainThreadWithAuthDataResultAndError(
                                                      refreshToken:refreshToken];
   FIRUser *user = [[self alloc] initWithTokenService:tokenService];
   user.auth = auth;
+<<<<<<< HEAD
+=======
+  user.tenantID = auth.tenantID;
+>>>>>>> origin/develop12
   user.requestConfiguration = auth.requestConfiguration;
   [user internalGetTokenWithCallback:^(NSString *_Nullable accessToken, NSError *_Nullable error) {
     if (error) {
@@ -324,13 +355,21 @@ static void callInMainThreadWithAuthDataResultAndError(
                                                  forKey:kPhoneNumberCodingKey];
   BOOL emailVerified = [aDecoder decodeBoolForKey:kEmailVerifiedCodingKey];
   NSSet *providerDataClasses =
+<<<<<<< HEAD
       [NSSet setWithArray:@ [[NSDictionary class], [NSString class], [FIRUserInfoImpl class]]];
+=======
+      [NSSet setWithArray:@[ [NSDictionary class], [NSString class], [FIRUserInfoImpl class] ]];
+>>>>>>> origin/develop12
   NSDictionary<NSString *, FIRUserInfoImpl *> *providerData =
       [aDecoder decodeObjectOfClasses:providerDataClasses forKey:kProviderDataKey];
   FIRSecureTokenService *tokenService = [aDecoder decodeObjectOfClass:[FIRSecureTokenService class]
                                                                forKey:kTokenServiceCodingKey];
   FIRUserMetadata *metadata = [aDecoder decodeObjectOfClass:[FIRUserMetadata class]
                                                      forKey:kMetadataCodingKey];
+<<<<<<< HEAD
+=======
+  NSString *tenantID = [aDecoder decodeObjectOfClass:[NSString class] forKey:kTenantIDCodingKey];
+>>>>>>> origin/develop12
   NSString *APIKey = [aDecoder decodeObjectOfClass:[NSString class] forKey:kAPIKeyCodingKey];
 #if TARGET_OS_IOS
   FIRMultiFactor *multiFactor = [aDecoder decodeObjectOfClass:[FIRMultiFactor class]
@@ -354,6 +393,10 @@ static void callInMainThreadWithAuthDataResultAndError(
     _providerData = providerData;
     _phoneNumber = phoneNumber;
     _metadata = metadata ?: [[FIRUserMetadata alloc] initWithCreationDate:nil lastSignInDate:nil];
+<<<<<<< HEAD
+=======
+    _tenantID = tenantID;
+>>>>>>> origin/develop12
     _requestConfiguration = [[FIRAuthRequestConfiguration alloc] initWithAPIKey:APIKey];
 #if TARGET_OS_IOS
     _multiFactor = multiFactor ?: [[FIRMultiFactor alloc] init];
@@ -373,6 +416,10 @@ static void callInMainThreadWithAuthDataResultAndError(
   [aCoder encodeObject:_photoURL forKey:kPhotoURLCodingKey];
   [aCoder encodeObject:_displayName forKey:kDisplayNameCodingKey];
   [aCoder encodeObject:_metadata forKey:kMetadataCodingKey];
+<<<<<<< HEAD
+=======
+  [aCoder encodeObject:_tenantID forKey:kTenantIDCodingKey];
+>>>>>>> origin/develop12
   [aCoder encodeObject:_auth.requestConfiguration.APIKey forKey:kAPIKeyCodingKey];
   [aCoder encodeObject:_tokenService forKey:kTokenServiceCodingKey];
 #if TARGET_OS_IOS

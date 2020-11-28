@@ -87,6 +87,7 @@ extension SortDescriptor: ExpressibleByStringLiteral {
     public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
 
     /**
+<<<<<<< HEAD
      Creates a `SortDescriptor` out of a Unicode scalar literal.
 
      - parameter unicodeScalarLiteral: Property name literal.
@@ -105,6 +106,8 @@ extension SortDescriptor: ExpressibleByStringLiteral {
     }
 
     /**
+=======
+>>>>>>> origin/develop12
      Creates a `SortDescriptor` out of a string literal.
 
      - parameter stringLiteral: Property name literal.

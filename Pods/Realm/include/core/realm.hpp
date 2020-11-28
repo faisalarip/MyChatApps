@@ -19,9 +19,15 @@
 #ifndef REALM_HPP
 #define REALM_HPP
 
+<<<<<<< HEAD
 #include <realm/group_shared.hpp>
 #include <realm/descriptor.hpp>
 #include <realm/link_view.hpp>
+=======
+#include <realm/db.hpp>
+#include <realm/obj.hpp>
+#include <realm/list.hpp>
+>>>>>>> origin/develop12
 #include <realm/table_view.hpp>
 #include <realm/query.hpp>
 #include <realm/query_engine.hpp>

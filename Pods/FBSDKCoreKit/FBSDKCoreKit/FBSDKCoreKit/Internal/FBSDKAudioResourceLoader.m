@@ -20,12 +20,21 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKAudioResourceLoader.h"
 
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
+=======
+ #import "FBSDKAudioResourceLoader.h"
+
+ #import "FBSDKDynamicFrameworkLoader.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKLogger.h"
+ #import "FBSDKSettings.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKAudioResourceLoader
 {
@@ -34,7 +43,11 @@
   SystemSoundID _systemSoundID;
 }
 
+<<<<<<< HEAD
 #pragma mark - Class Methods
+=======
+ #pragma mark - Class Methods
+>>>>>>> origin/develop12
 
 + (instancetype)sharedLoader
 {
@@ -63,7 +76,11 @@
   return loader;
 }
 
+<<<<<<< HEAD
 #pragma mark - Object Lifecycle
+=======
+ #pragma mark - Object Lifecycle
+>>>>>>> origin/develop12
 
 - (instancetype)init
 {
@@ -78,7 +95,11 @@
   fbsdkdfl_AudioServicesDisposeSystemSoundID(_systemSoundID);
 }
 
+<<<<<<< HEAD
 #pragma mark - Public API
+=======
+ #pragma mark - Public API
+>>>>>>> origin/develop12
 
 - (BOOL)loadSound:(NSError **)errorRef
 {
@@ -103,7 +124,11 @@
   fbsdkdfl_AudioServicesPlaySystemSound(_systemSoundID);
 }
 
+<<<<<<< HEAD
 #pragma mark - Helper Methods
+=======
+ #pragma mark - Helper Methods
+>>>>>>> origin/develop12
 
 - (NSURL *)_fileURL:(NSError **)errorRef
 {
@@ -136,7 +161,11 @@
 
 @implementation FBSDKAudioResourceLoader (Subclass)
 
+<<<<<<< HEAD
 #pragma mark - Subclass Methods
+=======
+ #pragma mark - Subclass Methods
+>>>>>>> origin/develop12
 
 + (NSString *)name
 {

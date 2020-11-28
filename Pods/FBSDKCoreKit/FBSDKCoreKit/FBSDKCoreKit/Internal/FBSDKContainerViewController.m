@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKContainerViewController.h"
+=======
+ #import "FBSDKContainerViewController.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKContainerViewController
 

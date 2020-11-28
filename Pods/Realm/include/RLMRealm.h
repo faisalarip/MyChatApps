@@ -17,7 +17,11 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #import <Foundation/Foundation.h>
+<<<<<<< HEAD
 #import "RLMConstants.h"
+=======
+#import <Realm/RLMConstants.h>
+>>>>>>> origin/develop12
 
 @class RLMRealmConfiguration, RLMRealm, RLMObject, RLMSchema, RLMMigration, RLMNotificationToken, RLMThreadSafeReference, RLMAsyncOpenTask;
 struct RLMRealmPrivileges;
@@ -51,12 +55,21 @@ NS_ASSUME_NONNULL_BEGIN
  the Realm within an `@autoreleasepool {}` and ensure you have no other
  strong references to it.
 
+<<<<<<< HEAD
  @warning `RLMRealm` instances are not thread safe and cannot be shared across
  threads or dispatch queues. Trying to do so will cause an exception to be thrown.
  You must call this method on each thread you want
  to interact with the Realm on. For dispatch queues, this means that you must
  call it in each block which is dispatched, as a queue is not guaranteed to run
  all of its blocks on the same thread.
+=======
+ @warning Non-frozen `RLMRealm` instances are thread-confined and cannot be
+ shared across threads or dispatch queues. Trying to do so will cause an
+ exception to be thrown. You must call this method on each thread you want to
+ interact with the Realm on. For dispatch queues, this means that you must call
+ it in each block which is dispatched, as a queue is not guaranteed to run all
+ of its blocks on the same thread.
+>>>>>>> origin/develop12
  */
 
 @interface RLMRealm : NSObject
@@ -69,8 +82,13 @@ NS_ASSUME_NONNULL_BEGIN
  The default Realm is used by the `RLMObject` class methods
  which do not take an `RLMRealm` parameter, but is otherwise not special. The
  default Realm is persisted as *default.realm* under the *Documents* directory of
+<<<<<<< HEAD
  your Application on iOS, and in your application's *Application Support*
  directory on OS X.
+=======
+ your Application on iOS, in your application's *Application Support*
+ directory on macOS, and in the *Cache* directory on tvOS.
+>>>>>>> origin/develop12
 
  The default Realm is created using the default `RLMRealmConfiguration`, which
  can be changed via `+[RLMRealmConfiguration setDefaultConfiguration:]`.
@@ -80,6 +98,30 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)defaultRealm;
 
 /**
+<<<<<<< HEAD
+=======
+ Obtains an instance of the default Realm bound to the given queue.
+
+ Rather than being confined to the thread they are opened on, queue-bound
+ RLMRealms are confined to the given queue. They can be accessed from any
+ thread as long as it is from within a block dispatch to the queue, and
+ notifications will be delivered to the queue instead of a thread's run loop.
+
+ Realms can only be confined to a serial queue. Queue-confined RLMRealm
+ instances can be obtained when not on that queue, but attempting to do
+ anything with that instance without first dispatching to the queue will throw
+ an incorrect thread exception.
+
+ The default Realm is created using the default `RLMRealmConfiguration`, which
+ can be changed via `+[RLMRealmConfiguration setDefaultConfiguration:]`.
+
+ @param queue A serial dispatch queue to confine the Realm to.
+ @return The default `RLMRealm` instance for the given queue.
+ */
++ (instancetype)defaultRealmForQueue:(dispatch_queue_t)queue;
+
+/**
+>>>>>>> origin/develop12
  Obtains an `RLMRealm` instance with the given configuration.
 
  @param configuration A configuration object to use when creating the Realm.
@@ -92,6 +134,34 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable instancetype)realmWithConfiguration:(RLMRealmConfiguration *)configuration error:(NSError **)error;
 
 /**
+<<<<<<< HEAD
+=======
+ Obtains an `RLMRealm` instance with the given configuration bound to the given queue.
+
+ Rather than being confined to the thread they are opened on, queue-bound
+ RLMRealms are confined to the given queue. They can be accessed from any
+ thread as long as it is from within a block dispatch to the queue, and
+ notifications will be delivered to the queue instead of a thread's run loop.
+
+ Realms can only be confined to a serial queue. Queue-confined RLMRealm
+ instances can be obtained when not on that queue, but attempting to do
+ anything with that instance without first dispatching to the queue will throw
+ an incorrect thread exception.
+
+ @param configuration A configuration object to use when creating the Realm.
+ @param queue         A serial dispatch queue to confine the Realm to.
+ @param error         If an error occurs, upon return contains an `NSError` object
+                      that describes the problem. If you are not interested in
+                      possible errors, pass in `NULL`.
+
+ @return An `RLMRealm` instance.
+ */
++ (nullable instancetype)realmWithConfiguration:(RLMRealmConfiguration *)configuration
+                                          queue:(nullable dispatch_queue_t)queue
+                                          error:(NSError **)error;
+
+/**
+>>>>>>> origin/develop12
  Obtains an `RLMRealm` instance persisted at a specified file URL.
 
  @param fileURL The local URL of the file the Realm should be saved at.
@@ -109,12 +179,21 @@ NS_ASSUME_NONNULL_BEGIN
  synchronized Realms wait for all remote content available at the time the
  operation began to be downloaded and available locally.
 
+<<<<<<< HEAD
  @param configuration A configuration object to use when opening the Realm.
  @param callbackQueue The dispatch queue on which the callback should be run.
+=======
+ The Realm passed to the callback function is confined to the callback queue as
+ if `-[RLMRealm realmWithConfiguration:queue:error]` was used.
+
+ @param configuration A configuration object to use when opening the Realm.
+ @param callbackQueue The serial dispatch queue on which the callback should be run.
+>>>>>>> origin/develop12
  @param callback      A callback block. If the Realm was successfully opened,
                       it will be passed in as an argument.
                       Otherwise, an `NSError` describing what went wrong will be
                       passed to the block instead.
+<<<<<<< HEAD
 
  @note The returned Realm is confined to the thread on which it was created.
        Because GCD does not guarantee that queues will always use the same
@@ -124,6 +203,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (RLMAsyncOpenTask *)asyncOpenWithConfiguration:(RLMRealmConfiguration *)configuration
                      callbackQueue:(dispatch_queue_t)callbackQueue
                           callback:(RLMAsyncOpenRealmCallback)callback;
+=======
+ */
++ (RLMAsyncOpenTask *)asyncOpenWithConfiguration:(RLMRealmConfiguration *)configuration
+                                   callbackQueue:(dispatch_queue_t)callbackQueue
+                                        callback:(RLMAsyncOpenRealmCallback)callback;
+>>>>>>> origin/develop12
 
 /**
  The `RLMSchema` used by the Realm.
@@ -149,6 +234,29 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) BOOL isEmpty;
 
+<<<<<<< HEAD
+=======
+/**
+ Indicates if this Realm is frozen.
+
+ @see `-[RLMRealm freeze]`
+ */
+@property (nonatomic, readonly, getter=isFrozen) BOOL frozen;
+
+/**
+ Returns a frozen (immutable) snapshot of this Realm.
+
+ A frozen Realm is an immutable snapshot view of a particular version of a
+ Realm's data. Unlike normal RLMRealm instances, it does not live-update to
+ reflect writes made to the Realm, and can be accessed from any thread. Writing
+ to a frozen Realm is not allowed, and attempting to begin a write transaction
+ will throw an exception.
+
+ All objects and collections read from a frozen Realm will also be frozen.
+ */
+- (RLMRealm *)freeze NS_RETURNS_RETAINED;
+
+>>>>>>> origin/develop12
 #pragma mark - File Management
 
 /**

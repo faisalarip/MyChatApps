@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "FIRInstallationsIDController.h"
+=======
+#import "FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsIDController.h"
+>>>>>>> origin/develop12
 
 #if __has_include(<FBLPromises/FBLPromises.h>)
 #import <FBLPromises/FBLPromises.h>
@@ -22,6 +26,7 @@
 #import "FBLPromises.h"
 #endif
 
+<<<<<<< HEAD
 #import <FirebaseCore/FIRAppInternal.h>
 #import <GoogleUtilities/GULKeychainStorage.h>
 
@@ -36,6 +41,23 @@
 
 #import "FIRInstallationsHTTPError.h"
 #import "FIRInstallationsStoredAuthToken.h"
+=======
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+#import "GoogleUtilities/Environment/Private/GULKeychainStorage.h"
+
+#import "FirebaseInstallations/Source/Library/Errors/FIRInstallationsErrorUtil.h"
+#import "FirebaseInstallations/Source/Library/FIRInstallationsItem.h"
+#import "FirebaseInstallations/Source/Library/FIRInstallationsLogger.h"
+#import "FirebaseInstallations/Source/Library/IIDMigration/FIRInstallationsIIDStore.h"
+#import "FirebaseInstallations/Source/Library/IIDMigration/FIRInstallationsIIDTokenStore.h"
+#import "FirebaseInstallations/Source/Library/InstallationsAPI/FIRInstallationsAPIService.h"
+#import "FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsBackoffController.h"
+#import "FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsSingleOperationPromiseCache.h"
+#import "FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStore.h"
+
+#import "FirebaseInstallations/Source/Library/Errors/FIRInstallationsHTTPError.h"
+#import "FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStoredAuthToken.h"
+>>>>>>> origin/develop12
 
 const NSNotificationName FIRInstallationIDDidChangeNotification =
     @"FIRInstallationIDDidChangeNotification";
@@ -44,6 +66,11 @@ NSString *const kFIRInstallationIDDidChangeNotificationAppNameKey =
 
 NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 hour.
 
+<<<<<<< HEAD
+=======
+static NSString *const kKeychainService = @"com.firebase.FIRInstallations.installations";
+
+>>>>>>> origin/develop12
 @interface FIRInstallationsIDController ()
 @property(nonatomic, readonly) NSString *appID;
 @property(nonatomic, readonly) NSString *appName;
@@ -54,6 +81,11 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
 
 @property(nonatomic, readonly) FIRInstallationsAPIService *APIService;
 
+<<<<<<< HEAD
+=======
+@property(nonatomic, readonly) id<FIRInstallationsBackoffControllerProtocol> backoffController;
+
+>>>>>>> origin/develop12
 @property(nonatomic, readonly) FIRInstallationsSingleOperationPromiseCache<FIRInstallationsItem *>
     *getInstallationPromiseCache;
 @property(nonatomic, readonly)
@@ -71,9 +103,15 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
                              APIKey:(NSString *)APIKey
                           projectID:(NSString *)projectID
                         GCMSenderID:(NSString *)GCMSenderID
+<<<<<<< HEAD
                         accessGroup:(NSString *)accessGroup {
   GULKeychainStorage *secureStorage =
       [[GULKeychainStorage alloc] initWithService:@"com.firebase.FIRInstallations.installations"];
+=======
+                        accessGroup:(nullable NSString *)accessGroup {
+  NSString *serviceName = [FIRInstallationsIDController keychainServiceWithAppID:appID];
+  GULKeychainStorage *secureStorage = [[GULKeychainStorage alloc] initWithService:serviceName];
+>>>>>>> origin/develop12
   FIRInstallationsStore *installationsStore =
       [[FIRInstallationsStore alloc] initWithSecureStorage:secureStorage accessGroup:accessGroup];
 
@@ -86,12 +124,23 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
   FIRInstallationsIIDTokenStore *IIDCheckingStore =
       [[FIRInstallationsIIDTokenStore alloc] initWithGCMSenderID:GCMSenderID];
 
+<<<<<<< HEAD
+=======
+  FIRInstallationsBackoffController *backoffController =
+      [[FIRInstallationsBackoffController alloc] init];
+
+>>>>>>> origin/develop12
   return [self initWithGoogleAppID:appID
                            appName:appName
                 installationsStore:installationsStore
                         APIService:apiService
                           IIDStore:IIDStore
+<<<<<<< HEAD
                      IIDTokenStore:IIDCheckingStore];
+=======
+                     IIDTokenStore:IIDCheckingStore
+                 backoffController:backoffController];
+>>>>>>> origin/develop12
 }
 
 /// The initializer is supposed to be used by tests to inject `installationsStore`.
@@ -100,7 +149,13 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
                  installationsStore:(FIRInstallationsStore *)installationsStore
                          APIService:(FIRInstallationsAPIService *)APIService
                            IIDStore:(FIRInstallationsIIDStore *)IIDStore
+<<<<<<< HEAD
                       IIDTokenStore:(FIRInstallationsIIDTokenStore *)IIDTokenStore {
+=======
+                      IIDTokenStore:(FIRInstallationsIIDTokenStore *)IIDTokenStore
+                  backoffController:
+                      (id<FIRInstallationsBackoffControllerProtocol>)backoffController {
+>>>>>>> origin/develop12
   self = [super init];
   if (self) {
     _appID = appID;
@@ -109,6 +164,10 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
     _APIService = APIService;
     _IIDStore = IIDStore;
     _IIDTokenStore = IIDTokenStore;
+<<<<<<< HEAD
+=======
+    _backoffController = backoffController;
+>>>>>>> origin/develop12
 
     __weak FIRInstallationsIDController *weakSelf = self;
 
@@ -251,6 +310,7 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
       break;
   }
 
+<<<<<<< HEAD
   return [self.APIService registerInstallation:installation]
       .catch(^(NSError *_Nonnull error) {
         if ([self doesRegistrationErrorRequireConfigChange:error]) {
@@ -262,6 +322,28 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
         }
       })
       .then(^id(FIRInstallationsItem *registeredInstallation) {
+=======
+  // Check for backoff.
+  if (![self.backoffController isNextRequestAllowed]) {
+    return [FIRInstallationsErrorUtil
+        rejectedPromiseWithError:[FIRInstallationsErrorUtil backoffIntervalWaitError]];
+  }
+
+  return [self.APIService registerInstallation:installation]
+      .catch(^(NSError *_Nonnull error) {
+        [self updateBackoffWithSuccess:NO APIError:error];
+
+        if ([self doesRegistrationErrorRequireConfigChange:error]) {
+          FIRLogError(kFIRLoggerInstallations,
+                      kFIRInstallationsMessageCodeInvalidFirebaseConfiguration,
+                      @"Firebase Installation registration failed for app with name: %@, error:\n"
+                      @"%@\nPlease make sure you use valid GoogleService-Info.plist",
+                      self.appName, error.userInfo[NSLocalizedFailureReasonErrorKey]);
+        }
+      })
+      .then(^id(FIRInstallationsItem *registeredInstallation) {
+        [self updateBackoffWithSuccess:YES APIError:nil];
+>>>>>>> origin/develop12
         return [self saveInstallation:registeredInstallation];
       })
       .then(^FIRInstallationsItem *(FIRInstallationsItem *registeredInstallation) {
@@ -283,7 +365,10 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
   switch (HTTPError.HTTPResponse.statusCode) {
     // These are the errors that require Firebase configuration change.
     case FIRInstallationsRegistrationHTTPCodeInvalidArgument:
+<<<<<<< HEAD
     case FIRInstallationsRegistrationHTTPCodeInvalidAPIKey:
+=======
+>>>>>>> origin/develop12
     case FIRInstallationsRegistrationHTTPCodeAPIKeyToProjectIDMismatch:
     case FIRInstallationsRegistrationHTTPCodeProjectNotFound:
       return YES;
@@ -331,10 +416,28 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
 
 - (FBLPromise<FIRInstallationsItem *> *)refreshAuthTokenForInstallation:
     (FIRInstallationsItem *)installation {
+<<<<<<< HEAD
   return [[self.APIService refreshAuthTokenForInstallation:installation]
       then:^id _Nullable(FIRInstallationsItem *_Nullable refreshedInstallation) {
         return [self saveInstallation:refreshedInstallation];
       }];
+=======
+  // Check for backoff.
+  if (![self.backoffController isNextRequestAllowed]) {
+    return [FIRInstallationsErrorUtil
+        rejectedPromiseWithError:[FIRInstallationsErrorUtil backoffIntervalWaitError]];
+  }
+
+  return [[[self.APIService refreshAuthTokenForInstallation:installation]
+      then:^id _Nullable(FIRInstallationsItem *_Nullable refreshedInstallation) {
+        [self updateBackoffWithSuccess:YES APIError:nil];
+        return [self saveInstallation:refreshedInstallation];
+      }] recover:^id _Nullable(NSError *_Nonnull error) {
+    // Pass the error to the backoff controller.
+    [self updateBackoffWithSuccess:NO APIError:error];
+    return error;
+  }];
+>>>>>>> origin/develop12
 }
 
 - (id)regenerateFIDOnRefreshTokenErrorIfNeeded:(NSError *)error {
@@ -441,6 +544,36 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
                     ?: [self.getInstallationPromiseCache getExistingPendingPromise];
 }
 
+<<<<<<< HEAD
+=======
+#pragma mark - Backoff
+
+- (void)updateBackoffWithSuccess:(BOOL)success APIError:(nullable NSError *)APIError {
+  if (success) {
+    [self.backoffController registerEvent:FIRInstallationsBackoffEventSuccess];
+  } else if ([APIError isKindOfClass:[FIRInstallationsHTTPError class]]) {
+    FIRInstallationsHTTPError *HTTPResponseError = (FIRInstallationsHTTPError *)APIError;
+    NSInteger statusCode = HTTPResponseError.HTTPResponse.statusCode;
+
+    if (statusCode == FIRInstallationsAuthTokenHTTPCodeInvalidAuthentication ||
+        statusCode == FIRInstallationsAuthTokenHTTPCodeFIDNotFound) {
+      // These errors are explicitly excluded because they are handled by FIS SDK itself so don't
+      // require backoff.
+    } else if (statusCode == 400 || statusCode == 403) {  // Explicitly unrecoverable errors.
+      [self.backoffController registerEvent:FIRInstallationsBackoffEventUnrecoverableFailure];
+    } else if (statusCode == 429 ||
+               (statusCode >= 500 && statusCode < 600)) {  // Explicitly recoverable errors.
+      [self.backoffController registerEvent:FIRInstallationsBackoffEventRecoverableFailure];
+    } else {  // Treat all unknown errors as recoverable.
+      [self.backoffController registerEvent:FIRInstallationsBackoffEventRecoverableFailure];
+    }
+  }
+
+  // If the error class is not `FIRInstallationsHTTPError` it indicates a connection error. Such
+  // errors should not change backoff interval.
+}
+
+>>>>>>> origin/develop12
 #pragma mark - Notifications
 
 - (void)postFIDDidChangeNotification {
@@ -456,4 +589,26 @@ NSTimeInterval const kFIRInstallationsTokenExpirationThreshold = 60 * 60;  // 1 
   return [self.appName isEqualToString:kFIRDefaultAppName];
 }
 
+<<<<<<< HEAD
+=======
+#pragma mark - Keychain
+
++ (NSString *)keychainServiceWithAppID:(NSString *)appID {
+#if TARGET_OS_MACCATALYST || TARGET_OS_OSX
+  // We need to keep service name unique per application on macOS.
+  // Applications on macOS may request access to Keychain items stored by other applications. It
+  // means that when the app looks up for a relevant Keychain item in the service scope it will
+  // request user password to grant access to the Keychain if there are other Keychain items from
+  // other applications stored under the same Keychain Service.
+  return [kKeychainService stringByAppendingFormat:@".%@", appID];
+#else
+  // Use a constant Keychain service for non-macOS because:
+  // 1. Keychain items cannot be shared between apps until configured specifically so the service
+  // name collisions are not a concern
+  // 2. We don't want to change the service name to avoid doing a migration.
+  return kKeychainService;
+#endif
+}
+
+>>>>>>> origin/develop12
 @end

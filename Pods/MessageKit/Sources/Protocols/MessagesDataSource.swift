@@ -102,6 +102,20 @@ public protocol MessagesDataSource: AnyObject {
     ///
     /// The default value returned by this method is `nil`.
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString?
+<<<<<<< HEAD
+=======
+
+    /// The attributed text to be used for cell's timestamp label.
+    /// The timestamp label is shown when showMessageTimestampOnSwipeLeft is enabled by swiping left over the chat controller.
+    ///
+    /// - Parameters:
+    ///   - message: The `MessageType` that will be displayed by this cell.
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// The default value returned by this method is `nil`.
+    func messageTimestampLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString?
+>>>>>>> origin/develop12
     
     /// Custom collectionView cell for message with `custom` message type.
     ///
@@ -148,7 +162,24 @@ public extension MessagesDataSource {
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         return nil
     }
+<<<<<<< HEAD
     
+=======
+
+    func messageTimestampLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let sentDate = message.sentDate
+        let sentDateString = MessageKitDateFormatter.shared.string(from: sentDate)
+        let timeLabelFont: UIFont = .boldSystemFont(ofSize: 10)
+        let timeLabelColor: UIColor
+        if #available(iOS 13, *) {
+            timeLabelColor = .systemGray
+        } else {
+            timeLabelColor = .darkGray
+        }
+        return NSAttributedString(string: sentDateString, attributes: [NSAttributedString.Key.font: timeLabelFont, NSAttributedString.Key.foregroundColor: timeLabelColor])
+    }
+
+>>>>>>> origin/develop12
     func customCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell {
         fatalError(MessageKitError.customDataUnresolvedCell)
     }

@@ -45,6 +45,10 @@
 /**
  Encode the current image to the data, the image format is unspecified
 
+<<<<<<< HEAD
+=======
+ @note If the receiver is `SDAnimatedImage`, this will return the animated image data if available. No more extra encoding process.
+>>>>>>> origin/develop12
  @return The encoded data. If can't encode, return nil
  */
 - (nullable NSData *)sd_imageData;

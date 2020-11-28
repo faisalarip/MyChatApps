@@ -24,9 +24,17 @@
 #include <map>
 #include <string>
 #include <atomic>
+<<<<<<< HEAD
 
 #include <realm/util/features.h>
 #include <realm/util/file.hpp>
+=======
+#include <mutex>
+
+#include <realm/util/features.h>
+#include <realm/util/file.hpp>
+#include <realm/util/thread.hpp>
+>>>>>>> origin/develop12
 #include <realm/alloc.hpp>
 #include <realm/disable_sync_to_disk.hpp>
 
@@ -36,6 +44,12 @@ namespace realm {
 class Group;
 class GroupWriter;
 
+<<<<<<< HEAD
+=======
+namespace util {
+struct SharedFileInfo;
+}
+>>>>>>> origin/develop12
 
 /// Thrown by Group and SharedGroup constructors if the specified file
 /// (or memory buffer) does not appear to contain a valid Realm
@@ -286,9 +300,33 @@ public:
     /// of memory in the file must ensure that no allocation crosses the
     /// boundary between two sections.
     ///
+<<<<<<< HEAD
     /// Clears any allocator specicific caching of address translations
     /// and force any later address translations to trigger decryption if required.
     void update_reader_view(size_t file_size);
+=======
+    /// Updates the memory mappings to reflect a new size for the file.
+    /// Stale mappings are retained so that they remain valid for other threads,
+    /// which haven't yet seen the file size change. The stale mappings are
+    /// associated with a version count if one is provided.
+    /// They are later purged by calls to purge_old_mappings().
+    /// The version parameter is subtly different from the mapping_version obtained
+    /// by get_mapping_version() below. The mapping version changes whenever a
+    /// ref->ptr translation changes, and is used by Group to enforce re-translation.
+    void update_reader_view(size_t file_size);
+    void purge_old_mappings(uint64_t oldest_live_version, uint64_t youngest_live_version);
+    void init_mapping_management(uint64_t currently_live_version);
+
+    /// Get an ID for the current mapping version. This ID changes whenever any part
+    /// of an existing mapping is changed. Such a change requires all refs to be
+    /// retranslated to new pointers. The allocator tries to avoid this, and we
+    /// believe it will only ever occur on Windows based platforms, and when a
+    /// compatibility mapping is used to read earlier file versions.
+    uint64_t get_mapping_version()
+    {
+        return m_mapping_version;
+    }
+>>>>>>> origin/develop12
 
     /// Returns true initially, and after a call to reset_free_space_tracking()
     /// up until the point of the first call to SlabAlloc::alloc(). Note that a
@@ -321,24 +359,38 @@ public:
     bool is_all_free() const;
     void print() const;
 #endif
+<<<<<<< HEAD
     struct MappedFile;
+=======
+>>>>>>> origin/develop12
 
 protected:
     MemRef do_alloc(const size_t size) override;
     MemRef do_realloc(ref_type, char*, size_t old_size, size_t new_size) override;
     // FIXME: It would be very nice if we could detect an invalid free operation in debug mode
+<<<<<<< HEAD
     void do_free(ref_type, char*) noexcept override;
+=======
+    void do_free(ref_type, char*) override;
+>>>>>>> origin/develop12
     char* do_translate(ref_type) const noexcept override;
 
     /// Returns the first section boundary *above* the given position.
     size_t get_upper_section_boundary(size_t start_pos) const noexcept;
 
+<<<<<<< HEAD
+=======
+    /// Returns the section boundary at or above the given size
+    size_t align_size_to_section_boundary(size_t size) const noexcept;
+
+>>>>>>> origin/develop12
     /// Returns the first section boundary *at or below* the given position.
     size_t get_lower_section_boundary(size_t start_pos) const noexcept;
 
     /// Returns true if the given position is at a section boundary
     bool matches_section_boundary(size_t pos) const noexcept;
 
+<<<<<<< HEAD
     /// Returns the index of the section holding a given address.
     /// The section index is determined solely by the minimal section size,
     /// and does not necessarily reflect the mapping. A mapping may
@@ -351,6 +403,8 @@ protected:
     /// during initialization with the help of compute_section_base() below.
     inline size_t get_section_base(size_t index) const noexcept;
 
+=======
+>>>>>>> origin/develop12
     /// Actually compute the starting offset of a section. Only used to initialize
     /// a table of predefined results, which are then used by get_section_base().
     size_t compute_section_base(size_t index) const noexcept;
@@ -361,7 +415,10 @@ protected:
     size_t find_section_in_range(size_t start_pos, size_t free_chunk_size, size_t request_size) const noexcept;
 
 private:
+<<<<<<< HEAD
     void internal_invalidate_cache() noexcept;
+=======
+>>>>>>> origin/develop12
     enum AttachMode {
         attach_None,        // Nothing is attached
         attach_OwnedBuffer, // We own the buffer (m_data = nullptr for empty buffer)
@@ -378,6 +435,7 @@ private:
     // Slabs table in order of ascending file offsets.
     struct Slab {
         ref_type ref_end;
+<<<<<<< HEAD
         std::unique_ptr<char[]> addr;
         size_t size;
 
@@ -395,6 +453,23 @@ private:
     struct Chunk { // describes a freed in-file block
         ref_type ref;
         size_t size;
+=======
+        char* addr;
+        size_t size;
+
+        Slab(ref_type r, size_t s);
+        ~Slab();
+
+        Slab(const Slab&) = delete;
+        Slab(Slab&& other) noexcept
+            : ref_end(other.ref_end)
+            , size(other.size)
+        {
+            addr = other.addr;
+            other.addr = nullptr;
+            other.size = 0;
+        }
+>>>>>>> origin/develop12
     };
 
     // free blocks that are in the slab area are managed using the following structures:
@@ -415,13 +490,21 @@ private:
         }
         void unlink();
     };
+<<<<<<< HEAD
     struct BetweenBlocks { // stores sizes and used/free status of blocks before and after.
+=======
+    struct BetweenBlocks {         // stores sizes and used/free status of blocks before and after.
+>>>>>>> origin/develop12
         int32_t block_before_size; // negated if block is in use,
         int32_t block_after_size;  // positive if block is free - and zero at end
     };
 
     Config m_cfg;
+<<<<<<< HEAD
     using FreeListMap = std::map<int, FreeBlock*>;  // log(N) addressing for larger blocks
+=======
+    using FreeListMap = std::map<int, FreeBlock*>; // log(N) addressing for larger blocks
+>>>>>>> origin/develop12
     FreeListMap m_block_map;
 
     // abstract notion of a freelist - used to hide whether a freelist
@@ -440,28 +523,52 @@ private:
     };
 
     // simple helper functions for accessing/navigating blocks and betweenblocks (TM)
+<<<<<<< HEAD
     BetweenBlocks* bb_before(FreeBlock* entry) const {
         return reinterpret_cast<BetweenBlocks*>(entry) - 1;
     }
     BetweenBlocks* bb_after(FreeBlock* entry) const {
+=======
+    BetweenBlocks* bb_before(FreeBlock* entry) const
+    {
+        return reinterpret_cast<BetweenBlocks*>(entry) - 1;
+    }
+    BetweenBlocks* bb_after(FreeBlock* entry) const
+    {
+>>>>>>> origin/develop12
         auto bb = bb_before(entry);
         size_t sz = bb->block_after_size;
         char* addr = reinterpret_cast<char*>(entry) + sz;
         return reinterpret_cast<BetweenBlocks*>(addr);
     }
+<<<<<<< HEAD
     FreeBlock* block_before(BetweenBlocks* bb) const {
+=======
+    FreeBlock* block_before(BetweenBlocks* bb) const
+    {
+>>>>>>> origin/develop12
         size_t sz = bb->block_before_size;
         if (sz <= 0)
             return nullptr; // only blocks that are not in use
         char* addr = reinterpret_cast<char*>(bb) - sz;
         return reinterpret_cast<FreeBlock*>(addr);
     }
+<<<<<<< HEAD
     FreeBlock* block_after(BetweenBlocks* bb) const {
+=======
+    FreeBlock* block_after(BetweenBlocks* bb) const
+    {
+>>>>>>> origin/develop12
         if (bb->block_after_size <= 0)
             return nullptr;
         return reinterpret_cast<FreeBlock*>(bb + 1);
     }
+<<<<<<< HEAD
     int size_from_block(FreeBlock* entry) const {
+=======
+    int size_from_block(FreeBlock* entry) const
+    {
+>>>>>>> origin/develop12
         return bb_before(entry)->block_after_size;
     }
     void mark_allocated(FreeBlock* entry);
@@ -469,7 +576,11 @@ private:
     void mark_freed(FreeBlock* entry, int size);
 
     // hook for the memory verifier in Group.
+<<<<<<< HEAD
     template<typename Func>
+=======
+    template <typename Func>
+>>>>>>> origin/develop12
     void for_all_free_entries(Func f) const;
 
     // Main entry points for alloc/free:
@@ -485,9 +596,15 @@ private:
     void rebuild_freelists_from_slab();
     void clear_freelists();
 
+<<<<<<< HEAD
     // grow the slab area to accommodate the requested size.
     // returns a free block large enough to handle the request.
     FreeBlock* grow_slab_for(int request_size);
+=======
+    // grow the slab area.
+    // returns a free block large enough to handle the request.
+    FreeBlock* grow_slab(int size);
+>>>>>>> origin/develop12
     // create a single free chunk with "BetweenBlocks" at both ends and a
     // single free chunk between them. This free chunk will be of size:
     //   slab_size - 2 * sizeof(BetweenBlocks)
@@ -523,6 +640,39 @@ private:
         uint64_t m_magic_cookie;
     };
 
+<<<<<<< HEAD
+=======
+    // Description of to-be-deleted memory mapping
+    struct OldMapping {
+        OldMapping(uint64_t version, util::File::Map<char>&& map) noexcept
+            : replaced_at_version(version)
+            , mapping(std::move(map))
+        {
+        }
+        OldMapping(OldMapping&& other) noexcept
+            : replaced_at_version(other.replaced_at_version)
+            , mapping()
+        {
+            mapping = std::move(other.mapping);
+        }
+        void operator=(OldMapping&& other) noexcept
+        {
+            replaced_at_version = other.replaced_at_version;
+            mapping = std::move(other.mapping);
+        }
+        uint64_t replaced_at_version;
+        util::File::Map<char> mapping;
+    };
+    struct OldRefTranslation {
+        OldRefTranslation(uint64_t v, RefTranslation* m) noexcept
+        {
+            replaced_at_version = v;
+            translations = m;
+        }
+        uint64_t replaced_at_version;
+        RefTranslation* translations;
+    };
+>>>>>>> origin/develop12
     static_assert(sizeof(Header) == 24, "Bad header size");
     static_assert(sizeof(StreamingFooter) == 16, "Bad footer size");
 
@@ -531,6 +681,7 @@ private:
 
     static const uint_fast64_t footer_magic_cookie = 0x3034125237E526C8ULL;
 
+<<<<<<< HEAD
     // The mappings are shared, if they are from a file
     std::shared_ptr<MappedFile> m_file_mappings;
 
@@ -548,12 +699,64 @@ private:
     int m_section_shifts = 0;
     std::unique_ptr<size_t[]> m_section_bases;
     size_t m_num_section_bases = 0;
+=======
+    util::RaceDetector changes;
+
+    // mappings used by newest transactions - additional mappings may be open
+    // and in use by older transactions. These translations are in m_old_mappings.
+    std::vector<util::File::Map<char>> m_mappings;
+    // The section nr for the first mapping in m_mappings. Will be 0 for newer file formats,
+    // but will be nonzero if a compatibility mapping is in use. In that case, the ref for
+    // the first mapping is the *last* section boundary in the file. Note: in this
+    // mode, the first mapping in m_mappings may overlap with the last part of the
+    // file, leading to aliasing.
+    int m_sections_in_compatibility_mapping = 0;
+    // if the file has an older format, it needs to be mapped by a single
+    // mapping. This is the compatibility mapping. As such files extend, additional
+    // mappings are added to m_mappings (above) - the compatibility mapping remains
+    // unchanged until the file is closed.
+    // Note: If the initial file is smaller than a single section, the compatibility
+    // mapping is not needed and not used. Hence, it is not possible for the first mapping
+    // in m_mappings to completely overlap the compatibility mapping. Hence, we do not
+    // need special logic to detect if the compatibility mapping can be unmapped.
+    util::File::Map<char> m_compatibility_mapping;
+
+    size_t m_translation_table_size = 0;
+    uint64_t m_mapping_version = 1;
+    uint64_t m_youngest_live_version = 1;
+    std::mutex m_mapping_mutex;
+    util::File m_file;
+    util::SharedFileInfo* m_realm_file_info = nullptr;
+    // vectors where old mappings, are held from deletion to ensure translations are
+    // kept open and ref->ptr translations work for other threads..
+    std::vector<OldMapping> m_old_mappings;
+    std::vector<OldRefTranslation> m_old_translations;
+    // Rebuild the ref translations in a thread-safe manner. Save the old one along with it's
+    // versioning information for later deletion - 'requires_new_fast_mapping' must be
+    // true if there are changes to entries among the existing translations. Must be called
+    // with m_mapping_mutex locked.
+    void rebuild_translations(bool requires_new_fast_mapping, size_t old_num_sections);
+    // Add a translation covering a new section in the slab area. The translation is always
+    // added at the end.
+    void extend_fast_mapping_with_slab(char* address);
+    // Prepare the initial mapping for a file which requires use of the compatibility mapping
+    void setup_compatibility_mapping(size_t file_size);
+
+    const char* m_data = nullptr;
+    size_t m_initial_section_size = 0;
+    int m_section_shifts = 0;
+>>>>>>> origin/develop12
     AttachMode m_attach_mode = attach_None;
     enum FeeeSpaceState {
         free_space_Clean,
         free_space_Dirty,
         free_space_Invalid,
     };
+<<<<<<< HEAD
+=======
+    constexpr static int minimal_alloc = 128 * 1024;
+    constexpr static int maximal_alloc = 1 << section_shift;
+>>>>>>> origin/develop12
 
     /// When set to free_space_Invalid, the free lists are no longer
     /// up-to-date. This happens if do_free() or
@@ -572,6 +775,7 @@ private:
     size_t m_commit_size = 0;
 
     bool m_debug_out = false;
+<<<<<<< HEAD
     struct hash_entry {
         ref_type ref = 0;
         const char* addr = nullptr;
@@ -579,6 +783,8 @@ private:
     };
     mutable hash_entry cache[256];
     mutable size_t version = 1;
+=======
+>>>>>>> origin/develop12
 
     /// Throws if free-lists are no longer valid.
     size_t consolidate_free_read_only();
@@ -588,7 +794,11 @@ private:
     /// Throws InvalidDatabase if the file is not a Realm file, if the file is
     /// corrupted, or if the specified encryption key is incorrect. This
     /// function will not detect all forms of corruption, though.
+<<<<<<< HEAD
     void validate_buffer(const char* data, size_t len, const std::string& path);
+=======
+    void validate_header(const char* data, size_t len, const std::string& path);
+>>>>>>> origin/develop12
     void throw_header_exception(std::string msg, const Header& header, const std::string& path);
 
     static bool is_file_on_streaming_form(const Header& header);
@@ -599,6 +809,7 @@ private:
     // Gets the path of the attached file, or other relevant debugging info.
     std::string get_file_path_for_assertions() const;
 
+<<<<<<< HEAD
     class ChunkRefEq;
     class ChunkRefEndEq;
     class SlabRefEndEq;
@@ -622,6 +833,15 @@ inline void SlabAlloc::internal_invalidate_cache() noexcept
 {
     ++version;
 }
+=======
+    static bool ref_less_than_slab_ref_end(ref_type, const Slab&) noexcept;
+
+    friend class Group;
+    friend class DB;
+    friend class GroupWriter;
+};
+
+>>>>>>> origin/develop12
 
 class SlabAlloc::DetachGuard {
 public:
@@ -650,7 +870,10 @@ inline void SlabAlloc::own_buffer() noexcept
 {
     REALM_ASSERT_3(m_attach_mode, ==, attach_UsersBuffer);
     REALM_ASSERT(m_data);
+<<<<<<< HEAD
     REALM_ASSERT(m_file_mappings == nullptr);
+=======
+>>>>>>> origin/develop12
     m_attach_mode = attach_OwnedBuffer;
 }
 
@@ -667,7 +890,11 @@ inline bool SlabAlloc::nonempty_attachment() const noexcept
 inline size_t SlabAlloc::get_baseline() const noexcept
 {
     REALM_ASSERT_DEBUG(is_attached());
+<<<<<<< HEAD
     return m_baseline;
+=======
+    return m_baseline.load(std::memory_order_relaxed);
+>>>>>>> origin/develop12
 }
 
 inline bool SlabAlloc::is_free_space_clean() const noexcept
@@ -698,6 +925,7 @@ inline size_t SlabAlloc::get_upper_section_boundary(size_t start_pos) const noex
     return get_section_base(1 + get_section_index(start_pos));
 }
 
+<<<<<<< HEAD
 inline size_t SlabAlloc::get_lower_section_boundary(size_t start_pos) const noexcept
 {
     return get_section_base(get_section_index(start_pos));
@@ -719,6 +947,33 @@ void SlabAlloc::for_all_free_entries(Func f) const
     ref_type ref = m_baseline;
     for (auto& e : m_slabs) {
         BetweenBlocks* bb = reinterpret_cast<BetweenBlocks*>(e.addr.get());
+=======
+inline size_t SlabAlloc::align_size_to_section_boundary(size_t size) const noexcept
+{
+    if (matches_section_boundary(size))
+        return size;
+    else
+        return get_upper_section_boundary(size);
+}
+
+inline size_t SlabAlloc::get_lower_section_boundary(size_t start_pos) const noexcept
+{
+    return get_section_base(get_section_index(start_pos));
+}
+
+inline bool SlabAlloc::matches_section_boundary(size_t pos) const noexcept
+{
+    auto boundary = get_lower_section_boundary(pos);
+    return pos == boundary;
+}
+
+template <typename Func>
+void SlabAlloc::for_all_free_entries(Func f) const
+{
+    ref_type ref = align_size_to_section_boundary(m_baseline.load(std::memory_order_relaxed));
+    for (const auto& e : m_slabs) {
+        BetweenBlocks* bb = reinterpret_cast<BetweenBlocks*>(e.addr);
+>>>>>>> origin/develop12
         REALM_ASSERT(bb->block_before_size == 0);
         while (1) {
             int size = bb->block_after_size;
@@ -737,6 +992,15 @@ void SlabAlloc::for_all_free_entries(Func f) const
                 ref -= size;
             }
         }
+<<<<<<< HEAD
+=======
+        // any gaps in ref-space is reported as a free block to the validator:
+        auto next_ref = align_size_to_section_boundary(ref);
+        if (next_ref > ref) {
+            f(ref, next_ref - ref);
+            ref = next_ref;
+        }
+>>>>>>> origin/develop12
     }
 }
 

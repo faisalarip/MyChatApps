@@ -388,7 +388,11 @@ struct Changeset::Reflector {
     struct Tracer {
         virtual void name(StringData) = 0;
         virtual void field(StringData, StringData) = 0;
+<<<<<<< HEAD
         virtual void field(StringData, ObjectID) = 0;
+=======
+        virtual void field(StringData, GlobalKey) = 0;
+>>>>>>> origin/develop12
         virtual void field(StringData, int64_t) = 0;
         virtual void field(StringData, double) = 0;
         virtual void after_each() {}
@@ -417,7 +421,11 @@ struct Changeset::Printer : Changeset::Reflector::Tracer {
     // ChangesetReflector::Tracer interface:
     void name(StringData) final;
     void field(StringData, StringData) final;
+<<<<<<< HEAD
     void field(StringData, ObjectID) final;
+=======
+    void field(StringData, GlobalKey) final;
+>>>>>>> origin/develop12
     void field(StringData, int64_t) final;
     void field(StringData, double) final;
     void after_each() final;

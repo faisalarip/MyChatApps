@@ -19,6 +19,7 @@
 #ifndef REALM_ARRAY_BINARY_HPP
 #define REALM_ARRAY_BINARY_HPP
 
+<<<<<<< HEAD
 #include <realm/binary_data.hpp>
 #include <realm/array_blob.hpp>
 #include <realm/array_integer.hpp>
@@ -96,11 +97,71 @@ public:
     void truncate(size_t new_size);
     void clear();
     void destroy();
+=======
+#include <realm/array_blobs_small.hpp>
+#include <realm/array_blobs_big.hpp>
+
+namespace realm {
+
+class ArrayBinary : public ArrayPayload {
+public:
+    using value_type = BinaryData;
+
+    explicit ArrayBinary(Allocator&);
+
+    static BinaryData default_value(bool nullable)
+    {
+        return nullable ? BinaryData{} : BinaryData{"", 0};
+    }
+
+    void create();
+
+    ref_type get_ref() const
+    {
+        return m_arr->get_ref();
+    }
+
+    void set_parent(ArrayParent* parent, size_t ndx_in_parent) noexcept override
+    {
+        m_arr->set_parent(parent, ndx_in_parent);
+    }
+
+    void update_parent()
+    {
+        m_arr->update_parent();
+    }
+
+    void init_from_mem(MemRef mem) noexcept;
+    void init_from_ref(ref_type ref) noexcept override
+    {
+        init_from_mem(MemRef(m_alloc.translate(ref), ref, m_alloc));
+    }
+    void init_from_parent();
+
+    size_t size() const;
+
+    void add(BinaryData value);
+    void set(size_t ndx, BinaryData value);
+    void set_null(size_t ndx)
+    {
+        set(ndx, BinaryData{});
+    }
+    void insert(size_t ndx, BinaryData value);
+    BinaryData get(size_t ndx) const;
+    BinaryData get_at(size_t ndx, size_t& pos) const;
+    bool is_null(size_t ndx) const;
+    void erase(size_t ndx);
+    void move(ArrayBinary& dst, size_t ndx);
+    void clear();
+
+    size_t find_first(BinaryData value, size_t begin, size_t end) const noexcept;
+>>>>>>> origin/develop12
 
     /// Get the specified element without the cost of constructing an
     /// array instance. If an array instance is already available, or
     /// you need to get multiple values, then this method will be
     /// slower.
+<<<<<<< HEAD
     static BinaryData get(const char* header, size_t ndx, Allocator&) noexcept;
 
     ref_type bptree_leaf_insert(size_t ndx, BinaryData, bool add_zero_term, TreeInsertBase& state);
@@ -257,3 +318,39 @@ inline bool ArrayBinary::update_from_parent(size_t old_baseline) noexcept
 } // namespace realm
 
 #endif // REALM_ARRAY_BINARY_HPP
+=======
+    static BinaryData get(const char* header, size_t ndx, Allocator& alloc) noexcept;
+
+    void verify() const;
+
+private:
+    static constexpr size_t small_blob_max_size = 64;
+
+    union Storage {
+        std::aligned_storage<sizeof(ArraySmallBlobs), alignof(ArraySmallBlobs)>::type m_small_blobs;
+        std::aligned_storage<sizeof(ArrayBigBlobs), alignof(ArrayBigBlobs)>::type m_big_blobs;
+    };
+
+    bool m_is_big = false;
+
+    Allocator& m_alloc;
+    Storage m_storage;
+    Array* m_arr;
+
+    bool upgrade_leaf(size_t value_size);
+};
+
+inline BinaryData ArrayBinary::get(const char* header, size_t ndx, Allocator& alloc) noexcept
+{
+    bool is_big = Array::get_context_flag_from_header(header);
+    if (!is_big) {
+        return ArraySmallBlobs::get(header, ndx, alloc);
+    }
+    else {
+        return ArrayBigBlobs::get(header, ndx, alloc);
+    }
+}
+}
+
+#endif /* SRC_REALM_ARRAY_BINARY_HPP_ */
+>>>>>>> origin/develop12

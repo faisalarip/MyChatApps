@@ -56,7 +56,10 @@ using namespace realm;
 
 @implementation RLMMigration {
     realm::Schema *_schema;
+<<<<<<< HEAD
     std::unordered_map<NSString *, realm::IndexSet> _deletedObjectIndices;
+=======
+>>>>>>> origin/develop12
 }
 
 - (instancetype)initWithRealm:(RLMRealm *)realm oldRealm:(RLMRealm *)oldRealm schema:(realm::Schema &)schema {
@@ -87,14 +90,21 @@ using namespace realm;
     // objects. It's unclear how this could be useful, but changing it would
     // also be a pointless breaking change and it's unlikely to be hurting anyone.
     if (objects && !oldObjects) {
+<<<<<<< HEAD
         for (auto i = objects.count; i > 0; --i) {
             @autoreleasepool {
                 block(nil, objects[i - 1]);
+=======
+        for (RLMObject *object in objects) {
+            @autoreleasepool {
+                block(nil, object);
+>>>>>>> origin/develop12
             }
         }
         return;
     }
 
+<<<<<<< HEAD
     auto count = oldObjects.count;
     if (count == 0) {
         return;
@@ -107,6 +117,23 @@ using namespace realm;
         }
         @autoreleasepool {
             block(oldObjects[index], objects[index]);
+=======
+    if (oldObjects.count == 0 || objects.count == 0) {
+        return;
+    }
+
+    auto& info = _realm->_info[className];
+    for (RLMObject *oldObject in oldObjects) {
+        @autoreleasepool {
+            Obj newObj;
+            try {
+                newObj = info.table()->get_object(oldObject->_row.get_key());
+            }
+            catch (InvalidKey const&) {
+                continue;
+            }
+            block(oldObject, (id)RLMCreateObjectAccessor(info, std::move(newObj)));
+>>>>>>> origin/develop12
         }
     }
 }
@@ -124,8 +151,11 @@ using namespace realm;
 
         block(self, _oldRealm->_realm->schema_version());
 
+<<<<<<< HEAD
         [self deleteObjectsMarkedForDeletion];
 
+=======
+>>>>>>> origin/develop12
         _oldRealm = nil;
         _realm = nil;
     }
@@ -140,6 +170,7 @@ using namespace realm;
 }
 
 - (void)deleteObject:(RLMObject *)object {
+<<<<<<< HEAD
     _deletedObjectIndices[object.objectSchema.className].add(object->_row.get_index());
 }
 
@@ -165,6 +196,9 @@ using namespace realm;
             }
         }
     }
+=======
+    [_realm deleteObject:object];
+>>>>>>> origin/develop12
 }
 
 - (BOOL)deleteDataForClassName:(NSString *)name {
@@ -176,9 +210,17 @@ using namespace realm;
     if (!table) {
         return false;
     }
+<<<<<<< HEAD
     _deletedObjectIndices[name].set(table->size());
     if (![_realm.schema schemaForClassName:name]) {
         realm::ObjectStore::delete_data_for_object(_realm.group, name.UTF8String);
+=======
+    if ([_realm.schema schemaForClassName:name]) {
+        table->clear();
+    }
+    else {
+        _realm.group.remove_table(table->get_key());
+>>>>>>> origin/develop12
     }
 
     return true;

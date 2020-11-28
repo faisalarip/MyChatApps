@@ -84,6 +84,13 @@ CATransition * SDTransitionFromAnimationOptions(SDWebImageAnimationOptions optio
 @implementation SDWebImageTransition (Conveniences)
 
 + (SDWebImageTransition *)fadeTransition {
+<<<<<<< HEAD
+=======
+    return [self fadeTransitionWithDuration:0.5];
+}
+
++ (SDWebImageTransition *)fadeTransitionWithDuration:(NSTimeInterval)duration {
+>>>>>>> origin/develop12
     SDWebImageTransition *transition = [SDWebImageTransition new];
 #if SD_UIKIT
     transition.animationOptions = UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction;
@@ -94,6 +101,13 @@ CATransition * SDTransitionFromAnimationOptions(SDWebImageAnimationOptions optio
 }
 
 + (SDWebImageTransition *)flipFromLeftTransition {
+<<<<<<< HEAD
+=======
+    return [self flipFromLeftTransitionWithDuration:0.5];
+}
+
++ (SDWebImageTransition *)flipFromLeftTransitionWithDuration:(NSTimeInterval)duration {
+>>>>>>> origin/develop12
     SDWebImageTransition *transition = [SDWebImageTransition new];
 #if SD_UIKIT
     transition.animationOptions = UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionAllowUserInteraction;
@@ -104,6 +118,13 @@ CATransition * SDTransitionFromAnimationOptions(SDWebImageAnimationOptions optio
 }
 
 + (SDWebImageTransition *)flipFromRightTransition {
+<<<<<<< HEAD
+=======
+    return [self flipFromRightTransitionWithDuration:0.5];
+}
+
++ (SDWebImageTransition *)flipFromRightTransitionWithDuration:(NSTimeInterval)duration {
+>>>>>>> origin/develop12
     SDWebImageTransition *transition = [SDWebImageTransition new];
 #if SD_UIKIT
     transition.animationOptions = UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionAllowUserInteraction;
@@ -114,6 +135,13 @@ CATransition * SDTransitionFromAnimationOptions(SDWebImageAnimationOptions optio
 }
 
 + (SDWebImageTransition *)flipFromTopTransition {
+<<<<<<< HEAD
+=======
+    return [self flipFromTopTransitionWithDuration:0.5];
+}
+
++ (SDWebImageTransition *)flipFromTopTransitionWithDuration:(NSTimeInterval)duration {
+>>>>>>> origin/develop12
     SDWebImageTransition *transition = [SDWebImageTransition new];
 #if SD_UIKIT
     transition.animationOptions = UIViewAnimationOptionTransitionFlipFromTop | UIViewAnimationOptionAllowUserInteraction;
@@ -124,6 +152,13 @@ CATransition * SDTransitionFromAnimationOptions(SDWebImageAnimationOptions optio
 }
 
 + (SDWebImageTransition *)flipFromBottomTransition {
+<<<<<<< HEAD
+=======
+    return [self flipFromBottomTransitionWithDuration:0.5];
+}
+
++ (SDWebImageTransition *)flipFromBottomTransitionWithDuration:(NSTimeInterval)duration {
+>>>>>>> origin/develop12
     SDWebImageTransition *transition = [SDWebImageTransition new];
 #if SD_UIKIT
     transition.animationOptions = UIViewAnimationOptionTransitionFlipFromBottom | UIViewAnimationOptionAllowUserInteraction;
@@ -134,6 +169,13 @@ CATransition * SDTransitionFromAnimationOptions(SDWebImageAnimationOptions optio
 }
 
 + (SDWebImageTransition *)curlUpTransition {
+<<<<<<< HEAD
+=======
+    return [self curlUpTransitionWithDuration:0.5];
+}
+
++ (SDWebImageTransition *)curlUpTransitionWithDuration:(NSTimeInterval)duration {
+>>>>>>> origin/develop12
     SDWebImageTransition *transition = [SDWebImageTransition new];
 #if SD_UIKIT
     transition.animationOptions = UIViewAnimationOptionTransitionCurlUp | UIViewAnimationOptionAllowUserInteraction;
@@ -144,12 +186,23 @@ CATransition * SDTransitionFromAnimationOptions(SDWebImageAnimationOptions optio
 }
 
 + (SDWebImageTransition *)curlDownTransition {
+<<<<<<< HEAD
+=======
+    return [self curlDownTransitionWithDuration:0.5];
+}
+
++ (SDWebImageTransition *)curlDownTransitionWithDuration:(NSTimeInterval)duration {
+>>>>>>> origin/develop12
     SDWebImageTransition *transition = [SDWebImageTransition new];
 #if SD_UIKIT
     transition.animationOptions = UIViewAnimationOptionTransitionCurlDown | UIViewAnimationOptionAllowUserInteraction;
 #else
     transition.animationOptions = SDWebImageAnimationOptionTransitionCurlDown;
 #endif
+<<<<<<< HEAD
+=======
+    transition.duration = duration;
+>>>>>>> origin/develop12
     return transition;
 }
 

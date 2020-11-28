@@ -39,7 +39,11 @@ namespace realm {
 class SyncUser;
 class SyncSession;
 
+<<<<<<< HEAD
 using ChangesetTransformer = sync::ClientHistory::ChangesetCooker;
+=======
+using ChangesetTransformer = sync::ClientReplication::ChangesetCooker;
+>>>>>>> origin/develop12
 
 enum class SyncSessionStopPolicy;
 
@@ -146,8 +150,11 @@ struct SyncConfig {
     // If true, upload/download waits are canceled on any sync error and not just fatal ones
     bool cancel_waits_on_nonfatal_error = false;
 
+<<<<<<< HEAD
     bool validate_sync_history = true;
 
+=======
+>>>>>>> origin/develop12
     util::Optional<std::string> authorization_header_name;
     std::map<std::string, std::string> custom_http_headers;
 

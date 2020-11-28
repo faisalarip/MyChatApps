@@ -32,6 +32,7 @@ namespace parser {
 template <typename RetType, class Enable = void>
 struct SubqueryGetter;
 
+<<<<<<< HEAD
 struct SubqueryExpression
 {
     std::string var_name;
@@ -40,14 +41,31 @@ struct SubqueryExpression
     std::vector<KeyPathElement> link_chain;
     DataType get_dest_type() const;
     size_t get_dest_ndx() const;
+=======
+struct SubqueryExpression {
+    std::string var_name;
+    Query& query;
+    Query subquery;
+    std::vector<KeyPathElement> link_chain;
+    DataType get_dest_type() const;
+    ColKey get_dest_col_key() const;
+>>>>>>> origin/develop12
     ConstTableRef get_dest_table() const;
     bool dest_type_is_backlink() const;
 
 
+<<<<<<< HEAD
     SubqueryExpression(Query &q, const std::string &key_path_string, const std::string &variable_name, parser::KeyPathMapping &mapping);
     Query& get_subquery();
 
     Table* table_getter() const;
+=======
+    SubqueryExpression(Query& q, const std::string& key_path_string, const std::string& variable_name,
+                       parser::KeyPathMapping& mapping);
+    Query& get_subquery();
+
+    LinkChain link_chain_getter() const;
+>>>>>>> origin/develop12
 
     template <typename T>
     auto value_of_type_for_query() const
@@ -68,10 +86,17 @@ inline bool SubqueryExpression::dest_type_is_backlink() const
     return link_chain.back().is_backlink;
 }
 
+<<<<<<< HEAD
 inline size_t SubqueryExpression::get_dest_ndx() const
 {
     REALM_ASSERT_DEBUG(link_chain.size() > 0);
     return link_chain.back().col_ndx;
+=======
+inline ColKey SubqueryExpression::get_dest_col_key() const
+{
+    REALM_ASSERT_DEBUG(link_chain.size() > 0);
+    return link_chain.back().col_key;
+>>>>>>> origin/develop12
 }
 
 inline ConstTableRef SubqueryExpression::get_dest_table() const
@@ -86,13 +111,22 @@ inline ConstTableRef SubqueryExpression::get_dest_table() const
 // default implementation. The return type is just a dummy to make things compile.
 template <typename RetType, class Enable>
 struct SubqueryGetter {
+<<<<<<< HEAD
     static Columns<RetType> convert(const SubqueryExpression&) {
         throw std::runtime_error(util::format("Predicate error: comparison of type '%1' with result of a subquery count is not supported.",
                                               type_to_str<RetType>()));
+=======
+    static Columns<RetType> convert(const SubqueryExpression&)
+    {
+        throw std::runtime_error(
+            util::format("Predicate error: comparison of type '%1' with result of a subquery count is not supported.",
+                         type_to_str<RetType>()));
+>>>>>>> origin/develop12
     }
 };
 
 template <typename RetType>
+<<<<<<< HEAD
 struct SubqueryGetter<RetType,
 typename std::enable_if_t<realm::is_any<RetType, Int, Float, Double>::value> >{
     static SubQueryCount convert(const SubqueryExpression& expr)
@@ -101,6 +135,18 @@ typename std::enable_if_t<realm::is_any<RetType, Int, Float, Double>::value> >{
             return expr.table_getter()->template column<BackLink>(*expr.get_dest_table(), expr.get_dest_ndx(), expr.subquery).count();
         } else {
             return expr.table_getter()->template column<LinkList>(expr.get_dest_ndx(), expr.subquery).count();
+=======
+struct SubqueryGetter<RetType, typename std::enable_if_t<realm::is_any<RetType, Int, Float, Double>::value>> {
+    static SubQueryCount convert(const SubqueryExpression& expr)
+    {
+        if (expr.dest_type_is_backlink()) {
+            return expr.link_chain_getter()
+                .template column<BackLink>(*expr.get_dest_table(), expr.get_dest_col_key(), expr.subquery)
+                .count();
+        }
+        else {
+            return expr.link_chain_getter().template column<Link>(expr.get_dest_col_key(), expr.subquery).count();
+>>>>>>> origin/develop12
         }
     }
 };
@@ -109,4 +155,7 @@ typename std::enable_if_t<realm::is_any<RetType, Int, Float, Double>::value> >{
 } // namespace realm
 
 #endif // REALM_SUBQUERY_EXPRESSION_HPP
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12

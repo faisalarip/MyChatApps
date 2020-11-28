@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #include <stdint.h>
+=======
+ #include <stdint.h>
+>>>>>>> origin/develop12
 
 typedef double FBSDKMonotonicTimeSeconds;
 typedef uint64_t FBSDKMonotonicTimeMilliseconds;

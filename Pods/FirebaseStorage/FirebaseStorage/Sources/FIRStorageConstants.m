@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+<<<<<<< HEAD
 #import <FirebaseStorage/FIRStorageConstants.h>
+=======
+#import "FirebaseStorage/Sources/Public/FirebaseStorage/FIRStorageConstants.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseStorage/Sources/FIRStorageConstants_Private.h"
 

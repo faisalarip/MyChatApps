@@ -15,7 +15,11 @@
  */
 
 #import <Foundation/Foundation.h>
+<<<<<<< HEAD
 #import <GoogleUtilities/GULLogger.h>
+=======
+#import "GoogleUtilities/Logger/Private/GULLogger.h"
+>>>>>>> origin/develop12
 
 /// Error codes in Firebase Network error domain.
 /// Note: these error codes should never change. It would make it harder to decode the errors if

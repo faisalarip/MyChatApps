@@ -31,7 +31,11 @@
 - (void)addLoader:(nonnull id<SDImageLoader>)loader;
 
 /**
+<<<<<<< HEAD
  Remove a image loader in the loaders array.
+=======
+ Remove an image loader in the loaders array.
+>>>>>>> origin/develop12
  
  @param loader loader
  */

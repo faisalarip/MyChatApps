@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/SystemService/FIRSecureTokenService.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRAuth.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuth.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthSerialTaskQueue.h"
 #import "FirebaseAuth/Sources/Backend/FIRAuthBackend.h"

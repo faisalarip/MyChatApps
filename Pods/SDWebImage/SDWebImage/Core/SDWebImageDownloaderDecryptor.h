@@ -17,9 +17,15 @@ We can use a block to specify the downloader decryptor. But Using protocol can m
 */
 @protocol SDWebImageDownloaderDecryptor <NSObject>
 
+<<<<<<< HEAD
 /// Decrypt the original download data and return a new data. You can use this to decrypt the data using your perfereed algorithm.
 /// @param data The original download data
 /// @param response The URL response for data. If you modifiy the original URL response via response modifier, the modified version will be here. This arg is nullable.
+=======
+/// Decrypt the original download data and return a new data. You can use this to decrypt the data using your preferred algorithm.
+/// @param data The original download data
+/// @param response The URL response for data. If you modify the original URL response via response modifier, the modified version will be here. This arg is nullable.
+>>>>>>> origin/develop12
 /// @note If nil is returned, the image download will be marked as failed with error `SDWebImageErrorBadImageData`
 - (nullable NSData *)decryptedDataWithData:(nonnull NSData *)data response:(nullable NSURLResponse *)response;
 

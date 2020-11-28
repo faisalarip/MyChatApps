@@ -32,7 +32,11 @@ static void populate_keypath_mapping(parser::KeyPathMapping& mapping, Realm& rea
         TableRef table;
         auto get_table = [&] {
             if (!table)
+<<<<<<< HEAD
                 table = ObjectStore::table_for_object_type(realm.read_group(), object_schema.name);
+=======
+                table = realm.read_group().get_table(object_schema.table_key);
+>>>>>>> origin/develop12
             return table;
         };
 
@@ -59,7 +63,11 @@ inline IncludeDescriptor generate_include_from_keypaths(std::vector<StringData> 
                                                         Realm& realm, ObjectSchema const& object_schema,
                                                         parser::KeyPathMapping& mapping)
 {
+<<<<<<< HEAD
     auto base_table = ObjectStore::table_for_object_type(realm.read_group(), object_schema.name);
+=======
+    auto base_table = realm.read_group().get_table(object_schema.table_key);
+>>>>>>> origin/develop12
     REALM_ASSERT(base_table);
     // FIXME: the following is mostly copied from core's query_builder::apply_ordering
     std::vector<std::vector<LinkPathPart>> properties;
@@ -79,6 +87,7 @@ inline IncludeDescriptor generate_include_from_keypaths(std::vector<StringData> 
             // backlinks use type_LinkList since list operations apply to them (and is_backlink is set)
             if (element.col_type != type_Link && element.col_type != type_LinkList) {
                 throw InvalidPathError(util::format("Property '%1' is not a link in object of type '%2' in 'INCLUDE' clause",
+<<<<<<< HEAD
                                                     element.table->get_column_name(element.col_ndx),
                                                     get_printable_table_name(*element.table)));
             }
@@ -88,11 +97,23 @@ inline IncludeDescriptor generate_include_from_keypaths(std::vector<StringData> 
                 }
                 else {
                     cur_table = element.table->get_link_target(element.col_ndx); // advance through forward link
+=======
+                                                    element.table->get_column_name(element.col_key),
+                                                    get_printable_table_name(*element.table)));
+            }
+            if (element.table == cur_table) {
+                if (!element.col_key) {
+                    cur_table = element.table;
+                }
+                else {
+                    cur_table = element.table->get_link_target(element.col_key); // advance through forward link
+>>>>>>> origin/develop12
                 }
             }
             else {
                 cur_table = element.table; // advance through backlink
             }
+<<<<<<< HEAD
             ConstTableRef tr;
             if (element.is_backlink) {
                 tr = element.table;
@@ -102,5 +123,13 @@ inline IncludeDescriptor generate_include_from_keypaths(std::vector<StringData> 
         properties.push_back(std::move(links));
     }
     return IncludeDescriptor{*base_table, properties};
+=======
+            LinkPathPart link = element.is_backlink ? LinkPathPart(element.col_key, element.table) : LinkPathPart(element.col_key);
+            links.emplace_back(std::move(link));
+        }
+        properties.push_back(std::move(links));
+    }
+    return IncludeDescriptor{base_table, properties};
+>>>>>>> origin/develop12
 }
 }

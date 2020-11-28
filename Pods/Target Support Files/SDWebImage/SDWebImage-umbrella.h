@@ -21,6 +21,10 @@
 #import "SDDiskCache.h"
 #import "SDGraphicsImageRenderer.h"
 #import "SDImageAPNGCoder.h"
+<<<<<<< HEAD
+=======
+#import "SDImageAWebPCoder.h"
+>>>>>>> origin/develop12
 #import "SDImageCache.h"
 #import "SDImageCacheConfig.h"
 #import "SDImageCacheDefine.h"

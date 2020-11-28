@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
+=======
+#import <TargetConditionals.h>
+>>>>>>> origin/develop12
 #if !TARGET_OS_OSX
 
 #import "FirebaseAuth/Sources/SystemService/FIRAuthAPNSToken.h"

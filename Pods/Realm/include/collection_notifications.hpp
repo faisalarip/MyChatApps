@@ -25,6 +25,10 @@
 #include <exception>
 #include <memory>
 #include <type_traits>
+<<<<<<< HEAD
+=======
+#include <unordered_map>
+>>>>>>> origin/develop12
 #include <vector>
 
 namespace realm {
@@ -86,7 +90,11 @@ struct CollectionChangeSet {
     std::vector<Move> moves;
 
     // Per-column version of `modifications`
+<<<<<<< HEAD
     std::vector<IndexSet> columns;
+=======
+    std::unordered_map<int64_t, IndexSet> columns;
+>>>>>>> origin/develop12
 
     bool empty() const noexcept
     {

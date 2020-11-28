@@ -21,6 +21,7 @@
 
 #include "impl/collection_notifier.hpp"
 
+<<<<<<< HEAD
 #include <realm/group_shared.hpp>
 
 namespace realm {
@@ -35,16 +36,33 @@ private:
 
     // The actual change, calculated in run() and delivered in prepare_handover()
     CollectionChangeBuilder m_change;
+=======
+#include <realm/keys.hpp>
+
+namespace realm {
+
+namespace _impl {
+class ObjectNotifier : public CollectionNotifier {
+public:
+    ObjectNotifier(std::shared_ptr<Realm> realm, TableKey table, ObjKey obj);
+
+private:
+    TableKey m_table;
+    ObjKey m_obj;
+>>>>>>> origin/develop12
     TransactionChangeInfo* m_info;
 
     void run() override;
 
+<<<<<<< HEAD
     void do_prepare_handover(SharedGroup&) override;
 
     void do_attach_to(SharedGroup& sg) override;
     void do_detach_from(SharedGroup& sg) override;
 
     void release_data() noexcept override;
+=======
+>>>>>>> origin/develop12
     bool do_add_required_change_info(TransactionChangeInfo& info) override;
 };
 }

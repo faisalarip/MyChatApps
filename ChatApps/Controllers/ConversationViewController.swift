@@ -19,7 +19,11 @@ class ConversationViewController: UIViewController {
     private let tableView: UITableView = {
         let table = UITableView()
         table.isHidden = true
+<<<<<<< HEAD
         table.register(ConversationCell.self, forCellReuseIdentifier: ConversationCell.identifier)
+=======
+        table.register(ConversationCell.self, forCellReuseIdentifier: ConversationCell.identifier)        
+>>>>>>> origin/develop12
         return table
     }()
     
@@ -33,22 +37,50 @@ class ConversationViewController: UIViewController {
         return label
     }()
     
+<<<<<<< HEAD
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+=======
+    private var loginObserved: NSObjectProtocol?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+>>>>>>> origin/develop12
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
         
         view.addSubview(tableView)
         view.addSubview(noLabel)
+<<<<<<< HEAD
         setupTableView()
         fetchConversations()
         startListeningForConversation()
+=======
+        
+        setupTableView()
+        fetchConversations()
+        startListeningForConversation()
+        
+        loginObserved = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] ( _ ) in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.startListeningForConversation()
+        })
+>>>>>>> origin/develop12
     }
     
     private func startListeningForConversation() {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return }
         
+<<<<<<< HEAD
+=======
+        if let oberserver = loginObserved {
+            NotificationCenter.default.removeObserver(oberserver)
+        }
+        
+>>>>>>> origin/develop12
         print("Starting conversations fetch...")
         let safeEmail = DatabaseManager.shared.safeEmail(with: email)
         DatabaseManager.shared.getAllConversation(for: safeEmail) { [weak self] (result) in
@@ -63,7 +95,11 @@ class ConversationViewController: UIViewController {
                         self?.tableView.reloadData()
                     }
                 case .failure(let error):
+<<<<<<< HEAD
                 print("Failed to get conersations \(error)")
+=======
+                print("Failed to get conversations \(error)")
+>>>>>>> origin/develop12
             }
         }
         
@@ -73,13 +109,33 @@ class ConversationViewController: UIViewController {
         let vc = NewConversationViewController()
         vc.completion = { [weak self] result in
             print("\(result)")
+<<<<<<< HEAD
             self?.createNewConversation(with: result)
+=======
+
+            let currentConvo = self?.conversations
+                        
+            if let targetConvo = currentConvo?.first(where: {
+                $0.otherUserEmail == DatabaseManager.shared.safeEmail(with: result.recepientEmail)
+            }) {
+                let chatVC = ChatViewController(with: targetConvo.otherUserEmail, id: targetConvo.id)
+                chatVC.isNewConversation = false
+                chatVC.title = targetConvo.name
+                chatVC.navigationItem.largeTitleDisplayMode = .never
+                self?.navigationController?.pushViewController(chatVC, animated: true)
+            } else {
+                // create new conversation
+                self?.createNewConversation(with: result)
+            }
+            
+>>>>>>> origin/develop12
         }
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .popover
         present(nav, animated: true)
     }
     
+<<<<<<< HEAD
     private func createNewConversation(with result: [String: String]) {
         guard let name = result["name"], let email = result["email"] else {
             return
@@ -94,6 +150,38 @@ class ConversationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+=======
+    private func createNewConversation(with result: SearchResult) {
+        let name = result.name
+        let emailRecepient = DatabaseManager.shared.safeEmail(with: result.recepientEmail)
+        
+        // Check in database if conversation with these two users exists
+        // if it does, reuse conversation Id
+        // otherwise, user existing code        
+        DatabaseManager.shared.conversationExists(with: emailRecepient) { [weak self] (result) in
+            switch result {
+            case .success(let conversationId):
+                let vc = ChatViewController(with: emailRecepient, id: conversationId)
+                vc.isNewConversation = false
+                vc.title = name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                self?.navigationController?.pushViewController(vc, animated: true)
+            case .failure(_):
+                let vc = ChatViewController(with: emailRecepient, id: nil)
+                vc.isNewConversation = true
+                vc.title = name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
+            
+        }
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+>>>>>>> origin/develop12
         validateLogIn()
     }
     
@@ -149,7 +237,32 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+<<<<<<< HEAD
         return 120
+=======
+        return 85
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            
+            let conversationId = conversations[indexPath.row].id
+            
+            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] (success) in
+                if success {
+                    self?.conversations.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .left)
+                }
+            }
+
+            tableView.endUpdates()
+        }
+>>>>>>> origin/develop12
     }
     
 }

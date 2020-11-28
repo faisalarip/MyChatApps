@@ -36,11 +36,16 @@ namespace util {
 template <typename Tag>
 struct TaggedBool {
     // Allow explicit construction from anything convertible to bool
+<<<<<<< HEAD
     constexpr explicit TaggedBool(bool v) : m_value(v) { }
+=======
+    constexpr explicit TaggedBool(bool v) noexcept : m_value(v) { }
+>>>>>>> origin/develop12
 
     // Allow implicit construction from *just* bool and not things convertible
     // to bool (such as other types of tagged bools)
     template <typename Bool, typename = typename std::enable_if<std::is_same<Bool, bool>::value>::type>
+<<<<<<< HEAD
     constexpr TaggedBool(Bool v) : m_value(v) {}
 
     constexpr TaggedBool(TaggedBool const& v) : m_value(v.m_value) {}
@@ -50,6 +55,17 @@ struct TaggedBool {
 
     friend constexpr bool operator==(TaggedBool l, TaggedBool r) { return l.m_value == r.m_value; }
     friend constexpr bool operator!=(TaggedBool l, TaggedBool r) { return l.m_value != r.m_value; }
+=======
+    constexpr TaggedBool(Bool v) noexcept : m_value(v) {}
+
+    constexpr TaggedBool(TaggedBool const& v) noexcept : m_value(v.m_value) {}
+
+    constexpr operator bool() const noexcept { return m_value; }
+    constexpr TaggedBool operator!() const noexcept { return TaggedBool{!m_value}; }
+
+    friend constexpr bool operator==(TaggedBool l, TaggedBool r) noexcept { return l.m_value == r.m_value; }
+    friend constexpr bool operator!=(TaggedBool l, TaggedBool r) noexcept { return l.m_value != r.m_value; }
+>>>>>>> origin/develop12
 
 private:
     bool m_value;

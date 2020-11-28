@@ -111,6 +111,10 @@ std::string to_string(const T& v)
     return Printable(v).str();
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 std::string format(const char* fmt, std::initializer_list<Printable>);
 
 template<typename... Args>

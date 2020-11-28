@@ -22,6 +22,7 @@
 #include <memory>
 #include <vector>
 
+<<<<<<< HEAD
 namespace realm {
 
 enum class ConstSourcePayload { Copy, Stay };
@@ -98,6 +99,13 @@ struct RowBaseHandoverPatch {
     std::unique_ptr<TableHandoverPatch> m_table;
     size_t row_ndx;
 };
+=======
+#include <realm/keys.hpp>
+
+namespace realm {
+
+enum class PayloadPolicy { Copy, Stay, Move };
+>>>>>>> origin/develop12
 
 
 } // end namespace Realm

@@ -67,7 +67,11 @@ typedef SSIZE_T ssize_t;
 #endif
 
 
+<<<<<<< HEAD
 #if defined(REALM_PTR_64) && defined(REALM_X86_OR_X64)
+=======
+#if defined(REALM_PTR_64) && defined(REALM_X86_OR_X64) && !REALM_WATCHOS
+>>>>>>> origin/develop12
 #define REALM_COMPILER_SSE // Compiler supports SSE 4.2 through __builtin_ accessors or back-end assembler
 #define REALM_COMPILER_AVX
 #endif
@@ -140,6 +144,23 @@ int fast_popcount32(int32_t x);
 int fast_popcount64(int64_t x);
 uint64_t fastrand(uint64_t max = 0xffffffffffffffffULL, bool is_seed = false);
 
+<<<<<<< HEAD
+=======
+// Class to be used when a private generator is wanted.
+// Object of this class should not be shared between threads.
+class FastRand {
+public:
+    FastRand(uint64_t seed = 1)
+        : m_state(seed)
+    {
+    }
+    uint64_t operator()(uint64_t max = uint64_t(-1));
+
+private:
+    uint64_t m_state;
+};
+
+>>>>>>> origin/develop12
 // log2 - returns -1 if x==0, otherwise log2(x)
 inline int log2(size_t x)
 {
@@ -214,7 +235,11 @@ enum IndexMethod {
 struct InternalFindResult {
     // Reference to a IntegerColumn containing result rows, or a single row
     // value if the result is FindRes_single.
+<<<<<<< HEAD
     size_t payload;
+=======
+    int64_t payload;
+>>>>>>> origin/develop12
     // Offset into the result column to start at.
     size_t start_ndx;
     // Offset index in the result column to end at.

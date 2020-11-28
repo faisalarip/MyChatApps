@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+<<<<<<< HEAD
 #import <sys/utsname.h>
 
 #import "FBSDKCoreKit+Internal.h"
@@ -27,6 +28,19 @@ static NSString * const FBSDKDeviceModelKey = @"device_model";
 static NSString * const FBSDKMonitoringsKey = @"monitorings";
 static NSString * const FBSDKOsVersionKey = @"device_os_version";
 
+=======
+#import "FBSDKMonitorNetworker.h"
+
+#import <sys/utsname.h>
+
+#import "FBSDKCoreKit+Internal.h"
+
+static NSString *const FBSDKAppIdentifierKey = @"id";
+static NSString *const FBSDKBundleIdentifierKey = @"unique_application_identifier";
+static NSString *const FBSDKDeviceModelKey = @"device_model";
+static NSString *const FBSDKMonitoringsKey = @"monitorings";
+static NSString *const FBSDKOsVersionKey = @"device_os_version";
+>>>>>>> origin/develop12
 
 @interface FBSDKMonitorNetworker ()
 @end
@@ -80,7 +94,11 @@ static NSString * const FBSDKOsVersionKey = @"device_os_version";
                            invalidObjectHandler:NULL];
 }
 
+<<<<<<< HEAD
 + (NSString * _Nonnull)deviceModel
+=======
++ (NSString *_Nonnull)deviceModel
+>>>>>>> origin/develop12
 {
   struct utsname systemInfo;
   uname(&systemInfo);

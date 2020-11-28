@@ -1,7 +1,11 @@
 /*
  MIT License
  
+<<<<<<< HEAD
  Copyright (c) 2017-2019 MessageKit
+=======
+ Copyright (c) 2017-2020 MessageKit
+>>>>>>> origin/develop12
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +27,7 @@
  */
 
 import Foundation
+<<<<<<< HEAD
 
 internal extension CGRect {
     
@@ -30,4 +35,12 @@ internal extension CGRect {
         self.init(x: x, y: y, width: w, height: h)
     }
 
+=======
+import UIKit
+
+internal extension CGRect {
+    init(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat) {
+        self.init(x: x, y: y, width: w, height: h)
+    }
+>>>>>>> origin/develop12
 }

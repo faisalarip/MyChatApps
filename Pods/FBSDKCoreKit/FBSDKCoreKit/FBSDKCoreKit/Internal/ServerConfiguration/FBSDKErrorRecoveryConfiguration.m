@@ -28,7 +28,12 @@
 - (instancetype)initWithRecoveryDescription:(NSString *)description
                          optionDescriptions:(NSArray *)optionDescriptions
                                    category:(FBSDKGraphRequestError)category
+<<<<<<< HEAD
                          recoveryActionName:(NSString *)recoveryActionName {
+=======
+                         recoveryActionName:(NSString *)recoveryActionName
+{
+>>>>>>> origin/develop12
   if ((self = [super init])) {
     _localizedRecoveryDescription = [description copy];
     _localizedRecoveryOptionDescriptions = [optionDescriptions copy];
@@ -70,7 +75,11 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
+<<<<<<< HEAD
   //immutable
+=======
+  // immutable
+>>>>>>> origin/develop12
   return self;
 }
 

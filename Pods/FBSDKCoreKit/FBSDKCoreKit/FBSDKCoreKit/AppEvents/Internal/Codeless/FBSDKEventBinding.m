@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKEventBinding.h"
 
 #import "FBSDKAppEvents.h"
@@ -36,6 +37,24 @@
 #define CODELESS_PATH_TYPE_RELATIVE  @"relative"
 #define CODELESS_CODELESS_EVENT_KEY  @"_is_fb_codeless"
 #define PARAMETER_NAME_PRICE          @"_valueToSum"
+=======
+ #import "FBSDKEventBinding.h"
+
+ #import "FBSDKAppEvents.h"
+ #import "FBSDKAppEventsUtility.h"
+ #import "FBSDKCodelessParameterComponent.h"
+ #import "FBSDKCodelessPathComponent.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKSwizzler.h"
+ #import "FBSDKUtility.h"
+ #import "FBSDKViewHierarchy.h"
+ #import "FBSDKViewHierarchyMacros.h"
+
+ #define CODELESS_PATH_TYPE_ABSOLUTE  @"absolute"
+ #define CODELESS_PATH_TYPE_RELATIVE  @"relative"
+ #define CODELESS_CODELESS_EVENT_KEY  @"_is_fb_codeless"
+ #define PARAMETER_NAME_PRICE          @"_valueToSum"
+>>>>>>> origin/develop12
 
 @implementation FBSDKEventBinding
 
@@ -102,8 +121,13 @@
   return NO;
 }
 
+<<<<<<< HEAD
 + (BOOL)match:(NSObject *)view
 pathComponent:(FBSDKCodelessPathComponent *)component
+=======
++ (BOOL)  match:(NSObject *)view
+  pathComponent:(FBSDKCodelessPathComponent *)component
+>>>>>>> origin/develop12
 {
   NSString *className = NSStringFromClass([view class]);
   if (![className isEqualToString:component.className]) {
@@ -128,7 +152,11 @@ pathComponent:(FBSDKCodelessPathComponent *)component
   if ((component.matchBitmask & FBSDKCodelessMatchBitmaskFieldText) > 0) {
     NSString *text = [FBSDKViewHierarchy getText:view];
     BOOL match = ((text.length == 0 && component.text.length == 0)
+<<<<<<< HEAD
                   || [text isEqualToString:component.text]);
+=======
+      || [text isEqualToString:component.text]);
+>>>>>>> origin/develop12
     if (!match) {
       return NO;
     }
@@ -143,7 +171,11 @@ pathComponent:(FBSDKCodelessPathComponent *)component
   if ((component.matchBitmask & FBSDKCodelessMatchBitmaskFieldHint) > 0) {
     NSString *hint = [FBSDKViewHierarchy getHint:view];
     BOOL match = ((hint.length == 0 && component.hint.length == 0)
+<<<<<<< HEAD
                   || [hint isEqualToString:component.hint]);
+=======
+      || [hint isEqualToString:component.hint]);
+>>>>>>> origin/develop12
     if (!match) {
       return NO;
     }
@@ -160,7 +192,12 @@ pathComponent:(FBSDKCodelessPathComponent *)component
   return isMatch;
 }
 
+<<<<<<< HEAD
 + (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath {
+=======
++ (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath
+{
+>>>>>>> origin/develop12
   for (NSInteger i = 0; i < MIN(path.count, viewPath.count); i++) {
     NSInteger idxPath = path.count - i - 1;
     NSInteger idxViewPath = viewPath.count - i - 1;
@@ -180,8 +217,13 @@ pathComponent:(FBSDKCodelessPathComponent *)component
     if ((pathComponent.matchBitmask & FBSDKCodelessMatchBitmaskFieldText) > 0) {
       NSString *text = viewPathComponent.text;
       BOOL match = ((text.length == 0 && pathComponent.text.length == 0)
+<<<<<<< HEAD
                     || [text isEqualToString:pathComponent.text]
                     || [[FBSDKUtility SHA256Hash:text] isEqualToString:pathComponent.text]);
+=======
+        || [text isEqualToString:pathComponent.text]
+        || [[FBSDKUtility SHA256Hash:text] isEqualToString:pathComponent.text]);
+>>>>>>> origin/develop12
       if (!match) {
         return NO;
       }
@@ -195,8 +237,13 @@ pathComponent:(FBSDKCodelessPathComponent *)component
     if ((pathComponent.matchBitmask & FBSDKCodelessMatchBitmaskFieldHint) > 0) {
       NSString *hint = viewPathComponent.hint;
       BOOL match = ((hint.length == 0 && pathComponent.hint.length == 0)
+<<<<<<< HEAD
                     || [hint isEqualToString:pathComponent.hint]
                     || [[FBSDKUtility SHA256Hash:hint] isEqualToString:pathComponent.hint]);
+=======
+        || [hint isEqualToString:pathComponent.hint]
+        || [[FBSDKUtility SHA256Hash:hint] isEqualToString:pathComponent.hint]);
+>>>>>>> origin/develop12
       if (!match) {
         return NO;
       }
@@ -206,14 +253,23 @@ pathComponent:(FBSDKCodelessPathComponent *)component
   return YES;
 }
 
+<<<<<<< HEAD
 + (NSObject *)findViewByPath:(NSArray *)path parent:(NSObject *)parent level:(int)level {
+=======
++ (NSObject *)findViewByPath:(NSArray *)path parent:(NSObject *)parent level:(int)level
+{
+>>>>>>> origin/develop12
   if (level >= path.count) {
     return nil;
   }
 
   FBSDKCodelessPathComponent *pathComponent = [FBSDKTypeUtility array:path objectAtIndex:level];
 
+<<<<<<< HEAD
   //  If found parent, skip to next level
+=======
+  // If found parent, skip to next level
+>>>>>>> origin/develop12
   if ([pathComponent.className isEqualToString:CODELESS_MAPPING_PARENT_CLASS_NAME]) {
     NSObject *nextParent = [FBSDKViewHierarchy getParent:parent];
 
@@ -262,8 +318,13 @@ pathComponent:(FBSDKCodelessPathComponent *)component
 
 - (BOOL)isEqualToBinding:(FBSDKEventBinding *)binding
 {
+<<<<<<< HEAD
   if (_path.count != binding.path.count ||
       _parameters.count != binding.parameters.count) {
+=======
+  if (_path.count != binding.path.count
+      || _parameters.count != binding.parameters.count) {
+>>>>>>> origin/develop12
     return NO;
   }
 
@@ -296,10 +357,18 @@ pathComponent:(FBSDKCodelessPathComponent *)component
   return YES;
 }
 
+<<<<<<< HEAD
 //  MARK: - find event parameters via relative path
 + (NSString *)findParameterOfPath:(NSArray *)path
                          pathType:(NSString *)pathType
                        sourceView:(UIView *)sourceView {
+=======
+// MARK: - find event parameters via relative path
++ (NSString *)findParameterOfPath:(NSArray *)path
+                         pathType:(NSString *)pathType
+                       sourceView:(UIView *)sourceView
+{
+>>>>>>> origin/develop12
   if (0 == path.count) {
     return nil;
   }

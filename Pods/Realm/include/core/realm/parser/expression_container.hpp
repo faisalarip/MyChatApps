@@ -34,7 +34,12 @@ namespace parser {
 class ExpressionContainer
 {
 public:
+<<<<<<< HEAD
     ExpressionContainer(Query& query, const parser::Expression& e, query_builder::Arguments& args, parser::KeyPathMapping& mapping);
+=======
+    ExpressionContainer(Query& query, const parser::Expression& e, query_builder::Arguments& args,
+                        parser::KeyPathMapping& mapping);
+>>>>>>> origin/develop12
 
     bool is_null();
 
@@ -53,8 +58,12 @@ public:
     DataType check_type_compatibility(DataType type);
     DataType get_comparison_type(ExpressionContainer& rhs);
 
+<<<<<<< HEAD
     enum class ExpressionInternal
     {
+=======
+    enum class ExpressionInternal {
+>>>>>>> origin/develop12
         exp_Value,
         exp_Property,
         exp_OpMin,

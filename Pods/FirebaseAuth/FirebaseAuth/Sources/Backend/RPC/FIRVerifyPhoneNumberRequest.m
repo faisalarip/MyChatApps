@@ -53,6 +53,14 @@ static NSString *const kPhoneNumberKey = @"phoneNumber";
  */
 static NSString *const kOperationKey = @"operation";
 
+<<<<<<< HEAD
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+>>>>>>> origin/develop12
 @implementation FIRVerifyPhoneNumberRequest
 
 - (nullable instancetype)initWithTemporaryProof:(NSString *)temporaryProof
@@ -123,6 +131,12 @@ NSString *const FIRAuthOperationString(FIRAuthOperationType operationType) {
   if (_phoneNumber) {
     postBody[kPhoneNumberKey] = _phoneNumber;
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    postBody[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
   NSString *operation = FIRAuthOperationString(_operation);
   postBody[kOperationKey] = operation;
   return [postBody copy];

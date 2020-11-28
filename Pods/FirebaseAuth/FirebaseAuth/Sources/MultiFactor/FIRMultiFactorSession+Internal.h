@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if TARGET_OS_IOS
 
 #import <FirebaseAuth/FIRMultiFactorInfo.h>
 #import <FirebaseAuth/FIRMultiFactorSession.h>
+=======
+#import <TargetConditionals.h>
+#if TARGET_OS_IOS
+
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorInfo.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorSession.h"
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 

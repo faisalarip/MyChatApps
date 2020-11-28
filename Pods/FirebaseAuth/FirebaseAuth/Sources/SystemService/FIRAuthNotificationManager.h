@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if !TARGET_OS_OSX
+=======
+#import <TargetConditionals.h>
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
+>>>>>>> origin/develop12
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>

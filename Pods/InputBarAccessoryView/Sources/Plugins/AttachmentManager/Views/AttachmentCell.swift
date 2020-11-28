@@ -2,7 +2,11 @@
 //  AttachmentCell.swift
 //  InputBarAccessoryView
 //
+<<<<<<< HEAD
 //  Copyright © 2017-2019 Nathan Tannar.
+=======
+//  Copyright © 2017-2020 Nathan Tannar.
+>>>>>>> origin/develop12
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,14 +35,26 @@ open class AttachmentCell: UICollectionViewCell {
     
     // MARK: - Properties
     
+<<<<<<< HEAD
     class var reuseIdentifier: String {
+=======
+    public class var reuseIdentifier: String {
+>>>>>>> origin/develop12
         return "AttachmentCell"
     }
     
     public let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+<<<<<<< HEAD
         view.backgroundColor = .groupTableViewBackground
+=======
+        if #available(iOS 13, *) {
+            view.backgroundColor = .systemGray6
+        } else {
+            view.backgroundColor = .groupTableViewBackground
+        }
+>>>>>>> origin/develop12
         view.layer.cornerRadius = 8
         view.clipsToBounds = true
         return view
@@ -52,11 +68,25 @@ open class AttachmentCell: UICollectionViewCell {
     
     open lazy var deleteButton: UIButton = { [weak self] in
         let button = UIButton()
+<<<<<<< HEAD
         button.setAttributedTitle(NSMutableAttributedString().bold("X", fontSize: 15, textColor: .white), for: .normal)
         button.setAttributedTitle(NSMutableAttributedString().bold("X", fontSize: 15, textColor: UIColor.white.withAlphaComponent(0.5)), for: .highlighted)
         button.layer.cornerRadius = 10
         button.clipsToBounds = true
         button.backgroundColor = UIColor(red: 0, green: 122/255, blue: 1, alpha: 1)
+=======
+        let textColor: UIColor
+        if #available(iOS 13, *) {
+            textColor = .systemBackground
+        } else {
+            textColor = .white
+        }
+        button.setAttributedTitle(NSMutableAttributedString().bold("X", fontSize: 15, textColor: textColor), for: .normal)
+        button.setAttributedTitle(NSMutableAttributedString().bold("X", fontSize: 15, textColor: textColor.withAlphaComponent(0.5)), for: .highlighted)
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
+        button.backgroundColor = .systemBlue
+>>>>>>> origin/develop12
         button.addTarget(self, action: #selector(deleteAttachment), for: .touchUpInside)
         return button
     }()

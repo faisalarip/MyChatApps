@@ -28,12 +28,17 @@
 using namespace realm;
 
 namespace realm {
+<<<<<<< HEAD
 bool operator==(Schema const& a, Schema const& b)
+=======
+bool operator==(Schema const& a, Schema const& b) noexcept
+>>>>>>> origin/develop12
 {
     return static_cast<Schema::base const&>(a) == static_cast<Schema::base const&>(b);
 }
 }
 
+<<<<<<< HEAD
 Schema::Schema() = default;
 Schema::~Schema() = default;
 Schema::Schema(Schema const&) = default;
@@ -44,13 +49,30 @@ Schema& Schema::operator=(Schema&&) = default;
 Schema::Schema(std::initializer_list<ObjectSchema> types) : Schema(base(types)) { }
 
 Schema::Schema(base types) : base(std::move(types))
+=======
+Schema::Schema() noexcept = default;
+Schema::~Schema() = default;
+Schema::Schema(Schema const&) = default;
+Schema::Schema(Schema &&) noexcept = default;
+Schema& Schema::operator=(Schema const&) = default;
+Schema& Schema::operator=(Schema&&) noexcept = default;
+
+Schema::Schema(std::initializer_list<ObjectSchema> types) : Schema(base(types)) { }
+
+Schema::Schema(base types) noexcept
+: base(std::move(types))
+>>>>>>> origin/develop12
 {
     std::sort(begin(), end(), [](ObjectSchema const& lft, ObjectSchema const& rgt) {
         return lft.name < rgt.name;
     });
 }
 
+<<<<<<< HEAD
 Schema::iterator Schema::find(StringData name)
+=======
+Schema::iterator Schema::find(StringData name) noexcept
+>>>>>>> origin/develop12
 {
     auto it = std::lower_bound(begin(), end(), name, [](ObjectSchema const& lft, StringData rgt) {
         return lft.name < rgt;
@@ -61,7 +83,11 @@ Schema::iterator Schema::find(StringData name)
     return it;
 }
 
+<<<<<<< HEAD
 Schema::const_iterator Schema::find(StringData name) const
+=======
+Schema::const_iterator Schema::find(StringData name) const noexcept
+>>>>>>> origin/develop12
 {
     return const_cast<Schema *>(this)->find(name);
 }
@@ -101,6 +127,7 @@ void Schema::validate() const
     }
 }
 
+<<<<<<< HEAD
 namespace {
 struct IsNotRemoveProperty {
     bool operator()(SchemaChange sc) const { return sc.visit(*this); }
@@ -114,6 +141,8 @@ struct GetRemovedColumn {
 };
 }
 
+=======
+>>>>>>> origin/develop12
 static void compare(ObjectSchema const& existing_schema,
                     ObjectSchema const& target_schema,
                     std::vector<SchemaChange>& changes)
@@ -151,16 +180,20 @@ static void compare(ObjectSchema const& existing_schema,
         }
     }
 
+<<<<<<< HEAD
     if (existing_schema.primary_key != target_schema.primary_key) {
         changes.emplace_back(schema_change::ChangePrimaryKey{&existing_schema, target_schema.primary_key_property()});
     }
 
+=======
+>>>>>>> origin/develop12
     for (auto& target_prop : target_schema.persisted_properties) {
         if (!existing_schema.property_for_name(target_prop.name)) {
             changes.emplace_back(schema_change::AddProperty{&existing_schema, &target_prop});
         }
     }
 
+<<<<<<< HEAD
     // Move all RemovePropertys to the end and sort in descending order of
     // column index, as removing a column will shift all columns after that one
     auto it = std::partition(begin(changes), end(changes), IsNotRemoveProperty{});
@@ -170,6 +203,15 @@ static void compare(ObjectSchema const& existing_schema,
 
 template<typename T, typename U, typename Func>
 void Schema::zip_matching(T&& a, U&& b, Func&& func)
+=======
+    if (existing_schema.primary_key != target_schema.primary_key) {
+        changes.emplace_back(schema_change::ChangePrimaryKey{&existing_schema, target_schema.primary_key_property()});
+    }
+}
+
+template<typename T, typename U, typename Func>
+void Schema::zip_matching(T&& a, U&& b, Func&& func) noexcept
+>>>>>>> origin/develop12
 {
     size_t i = 0, j = 0;
     while (i < a.size() && j < b.size()) {
@@ -224,23 +266,39 @@ std::vector<SchemaChange> Schema::compare(Schema const& target_schema, bool incl
     return changes;
 }
 
+<<<<<<< HEAD
 void Schema::copy_table_columns_from(realm::Schema const& other)
+=======
+void Schema::copy_keys_from(realm::Schema const& other) noexcept
+>>>>>>> origin/develop12
 {
     zip_matching(*this, other, [&](ObjectSchema* existing, const ObjectSchema* other) {
         if (!existing || !other)
             return;
 
+<<<<<<< HEAD
         for (auto& current_prop : other->persisted_properties) {
             auto target_prop = existing->property_for_name(current_prop.name);
             if (target_prop) {
                 target_prop->table_column = current_prop.table_column;
+=======
+        existing->table_key = other->table_key;
+        for (auto& current_prop : other->persisted_properties) {
+            auto target_prop = existing->property_for_name(current_prop.name);
+            if (target_prop) {
+                target_prop->column_key = current_prop.column_key;
+>>>>>>> origin/develop12
             }
         }
     });
 }
 
 namespace realm {
+<<<<<<< HEAD
 bool operator==(SchemaChange const& lft, SchemaChange const& rgt)
+=======
+bool operator==(SchemaChange const& lft, SchemaChange const& rgt) noexcept
+>>>>>>> origin/develop12
 {
     if (lft.m_kind != rgt.m_kind)
         return false;

@@ -279,7 +279,11 @@ static id<SDImageLoader> _defaultImageLoader;
                 [self safelyRemoveOperationFromRunning:operation];
                 return;
             } else if (context[SDWebImageContextImageTransformer] && !cachedImage) {
+<<<<<<< HEAD
                 // Have a chance to quary original cache instead of downloading
+=======
+                // Have a chance to query original cache instead of downloading
+>>>>>>> origin/develop12
                 [self callOriginalCacheProcessForOperation:operation url:url options:options context:context progress:progressBlock completed:completedBlock];
                 return;
             }

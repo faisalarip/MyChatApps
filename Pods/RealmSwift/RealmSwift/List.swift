@@ -72,7 +72,11 @@ public final class List<Element: RealmCollectionValue>: ListBase {
         super.init()
     }
 
+<<<<<<< HEAD
     internal init(rlmArray: RLMArray<AnyObject>) {
+=======
+    internal init(objc rlmArray: RLMArray<AnyObject>) {
+>>>>>>> origin/develop12
         super.init(array: rlmArray)
     }
 
@@ -96,6 +100,7 @@ public final class List<Element: RealmCollectionValue>: ListBase {
         return notFoundToNil(index: _rlmArray.indexOfObject(with: predicate))
     }
 
+<<<<<<< HEAD
     /**
      Returns the index of the first object in the list matching the predicate, or `nil` if no objects match.
 
@@ -105,6 +110,8 @@ public final class List<Element: RealmCollectionValue>: ListBase {
         return index(matching: NSPredicate(format: predicateFormat, argumentArray: unwrapOptionals(in: args)))
     }
 
+=======
+>>>>>>> origin/develop12
     // MARK: Object Retrieval
 
     /**
@@ -168,6 +175,7 @@ public final class List<Element: RealmCollectionValue>: ListBase {
     /**
      Returns a `Results` containing all objects matching the given predicate in the list.
 
+<<<<<<< HEAD
      - parameter predicateFormat: A predicate format string, optionally followed by a variable number of arguments.
     */
     public func filter(_ predicateFormat: String, _ args: Any...) -> Results<Element> {
@@ -178,6 +186,8 @@ public final class List<Element: RealmCollectionValue>: ListBase {
     /**
      Returns a `Results` containing all objects matching the given predicate in the list.
 
+=======
+>>>>>>> origin/develop12
      - parameter predicate: The predicate with which to filter the objects.
      */
     public func filter(_ predicate: NSPredicate) -> Results<Element> {
@@ -393,9 +403,16 @@ public final class List<Element: RealmCollectionValue>: ListBase {
      not perform a write transaction on the same thread or explicitly call `realm.refresh()`, accessing it will never
      perform blocking work.
 
+<<<<<<< HEAD
      Notifications are delivered via the standard run loop, and so can't be delivered while the run loop is blocked by
      other activity. When notifications can't be delivered instantly, multiple notifications may be coalesced into a
      single notification. This can include the notification with the initial collection.
+=======
+     If no queue is given, notifications are delivered via the standard run loop, and so can't be delivered while the
+     run loop is blocked by other activity. If a queue is given, notifications are delivered to that queue instead. When
+     notifications can't be delivered instantly, multiple notifications may be coalesced into a single notification.
+     This can include the notification with the initial collection.
+>>>>>>> origin/develop12
 
      For example, the following code performs a write transaction immediately after adding the notification block, so
      there is no opportunity for the initial notification to be delivered first. As a result, the initial notification
@@ -430,6 +447,7 @@ public final class List<Element: RealmCollectionValue>: ListBase {
 
      - warning: This method cannot be called during a write transaction, or when the containing Realm is read-only.
 
+<<<<<<< HEAD
      - parameter block: The block to be called whenever a change occurs.
      - returns: A token which must be held for as long as you want updates to be delivered.
      */
@@ -437,6 +455,26 @@ public final class List<Element: RealmCollectionValue>: ListBase {
         return _rlmArray.addNotificationBlock { _, change, error in
             block(RealmCollectionChange.fromObjc(value: self, change: change, error: error))
         }
+=======
+     - parameter queue: The serial dispatch queue to receive notification on. If
+                        `nil`, notifications are delivered to the current thread.
+     - parameter block: The block to be called whenever a change occurs.
+     - returns: A token which must be held for as long as you want updates to be delivered.
+     */
+    public func observe(on queue: DispatchQueue? = nil,
+                        _ block: @escaping (RealmCollectionChange<List>) -> Void) -> NotificationToken {
+        return _rlmArray.addNotificationBlock(wrapObserveBlock(block), queue: queue)
+    }
+
+    // MARK: Frozen Objects
+
+    public var isFrozen: Bool {
+        return _rlmArray.isFrozen
+    }
+
+    public func freeze() -> List {
+        return List(objc: _rlmArray.freeze())
+>>>>>>> origin/develop12
     }
 
     // swiftlint:disable:next identifier_name
@@ -524,21 +562,33 @@ extension List: RealmCollection {
     public func index(before i: Int) -> Int { return i - 1 }
 
     /// :nodoc:
+<<<<<<< HEAD
     public func _observe(_ block: @escaping (RealmCollectionChange<AnyRealmCollection<Element>>) -> Void) -> NotificationToken {
         let anyCollection = AnyRealmCollection(self)
         return _rlmArray.addNotificationBlock { _, change, error in
             block(RealmCollectionChange.fromObjc(value: anyCollection, change: change, error: error))
         }
+=======
+    // swiftlint:disable:next identifier_name
+    public func _observe(_ queue: DispatchQueue?,
+                         _ block: @escaping (RealmCollectionChange<AnyRealmCollection<Element>>) -> Void)
+        -> NotificationToken {
+            return _rlmArray.addNotificationBlock(wrapObserveBlock(block), queue: queue)
+>>>>>>> origin/develop12
     }
 }
 
 // MARK: - MutableCollection conformance, range replaceable collection emulation
 extension List: MutableCollection {
+<<<<<<< HEAD
 #if swift(>=4.1)
     public typealias SubSequence = Slice<List>
 #else
     public typealias SubSequence = RandomAccessSlice<List>
 #endif
+=======
+    public typealias SubSequence = Slice<List>
+>>>>>>> origin/develop12
 
     /**
      Returns the objects at the given range (get), or replaces the objects at the
@@ -564,6 +614,10 @@ extension List: MutableCollection {
      - warning: This method may only be called during a write transaction.
      */
     public func removeFirst(_ number: Int = 1) {
+<<<<<<< HEAD
+=======
+        throwForNegativeIndex(number)
+>>>>>>> origin/develop12
         let count = Int(_rlmArray.count)
         guard number <= count else {
             throwRealmException("It is not possible to remove more objects (\(number)) from a list"
@@ -581,6 +635,10 @@ extension List: MutableCollection {
      - warning: This method may only be called during a write transaction.
      */
     public func removeLast(_ number: Int = 1) {
+<<<<<<< HEAD
+=======
+        throwForNegativeIndex(number)
+>>>>>>> origin/develop12
         let count = Int(_rlmArray.count)
         guard number <= count else {
             throwRealmException("It is not possible to remove more objects (\(number)) from a list"
@@ -603,7 +661,10 @@ extension List: MutableCollection {
             currentIndex += 1
         }
     }
+<<<<<<< HEAD
     #if swift(>=4.1.50)
+=======
+>>>>>>> origin/develop12
     /**
      Removes objects from the list at the given range.
 
@@ -615,6 +676,7 @@ extension List: MutableCollection {
             remove(at: bounds.lowerBound)
         }
     }
+<<<<<<< HEAD
     #else
     /**
      Removes objects from the list at the given range.
@@ -634,10 +696,17 @@ extension List: MutableCollection {
     public func removeSubrange(_ bounds: CountableRange<Int>) {
         for _ in bounds {
             remove(at: bounds.lowerBound)
+=======
+    /// :nodoc:
+    public func remove(atOffsets offsets: IndexSet) {
+        for offset in offsets.reversed() {
+            remove(at: offset)
+>>>>>>> origin/develop12
         }
     }
 
     /// :nodoc:
+<<<<<<< HEAD
     public func removeSubrange(_ bounds: CountableClosedRange<Int>) {
         for _ in bounds {
             remove(at: bounds.lowerBound)
@@ -678,11 +747,31 @@ extension List: MutableCollection {
             insert(contentsOf: newElements, at: subrange.startIndex)
     }
 #endif
+=======
+    public func move(fromOffsets offsets: IndexSet, toOffset destination: Int) {
+        var tmp = [Element]()
+        for offset in offsets {
+            tmp.append(self[offset])
+        }
+        insert(contentsOf: tmp, at: destination)
+        for offset in offsets.reversed() {
+            var o = offset
+            if o >= destination {
+                o += tmp.count
+            }
+            remove(at: o)
+        }
+    }
+
+>>>>>>> origin/develop12
 }
 
 // MARK: - Codable
 
+<<<<<<< HEAD
 #if swift(>=4.1)
+=======
+>>>>>>> origin/develop12
 extension List: Decodable where Element: Decodable {
     public convenience init(from decoder: Decoder) throws {
         self.init()
@@ -701,14 +790,21 @@ extension List: Encodable where Element: Encodable {
         }
     }
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> origin/develop12
 
 // MARK: - AssistedObjectiveCBridgeable
 
 extension List: AssistedObjectiveCBridgeable {
     internal static func bridging(from objectiveCValue: Any, with metadata: Any?) -> List {
         guard let objectiveCValue = objectiveCValue as? RLMArray<AnyObject> else { preconditionFailure() }
+<<<<<<< HEAD
         return List(rlmArray: objectiveCValue)
+=======
+        return List(objc: objectiveCValue)
+>>>>>>> origin/develop12
     }
 
     internal var bridged: (objectiveCValue: Any, metadata: Any?) {

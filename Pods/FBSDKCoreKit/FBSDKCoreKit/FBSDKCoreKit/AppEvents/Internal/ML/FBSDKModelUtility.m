@@ -20,9 +20,15 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import <Foundation/Foundation.h>
 
 #import "FBSDKModelUtility.h"
+=======
+ #import "FBSDKModelUtility.h"
+
+ #import <Foundation/Foundation.h>
+>>>>>>> origin/develop12
 
 @implementation FBSDKModelUtility : NSObject
 
@@ -30,7 +36,11 @@
 {
   NSMutableArray *tokens = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] mutableCopy];
   [tokens removeObject:@""];
+<<<<<<< HEAD
   return [tokens componentsJoinedByString: @" "];
+=======
+  return [tokens componentsJoinedByString:@" "];
+>>>>>>> origin/develop12
 }
 
 @end

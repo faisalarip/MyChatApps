@@ -7,9 +7,15 @@
 */
 
 #import "SDImageHEICCoder.h"
+<<<<<<< HEAD
 #import "SDImageHEICCoderInternal.h"
 
 // These constantce are available from iOS 13+ and Xcode 11. This raw value is used for toolchain and firmware compatiblitiy
+=======
+#import "SDImageIOAnimatedCoderInternal.h"
+
+// These constants are available from iOS 13+ and Xcode 11. This raw value is used for toolchain and firmware compatibility
+>>>>>>> origin/develop12
 static NSString * kSDCGImagePropertyHEICSDictionary = @"{HEICS}";
 static NSString * kSDCGImagePropertyHEICSLoopCount = @"LoopCount";
 static NSString * kSDCGImagePropertyHEICSDelayTime = @"DelayTime";
@@ -45,10 +51,17 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     switch ([NSData sd_imageFormatForImageData:data]) {
         case SDImageFormatHEIC:
             // Check HEIC decoding compatibility
+<<<<<<< HEAD
             return [self.class canDecodeFromHEICFormat];
         case SDImageFormatHEIF:
             // Check HEIF decoding compatibility
             return [self.class canDecodeFromHEIFFormat];
+=======
+            return [self.class canDecodeFromFormat:SDImageFormatHEIC];
+        case SDImageFormatHEIF:
+            // Check HEIF decoding compatibility
+            return [self.class canDecodeFromFormat:SDImageFormatHEIF];
+>>>>>>> origin/develop12
         default:
             return NO;
     }
@@ -62,15 +75,23 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     switch (format) {
         case SDImageFormatHEIC:
             // Check HEIC encoding compatibility
+<<<<<<< HEAD
             return [self.class canEncodeToHEICFormat];
         case SDImageFormatHEIF:
             // Check HEIF encoding compatibility
             return [self.class canEncodeToHEIFFormat];
+=======
+            return [self.class canEncodeToFormat:SDImageFormatHEIC];
+        case SDImageFormatHEIF:
+            // Check HEIF encoding compatibility
+            return [self.class canEncodeToFormat:SDImageFormatHEIF];
+>>>>>>> origin/develop12
         default:
             return NO;
     }
 }
 
+<<<<<<< HEAD
 #pragma mark - HEIF Format
 
 + (BOOL)canDecodeFromFormat:(SDImageFormat)format {
@@ -134,6 +155,8 @@ static NSString * kSDCGImagePropertyHEICSUnclampedDelayTime = @"UnclampedDelayTi
     return canEncode;
 }
 
+=======
+>>>>>>> origin/develop12
 #pragma mark - Subclass Override
 
 + (SDImageFormat)imageFormat {

@@ -18,12 +18,23 @@
 
 #import "FBSDKAppEventsUtility.h"
 
+<<<<<<< HEAD
 #import <objc/runtime.h>
 
 #import <AdSupport/AdSupport.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
+=======
+#import <AdSupport/AdSupport.h>
+
+#import <objc/runtime.h>
+
+#import "FBSDKAccessToken.h"
+#import "FBSDKAppEvents.h"
+#import "FBSDKAppEventsConfiguration.h"
+#import "FBSDKAppEventsConfigurationManager.h"
+>>>>>>> origin/develop12
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
@@ -38,6 +49,7 @@
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY @"anon_id"
 #define FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH 40
 
+<<<<<<< HEAD
 @implementation FBSDKAppEventsUtility
 
 + (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
@@ -50,6 +62,47 @@
   [FBSDKBasicUtility dictionary:parameters setObject:attributionID forKey:@"attribution"];
 #endif
 
+=======
+static NSArray<NSString *> *standardEvents;
+
+@implementation FBSDKAppEventsUtility
+
++ (void)initialize
+{
+  standardEvents = @[
+    FBSDKAppEventNameCompletedRegistration,
+    FBSDKAppEventNameViewedContent,
+    FBSDKAppEventNameSearched,
+    FBSDKAppEventNameRated,
+    FBSDKAppEventNameCompletedTutorial,
+    FBSDKAppEventNameAddedToCart,
+    FBSDKAppEventNameAddedToWishlist,
+    FBSDKAppEventNameInitiatedCheckout,
+    FBSDKAppEventNameAddedPaymentInfo,
+    FBSDKAppEventNamePurchased,
+    FBSDKAppEventNameAchievedLevel,
+    FBSDKAppEventNameUnlockedAchievement,
+    FBSDKAppEventNameSpentCredits,
+    FBSDKAppEventNameContact,
+    FBSDKAppEventNameCustomizeProduct,
+    FBSDKAppEventNameDonate,
+    FBSDKAppEventNameFindLocation,
+    FBSDKAppEventNameSchedule,
+    FBSDKAppEventNameStartTrial,
+    FBSDKAppEventNameSubmitApplication,
+    FBSDKAppEventNameSubscribe,
+    FBSDKAppEventNameAdImpression,
+    FBSDKAppEventNameAdClick
+  ];
+}
+
++ (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+{
+  NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+  [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
+
+>>>>>>> origin/develop12
   if (shouldAccessAdvertisingID) {
     NSString *advertiserID = [[self class] advertiserID];
     [FBSDKTypeUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
@@ -57,6 +110,7 @@
 
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 
+<<<<<<< HEAD
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [[self class] advertisingTrackingStatus];
   if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
     BOOL allowed = (advertisingTrackingStatus == FBSDKAdvertisingTrackingAllowed);
@@ -67,6 +121,16 @@
     if (userData){
       [FBSDKTypeUtility dictionary:parameters setObject:userData forKey:@"ud"];
     }
+=======
+  FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [FBSDKSettings getAdvertisingTrackingStatus];
+  if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
+    [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKSettings isAdvertiserTrackingEnabled]).stringValue forKey:@"advertiser_tracking_enabled"];
+  }
+
+  NSString *userData = [FBSDKAppEvents getUserData];
+  if (userData) {
+    [FBSDKTypeUtility dictionary:parameters setObject:userData forKey:@"ud"];
+>>>>>>> origin/develop12
   }
 
   [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.limitEventAndDataUsage).stringValue forKey:@"application_tracking_enabled"];
@@ -79,9 +143,19 @@
 
   NSDictionary<NSString *, id> *dataProcessingOptions = [FBSDKSettings dataProcessingOptions];
   if (dataProcessingOptions) {
+<<<<<<< HEAD
     [FBSDKTypeUtility dictionary:parameters
                        setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS]
                           forKey:DATA_PROCESSING_OPTIONS];
+=======
+    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
+    if (options && [options isKindOfClass:NSArray.class]) {
+      NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
+      [FBSDKTypeUtility dictionary:parameters
+                         setObject:optionsString
+                            forKey:DATA_PROCESSING_OPTIONS];
+    }
+>>>>>>> origin/develop12
     [FBSDKTypeUtility dictionary:parameters
                        setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY]
                           forKey:DATA_PROCESSING_OPTIONS_COUNTRY];
@@ -119,6 +193,15 @@
     return nil;
   }
 
+<<<<<<< HEAD
+=======
+  if (@available(iOS 14.0, *)) {
+    if (![FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].advertiserIDCollectionEnabled) {
+      return nil;
+    }
+  }
+
+>>>>>>> origin/develop12
   NSString *result = nil;
 
   Class ASIdentifierManagerClass = fbsdkdfl_ASIdentifierManagerClass();
@@ -130,6 +213,7 @@
   return result;
 }
 
+<<<<<<< HEAD
 + (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus
 {
   static dispatch_once_t fetchAdvertisingTrackingStatusOnce;
@@ -156,6 +240,14 @@
 #else
   return [UIPasteboard pasteboardWithName:@"fb_app_attribution" create:NO].string;
 #endif
+=======
++ (BOOL)isStandardEvent:(nullable NSString *)event
+{
+  if (!event) {
+    return NO;
+  }
+  return [standardEvents containsObject:event];
+>>>>>>> origin/develop12
 }
 
 #pragma mark - Internal, for testing
@@ -170,11 +262,21 @@
 
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
 {
+<<<<<<< HEAD
   FBSDKConditionalLog([NSThread isMainThread],
                       FBSDKLoggingBehaviorDeveloperErrors,
                       @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
                       methodName,
                       className);
+=======
+  FBSDKConditionalLog(
+    [NSThread isMainThread],
+    FBSDKLoggingBehaviorDeveloperErrors,
+    @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
+    methodName,
+    className
+  );
+>>>>>>> origin/develop12
 }
 
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason
@@ -223,9 +325,15 @@
   [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
 }
 
+<<<<<<< HEAD
 + (BOOL)matchString:(NSString *)string
   firstCharacterSet:(NSCharacterSet *)firstCharacterSet
 restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
+=======
++ (BOOL)       matchString:(NSString *)string
+         firstCharacterSet:(NSCharacterSet *)firstCharacterSet
+  restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
+>>>>>>> origin/develop12
 {
   if (string.length == 0) {
     return NO;
@@ -264,8 +372,13 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
   @synchronized(self) {
     if (![cachedIdentifiers containsObject:identifier]) {
       if ([self matchString:identifier
+<<<<<<< HEAD
           firstCharacterSet:firstCharacterSet
    restOfStringCharacterSet:restOfStringCharacterSet]) {
+=======
+                  firstCharacterSet:firstCharacterSet
+           restOfStringCharacterSet:restOfStringCharacterSet]) {
+>>>>>>> origin/develop12
         [cachedIdentifiers addObject:identifier];
       } else {
         return NO;
@@ -300,7 +413,11 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
     // If there's an logging override app id present, then we don't want to use the client token since the client token
     // is intended to match up with the primary app id (and AppEvents doesn't require a client token).
     NSString *clientTokenString = [FBSDKSettings clientToken];
+<<<<<<< HEAD
     if (clientTokenString && appID && [appID isEqualToString:token.appID]){
+=======
+    if (clientTokenString && appID && [appID isEqualToString:token.appID]) {
+>>>>>>> origin/develop12
       tokenString = [NSString stringWithFormat:@"%@|%@", appID, clientTokenString];
     } else if (appID) {
       tokenString = nil;
@@ -314,6 +431,7 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
   return (long)round([NSDate date].timeIntervalSince1970);
 }
 
+<<<<<<< HEAD
 + (id)getVariable:(NSString *)variableName fromInstance:(NSObject *)instance {
   Ivar ivar = class_getInstanceVariable([instance class], variableName.UTF8String);
   if (ivar != NULL) {
@@ -327,6 +445,15 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
 }
 
 + (NSNumber *)getNumberValue:(NSString *)text {
+=======
++ (time_t)convertToUnixTime:(NSDate *)date
+{
+  return (time_t)round([date timeIntervalSince1970]);
+}
+
++ (NSNumber *)getNumberValue:(NSString *)text
+{
+>>>>>>> origin/develop12
   NSNumber *value = @0;
 
   NSLocale *locale = [NSLocale currentLocale];
@@ -357,15 +484,24 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
   return value;
 }
 
+<<<<<<< HEAD
 + (BOOL)isDebugBuild {
+=======
++ (BOOL)isDebugBuild
+{
+>>>>>>> origin/develop12
 #if TARGET_IPHONE_SIMULATOR
   return YES;
 #else
   BOOL isDevelopment = NO;
 
   // There is no provisioning profile in AppStore Apps.
+<<<<<<< HEAD
   @try
   {
+=======
+  @try {
+>>>>>>> origin/develop12
     NSData *data = [NSData dataWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"embedded" ofType:@"mobileprovision"]];
     if (data) {
       const char *bytes = [data bytes];
@@ -379,16 +515,33 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
     }
 
     return isDevelopment;
+<<<<<<< HEAD
   }
   @catch(NSException *exception)
   {
 
   }
+=======
+  } @catch (NSException *exception) {}
+>>>>>>> origin/develop12
 
   return NO;
 #endif
 }
 
+<<<<<<< HEAD
+=======
++ (BOOL)shouldDropAppEvent
+{
+  if (@available(iOS 14.0, *)) {
+    if ([FBSDKSettings getAdvertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && ![FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].eventCollectionEnabled) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
+>>>>>>> origin/develop12
 + (BOOL)isSensitiveUserData:(NSString *)text
 {
   if (0 == text.length) {
@@ -422,10 +575,18 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
   for (int i = (int)text.length - 1; i >= 0; i--) {
     int digit = chars[i] - '0';
 
+<<<<<<< HEAD
     if (isOdd)
       oddSum += digit;
     else
       evenSum += digit / 5 + (2 * digit) % 10;
+=======
+    if (isOdd) {
+      oddSum += digit;
+    } else {
+      evenSum += digit / 5 + (2 * digit) % 10;
+    }
+>>>>>>> origin/develop12
 
     isOdd = !isOdd;
   }

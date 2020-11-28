@@ -15,6 +15,11 @@
 #import "UIImage+Metadata.h"
 #import "UIImage+ExtendedCacheData.h"
 
+<<<<<<< HEAD
+=======
+static NSString * _defaultDiskCacheDirectory;
+
+>>>>>>> origin/develop12
 @interface SDImageCache ()
 
 #pragma mark - Properties
@@ -40,6 +45,20 @@
     return instance;
 }
 
+<<<<<<< HEAD
+=======
++ (NSString *)defaultDiskCacheDirectory {
+    if (!_defaultDiskCacheDirectory) {
+        _defaultDiskCacheDirectory = [[self userCacheDirectory] stringByAppendingPathComponent:@"com.hackemist.SDImageCache"];
+    }
+    return _defaultDiskCacheDirectory;
+}
+
++ (void)setDefaultDiskCacheDirectory:(NSString *)defaultDiskCacheDirectory {
+    _defaultDiskCacheDirectory = [defaultDiskCacheDirectory copy];
+}
+
+>>>>>>> origin/develop12
 - (instancetype)init {
     return [self initWithNamespace:@"default"];
 }
@@ -72,12 +91,20 @@
         _memoryCache = [[config.memoryCacheClass alloc] initWithConfig:_config];
         
         // Init the disk cache
+<<<<<<< HEAD
         if (directory != nil) {
             _diskCachePath = [directory stringByAppendingPathComponent:ns];
         } else {
             NSString *path = [[[self userCacheDirectory] stringByAppendingPathComponent:@"com.hackemist.SDImageCache"] stringByAppendingPathComponent:ns];
             _diskCachePath = path;
         }
+=======
+        if (!directory) {
+            // Use default disk cache directory
+            directory = [self.class defaultDiskCacheDirectory];
+        }
+        _diskCachePath = [directory stringByAppendingPathComponent:ns];
+>>>>>>> origin/develop12
         
         NSAssert([config.diskCacheClass conformsToProtocol:@protocol(SDDiskCache)], @"Custom disk cache class must conform to `SDDiskCache` protocol");
         _diskCache = [[config.diskCacheClass alloc] initWithCachePath:_diskCachePath config:_config];
@@ -121,7 +148,11 @@
     return [self.diskCache cachePathForKey:key];
 }
 
+<<<<<<< HEAD
 - (nullable NSString *)userCacheDirectory {
+=======
++ (nullable NSString *)userCacheDirectory {
+>>>>>>> origin/develop12
     NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     return paths.firstObject;
 }
@@ -131,9 +162,15 @@
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             // ~/Library/Caches/com.hackemist.SDImageCache/default/
+<<<<<<< HEAD
             NSString *newDefaultPath = [[[self userCacheDirectory] stringByAppendingPathComponent:@"com.hackemist.SDImageCache"] stringByAppendingPathComponent:@"default"];
             // ~/Library/Caches/default/com.hackemist.SDWebImageCache.default/
             NSString *oldDefaultPath = [[[self userCacheDirectory] stringByAppendingPathComponent:@"default"] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+=======
+            NSString *newDefaultPath = [[[self.class userCacheDirectory] stringByAppendingPathComponent:@"com.hackemist.SDImageCache"] stringByAppendingPathComponent:@"default"];
+            // ~/Library/Caches/default/com.hackemist.SDWebImageCache.default/
+            NSString *oldDefaultPath = [[[self.class userCacheDirectory] stringByAppendingPathComponent:@"default"] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+>>>>>>> origin/develop12
             dispatch_async(self.ioQueue, ^{
                 [((SDDiskCache *)self.diskCache) moveCacheDirectoryFromPath:oldDefaultPath toPath:newDefaultPath];
             });
@@ -269,7 +306,11 @@
     });
 }
 
+<<<<<<< HEAD
 // Make sure to call form io queue by caller
+=======
+// Make sure to call from io queue by caller
+>>>>>>> origin/develop12
 - (void)_storeImageDataToDisk:(nullable NSData *)imageData forKey:(nullable NSString *)key {
     if (!imageData || !key) {
         return;
@@ -304,7 +345,11 @@
     return exists;
 }
 
+<<<<<<< HEAD
 // Make sure to call form io queue by caller
+=======
+// Make sure to call from io queue by caller
+>>>>>>> origin/develop12
 - (BOOL)_diskImageDataExistsWithKey:(nullable NSString *)key {
     if (!key) {
         return NO;
@@ -516,6 +561,7 @@
         @autoreleasepool {
             NSData *diskData = [self diskImageDataBySearchingAllPathsForKey:key];
             UIImage *diskImage;
+<<<<<<< HEAD
             SDImageCacheType cacheType = SDImageCacheTypeNone;
             if (image) {
                 // the image is from in-memory cache, but need image data
@@ -523,6 +569,12 @@
                 cacheType = SDImageCacheTypeMemory;
             } else if (diskData) {
                 cacheType = SDImageCacheTypeDisk;
+=======
+            if (image) {
+                // the image is from in-memory cache, but need image data
+                diskImage = image;
+            } else if (diskData) {
+>>>>>>> origin/develop12
                 // decode image data only if in-memory cache missed
                 diskImage = [self diskImageForKey:key data:diskData options:options context:context];
                 if (diskImage && self.config.shouldCacheImagesInMemory) {
@@ -533,10 +585,17 @@
             
             if (doneBlock) {
                 if (shouldQueryDiskSync) {
+<<<<<<< HEAD
                     doneBlock(diskImage, diskData, cacheType);
                 } else {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         doneBlock(diskImage, diskData, cacheType);
+=======
+                    doneBlock(diskImage, diskData, SDImageCacheTypeDisk);
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        doneBlock(diskImage, diskData, SDImageCacheTypeDisk);
+>>>>>>> origin/develop12
                     });
                 }
             }
@@ -604,7 +663,11 @@
     });
 }
 
+<<<<<<< HEAD
 // Make sure to call form io queue by caller
+=======
+// Make sure to call from io queue by caller
+>>>>>>> origin/develop12
 - (void)_removeImageFromDiskForKey:(NSString *)key {
     if (!key) {
         return;

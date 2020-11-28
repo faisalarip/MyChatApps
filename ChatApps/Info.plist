@@ -21,7 +21,11 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+<<<<<<< HEAD
 				<string>fb643362356310047</string>
+=======
+				<string>fb884572135410595</string>
+>>>>>>> origin/develop12
 			</array>
 		</dict>
 		<dict>
@@ -29,16 +33,28 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+<<<<<<< HEAD
 				<string>com.googleusercontent.apps.797435623956-avpat8a3u8mh01fsk1o0gtmbm14eil9j</string>
+=======
+				<string>com.googleusercontent.apps.401233957403-4sfta04qcf49ctqstkpsk260fduh69pe</string>
+>>>>>>> origin/develop12
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
+<<<<<<< HEAD
 	<string>643362356310047</string>
 	<key>FacebookDisplayName</key>
 	<string>ChatApps</string>
+=======
+	<string>884572135410595</string>
+	<key>FacebookDisplayName</key>
+	<string>ChatApps1</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+>>>>>>> origin/develop12
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -61,6 +77,11 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Please allow access to take a profile picture</string>
+<<<<<<< HEAD
+=======
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Please allow access to send audio for video message</string>
+>>>>>>> origin/develop12
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Please allow access to select a photo for your profile</string>
 	<key>UIApplicationSceneManifest</key>

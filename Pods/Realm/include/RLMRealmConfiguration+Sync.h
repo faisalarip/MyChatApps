@@ -18,7 +18,11 @@
 
 #import <Realm/RLMRealmConfiguration.h>
 
+<<<<<<< HEAD
 #import "RLMSyncUtil.h"
+=======
+#import <Realm/RLMSyncUtil.h>
+>>>>>>> origin/develop12
 
 @class RLMSyncConfiguration;
 

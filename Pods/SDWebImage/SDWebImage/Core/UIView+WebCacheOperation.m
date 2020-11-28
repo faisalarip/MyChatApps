@@ -12,7 +12,11 @@
 static char loadOperationKey;
 
 // key is strong, value is weak because operation instance is retained by SDWebImageManager's runningOperations property
+<<<<<<< HEAD
 // we should use lock to keep thread-safe because these method may not be acessed from main queue
+=======
+// we should use lock to keep thread-safe because these method may not be accessed from main queue
+>>>>>>> origin/develop12
 typedef NSMapTable<NSString *, id<SDWebImageOperation>> SDOperationsDictionary;
 
 @implementation UIView (WebCacheOperation)

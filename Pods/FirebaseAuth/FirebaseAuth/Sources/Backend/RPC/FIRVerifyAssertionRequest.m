@@ -94,6 +94,14 @@ static NSString *const kReturnIDPCredentialKey = @"returnIdpCredential";
  */
 static NSString *const kSessionIDKey = @"sessionId";
 
+<<<<<<< HEAD
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+>>>>>>> origin/develop12
 @implementation FIRVerifyAssertionRequest
 
 - (nullable instancetype)initWithProviderID:(NSString *)providerID
@@ -166,6 +174,12 @@ static NSString *const kSessionIDKey = @"sessionId";
   if (_sessionID) {
     body[kSessionIDKey] = _sessionID;
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    body[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
 
   body[kAutoCreateKey] = @(_autoCreate);
 

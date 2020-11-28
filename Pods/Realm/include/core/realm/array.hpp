@@ -38,6 +38,11 @@ Searching: The main finding function is:
 #ifndef REALM_ARRAY_HPP
 #define REALM_ARRAY_HPP
 
+<<<<<<< HEAD
+=======
+#include <realm/node.hpp>
+
+>>>>>>> origin/develop12
 #include <cmath>
 #include <cstdlib> // size_t
 #include <algorithm>
@@ -55,6 +60,10 @@ Searching: The main finding function is:
 #include <realm/query_conditions.hpp>
 #include <realm/column_fwd.hpp>
 #include <realm/array_direct.hpp>
+<<<<<<< HEAD
+=======
+#include <realm/array_unsigned.hpp>
+>>>>>>> origin/develop12
 
 /*
     MMX: mmintrin.h
@@ -73,6 +82,7 @@ Searching: The main finding function is:
 
 namespace realm {
 
+<<<<<<< HEAD
 enum Action {
     act_ReturnFirst,
     act_Sum,
@@ -88,12 +98,15 @@ enum Action {
     act_Average
 };
 
+=======
+>>>>>>> origin/develop12
 template <class T>
 inline T no0(T v)
 {
     return v == 0 ? 1 : v;
 }
 
+<<<<<<< HEAD
 /// Special index value. It has various meanings depending on
 /// context. It is returned by some search functions to indicate 'not
 /// found'. It is similar in function to std::string::npos.
@@ -111,10 +124,24 @@ class StringColumn;
 class GroupWriter;
 template <class T>
 class QueryState;
+=======
+// Pre-definitions
+struct ObjKey;
+class Array;
+class GroupWriter;
+>>>>>>> origin/develop12
 namespace _impl {
 class ArrayWriterBase;
 }
 
+<<<<<<< HEAD
+=======
+template <class T>
+class BPlusTree;
+
+using KeyColumn = BPlusTree<ObjKey>;
+
+>>>>>>> origin/develop12
 
 struct MemStats {
     size_t allocated = 0;
@@ -151,6 +178,7 @@ private:
 };
 
 
+<<<<<<< HEAD
 class ArrayParent {
 public:
     virtual ~ArrayParent() noexcept
@@ -168,11 +196,14 @@ protected:
     friend class Array;
 };
 
+=======
+>>>>>>> origin/develop12
 struct TreeInsertBase {
     size_t m_split_offset;
     size_t m_split_size;
 };
 
+<<<<<<< HEAD
 /// Provides access to individual array nodes of the database.
 ///
 /// This class serves purely as an accessor, it assumes no ownership of the
@@ -222,17 +253,28 @@ struct TreeInsertBase {
 /// free-standing, that is, not be part of any database. For intra, or inter
 /// database copying, one would have to also specify the target allocator.
 class Array : public ArrayParent {
+=======
+class Array : public Node, public ArrayParent {
+>>>>>>> origin/develop12
 public:
     //    void state_init(int action, QueryState *state);
     //    bool match(int action, size_t index, int64_t value, QueryState *state);
 
     /// Create an array accessor in the unattached state.
+<<<<<<< HEAD
     explicit Array(Allocator&) noexcept;
+=======
+    explicit Array(Allocator& allocator) noexcept
+        : Node(allocator)
+    {
+    }
+>>>>>>> origin/develop12
 
     ~Array() noexcept override
     {
     }
 
+<<<<<<< HEAD
     enum Type {
         type_Normal,
 
@@ -250,6 +292,8 @@ public:
         type_HasRefs
     };
 
+=======
+>>>>>>> origin/develop12
     /// Create a new integer array of the specified type and size, and filled
     /// with the specified value, and attach this accessor to it. This does not
     /// modify the parent reference information of this accessor.
@@ -261,19 +305,36 @@ public:
     /// Reinitialize this array accessor to point to the specified new
     /// underlying memory. This does not modify the parent reference information
     /// of this accessor.
+<<<<<<< HEAD
     void init_from_ref(ref_type) noexcept;
+=======
+    void init_from_ref(ref_type ref) noexcept
+    {
+        REALM_ASSERT_DEBUG(ref);
+        char* header = m_alloc.translate(ref);
+        init_from_mem(MemRef(header, ref, m_alloc));
+    }
+>>>>>>> origin/develop12
 
     /// Same as init_from_ref(ref_type) but avoid the mapping of 'ref' to memory
     /// pointer.
     void init_from_mem(MemRef) noexcept;
 
     /// Same as `init_from_ref(get_ref_from_parent())`.
+<<<<<<< HEAD
     void init_from_parent() noexcept;
 
     /// Update the parents reference to this child. This requires, of course,
     /// that the parent information stored in this child is up to date. If the
     /// parent pointer is set to null, this function has no effect.
     void update_parent();
+=======
+    void init_from_parent() noexcept
+    {
+        ref_type ref = get_ref_from_parent();
+        init_from_ref(ref);
+    }
+>>>>>>> origin/develop12
 
     /// Called in the context of Group::commit() to ensure that attached
     /// accessors stay valid across a commit. Please note that this works only
@@ -304,6 +365,7 @@ public:
     /// initialized to the specified value.
     static MemRef create_array(Type, bool context_flag, size_t size, int_fast64_t value, Allocator&);
 
+<<<<<<< HEAD
     /// Construct a shallow copy of the specified slice of this array using the
     /// specified target allocator. Subarrays will **not** be cloned. See
     /// slice_and_clone_children() for an alternative.
@@ -341,10 +403,16 @@ public:
 
     size_t size() const noexcept;
     bool is_empty() const noexcept;
+=======
+>>>>>>> origin/develop12
     Type get_type() const noexcept;
 
 
     static void add_to_column(IntegerColumn* column, int64_t value);
+<<<<<<< HEAD
+=======
+    static void add_to_column(KeyColumn* column, int64_t value);
+>>>>>>> origin/develop12
 
     void insert(size_t ndx, int_fast64_t value);
     void add(int_fast64_t value);
@@ -467,6 +535,7 @@ public:
     void adjust_ge(int_fast64_t limit, int_fast64_t diff);
 
     //@{
+<<<<<<< HEAD
     /// These are similar in spirit to std::move() and std::move_backward from
     /// `<algorithm>`. \a dest_begin must not be in the range [`begin`,`end`), and
     /// \a dest_end must not be in the range (`begin`,`end`].
@@ -486,6 +555,18 @@ public:
     /// This function is guaranteed to not throw if
     /// `get_alloc().is_read_only(get_ref())` returns false.
     void move_rotate(size_t from, size_t to, size_t num_elems = 1);
+=======
+    /// This is similar in spirit to std::move() from `<algorithm>`.
+    /// \a dest_begin must not be in the range [`begin`,`end`)
+    ///
+    /// This function is guaranteed to not throw if
+    /// `get_alloc().is_read_only(get_ref())` returns false.
+    void move(size_t begin, size_t end, size_t dest_begin);
+    //@}
+
+    // Move elements from ndx and above to another array
+    void move(Array& dst, size_t ndx);
+>>>>>>> origin/develop12
 
     //@{
     /// Find the lower/upper bound of the specified value in a sequence of
@@ -523,6 +604,7 @@ public:
     //@}
 
     /// \brief Search the \c Array for a value greater or equal than \a target,
+<<<<<<< HEAD
     /// starting the search at the \a start index. If \a indirection is
     /// provided, use it as a look-up table to iterate over the \c Array.
     ///
@@ -549,6 +631,21 @@ public:
     void preset(int64_t min, int64_t max, size_t num_items);
     void preset(size_t bitwidth, size_t num_items);
 
+=======
+    /// starting the search at the \a start index.
+    ///
+    /// The \c Array must be sorted in ascending order.
+    ///
+    /// Behaviour is undefined if:
+    /// - sorting conditions are not respected;
+    /// - \a start is greater than the number of elements in this \c Array
+    ///
+    /// \param target the smallest value to search for
+    /// \param start the offset at which to start searching in the array
+    /// \return the index of the value if found, or realm::not_found otherwise
+    size_t find_gte(const int64_t target, size_t start, size_t end = size_t(-1)) const;
+
+>>>>>>> origin/develop12
     int64_t sum(size_t start = 0, size_t end = size_t(-1)) const;
     size_t count(int64_t value) const noexcept;
 
@@ -571,6 +668,7 @@ public:
     bool get_context_flag() const noexcept;
     void set_context_flag(bool) noexcept;
 
+<<<<<<< HEAD
     ref_type get_ref() const noexcept;
     MemRef get_mem() const noexcept;
 
@@ -580,6 +678,8 @@ public:
     /// function has no effect (idempotency).
     void destroy() noexcept;
 
+=======
+>>>>>>> origin/develop12
     /// Recursively destroy children (as if calling
     /// clear_and_destroy_children()), then put this accessor into the detached
     /// state (as if calling detach()), then free the allocated memory. If this
@@ -587,6 +687,7 @@ public:
     /// (idempotency).
     void destroy_deep() noexcept;
 
+<<<<<<< HEAD
     /// Shorthand for `destroy(MemRef(ref, alloc), alloc)`.
     static void destroy(ref_type ref, Allocator& alloc) noexcept;
 
@@ -594,6 +695,8 @@ public:
     /// destroy_deep(MemRef, Allocator&).
     static void destroy(MemRef, Allocator&) noexcept;
 
+=======
+>>>>>>> origin/develop12
     /// Shorthand for `destroy_deep(MemRef(ref, alloc), alloc)`.
     static void destroy_deep(ref_type ref, Allocator& alloc) noexcept;
 
@@ -603,10 +706,15 @@ public:
     /// destroy_deep() for every contained 'ref' element.
     static void destroy_deep(MemRef, Allocator&) noexcept;
 
+<<<<<<< HEAD
     Allocator& get_alloc() const noexcept
     {
         return m_alloc;
     }
+=======
+    // Clone deep
+    static MemRef clone(MemRef, Allocator& from_alloc, Allocator& target_alloc);
+>>>>>>> origin/develop12
 
     // Serialization
 
@@ -792,8 +900,11 @@ public:
     template <bool gt, Action action, size_t width, class Callback>
     bool find_gtlt(int64_t v, uint64_t chunk, QueryState<int64_t>* state, size_t baseindex, Callback callback) const;
 
+<<<<<<< HEAD
     ref_type bptree_leaf_insert(size_t ndx, int64_t, TreeInsertBase& state);
 
+=======
+>>>>>>> origin/develop12
     /// Get the specified element without the cost of constructing an
     /// array instance. If an array instance is already available, or
     /// you need to get multiple values, then this method will be
@@ -806,6 +917,7 @@ public:
 
     static void get_three(const char* data, size_t ndx, ref_type& v0, ref_type& v1, ref_type& v2) noexcept;
 
+<<<<<<< HEAD
     /// The meaning of 'width' depends on the context in which this
     /// array is used.
     size_t get_width() const noexcept
@@ -832,6 +944,13 @@ public:
 
     static Type get_type_from_header(const char*) noexcept;
 
+=======
+    static RefOrTagged get_as_ref_or_tagged(const char* header, size_t ndx) noexcept
+    {
+        return get(header, ndx);
+    }
+
+>>>>>>> origin/develop12
     /// Get the number of bytes currently in use by this array. This
     /// includes the array header, but it does not include allocated
     /// bytes corresponding to excess capacity. The result is
@@ -859,9 +978,16 @@ public:
 
     void stats(MemStats& stats_dest) const noexcept;
 
+<<<<<<< HEAD
 #ifdef REALM_DEBUG
     void print() const;
     void verify() const;
+=======
+    void verify() const;
+
+#ifdef REALM_DEBUG
+    void print() const;
+>>>>>>> origin/develop12
     typedef size_t (*LeafVerifier)(MemRef, Allocator&);
     void verify_bptree(LeafVerifier) const;
     typedef void (*LeafDumper)(MemRef, Allocator&, std::ostream&, int level);
@@ -878,17 +1004,21 @@ public:
     void to_dot_parent_edge(std::ostream&) const;
 #endif
 
+<<<<<<< HEAD
     static const int header_size = 8; // Number of bytes used by header
 
     // The encryption layer relies on headers always fitting within a single page.
     static_assert(header_size == 8, "Header must always fit in entirely on a page");
 
+=======
+>>>>>>> origin/develop12
     Array& operator=(const Array&) = delete; // not allowed
     Array(const Array&) = delete; // not allowed
 protected:
     typedef bool (*CallbackDummy)(int64_t);
 
 protected:
+<<<<<<< HEAD
     // Includes array header. Not necessarily 8-byte aligned.
     virtual size_t calc_byte_len(size_t num_items, size_t width) const;
 
@@ -924,6 +1054,8 @@ protected:
                             WidthType width_type, int width, size_t size, size_t capacity) noexcept;
 
 
+=======
+>>>>>>> origin/develop12
     // This returns the minimum value ("lower bound") of the representable values
     // for the given bit width. Valid widths are 0, 1, 2, 4, 8, 16, 32, and 64.
     template <size_t width>
@@ -941,11 +1073,16 @@ protected:
     template <size_t width>
     void set_width() noexcept;
     void set_width(size_t) noexcept;
+<<<<<<< HEAD
     void alloc(size_t init_size, size_t width);
     void copy_on_write();
 
 private:
     void do_copy_on_write(size_t minimum_size = 0);
+=======
+
+private:
+>>>>>>> origin/develop12
     void do_ensure_minimum_width(int_fast64_t);
 
     template <size_t w>
@@ -961,15 +1098,19 @@ private:
     size_t adjust_ge(size_t start, size_t end, int_fast64_t limit, int_fast64_t diff);
 
 protected:
+<<<<<<< HEAD
     /// The total size in bytes (including the header) of a new empty
     /// array. Must be a multiple of 8 (i.e., 64-bit aligned).
     static const size_t initial_capacity = 128;
 
+=======
+>>>>>>> origin/develop12
     /// It is an error to specify a non-zero value unless the width
     /// type is wtype_Bits. It is also an error to specify a non-zero
     /// size if the width type is wtype_Ignore.
     static MemRef create(Type, bool context_flag, WidthType, size_t size, int_fast64_t value, Allocator&);
 
+<<<<<<< HEAD
     static MemRef clone(MemRef header, Allocator& alloc, Allocator& target_alloc);
 
     /// Get the address of the header of this array.
@@ -981,6 +1122,8 @@ protected:
     // Undefined behavior if array is in immutable memory
     static size_t get_capacity_from_header(const char*) noexcept;
 
+=======
+>>>>>>> origin/develop12
     // Overriding method in ArrayParent
     void update_child_ref(size_t, ref_type) override;
 
@@ -991,8 +1134,11 @@ protected:
 
     std::pair<ref_type, size_t> get_to_dot_parent(size_t ndx_in_parent) const override;
 
+<<<<<<< HEAD
     bool is_read_only() const noexcept;
 
+=======
+>>>>>>> origin/develop12
 protected:
     // Getters and Setters for adaptive-packed arrays
     typedef int64_t (Array::*Getter)(size_t) const; // Note: getters must not throw
@@ -1021,6 +1167,7 @@ private:
     Getter m_getter = nullptr; // cached to avoid indirection
     const VTable* m_vtable = nullptr;
 
+<<<<<<< HEAD
 public:
     // FIXME: Should not be public
     char* m_data = nullptr; // Points to first byte after header
@@ -1032,10 +1179,13 @@ public:
     bool m_no_relocation = false;
 #endif
 
+=======
+>>>>>>> origin/develop12
 protected:
     int64_t m_lbound; // min number that can be stored with current m_width
     int64_t m_ubound; // max number that can be stored with current m_width
 
+<<<<<<< HEAD
     size_t m_size = 0;     // Number of elements currently stored.
     size_t m_capacity = 0; // Number of elements that fit inside the allocated memory.
 
@@ -1048,6 +1198,8 @@ private:
 
 protected:
     uint_least8_t m_width = 0;   // Size of an element (meaning depend on type of array).
+=======
+>>>>>>> origin/develop12
     bool m_is_inner_bptree_node; // This array is an inner node of B+-tree.
     bool m_has_refs;             // Elements whose first bit is zero are refs to subarrays.
     bool m_context_flag;         // Meaning depends on context.
@@ -1055,6 +1207,7 @@ protected:
 private:
     ref_type do_write_shallow(_impl::ArrayWriterBase&) const;
     ref_type do_write_deep(_impl::ArrayWriterBase&, bool only_if_modified) const;
+<<<<<<< HEAD
     static size_t calc_byte_size(WidthType wtype, size_t size, uint_least8_t width) noexcept;
 
     friend class SlabAlloc;
@@ -1078,6 +1231,29 @@ public:
     size_t m_match_count;
     size_t m_limit;
     size_t m_minmax_index; // used only for min/max, to save index of current min/max value
+=======
+
+    friend class Allocator;
+    friend class SlabAlloc;
+    friend class GroupWriter;
+};
+
+class ClusterKeyArray : public ArrayUnsigned {
+public:
+    using ArrayUnsigned::ArrayUnsigned;
+
+    uint64_t get(size_t ndx) const
+    {
+        return (m_data != nullptr) ? ArrayUnsigned::get(ndx) : uint64_t(ndx);
+    }
+};
+
+// Implementation:
+template <>
+class QueryState<int64_t> : public QueryStateBase {
+public:
+    int64_t m_state = 0;
+>>>>>>> origin/develop12
 
     template <Action action>
     bool uses_val()
@@ -1088,6 +1264,7 @@ public:
             return false;
     }
 
+<<<<<<< HEAD
     void init(Action action, IntegerColumn* akku, size_t limit)
     {
         m_match_count = 0;
@@ -1111,6 +1288,20 @@ public:
         else {
             REALM_ASSERT_DEBUG(false);
         }
+=======
+    QueryState(Action action, size_t limit = -1)
+        : QueryState(action, int64_t(0), limit)
+    {
+    }
+
+    QueryState(Action action, KeyColumn* akku, size_t limit = -1)
+        : QueryState(action, reinterpret_cast<int64_t>(akku), limit)
+    {
+    }
+    QueryState(Action action, IntegerColumn* akku, size_t limit = -1)
+        : QueryState(action, reinterpret_cast<int64_t>(akku), limit)
+    {
+>>>>>>> origin/develop12
     }
 
     template <Action action, bool pattern>
@@ -1137,13 +1328,21 @@ public:
         if (action == act_Max) {
             if (value > m_state) {
                 m_state = value;
+<<<<<<< HEAD
                 m_minmax_index = index;
+=======
+                m_minmax_index = m_key_values ? m_key_values->get(index) + m_key_offset : index;
+>>>>>>> origin/develop12
             }
         }
         else if (action == act_Min) {
             if (value < m_state) {
                 m_state = value;
+<<<<<<< HEAD
                 m_minmax_index = index;
+=======
+                m_minmax_index = m_key_values ? m_key_values->get(index) + m_key_offset : index;
+>>>>>>> origin/develop12
             }
         }
         else if (action == act_Sum)
@@ -1153,7 +1352,17 @@ public:
             m_match_count = size_t(m_state);
         }
         else if (action == act_FindAll) {
+<<<<<<< HEAD
             Array::add_to_column(reinterpret_cast<IntegerColumn*>(m_state), index);
+=======
+            if (m_key_values) {
+                int64_t key_value = m_key_values->get(index) + m_key_offset;
+                Array::add_to_column(reinterpret_cast<KeyColumn*>(m_state), key_value);
+            }
+            else {
+                Array::add_to_column(reinterpret_cast<IntegerColumn*>(m_state), index);
+            }
+>>>>>>> origin/develop12
         }
         else if (action == act_ReturnFirst) {
             m_state = index;
@@ -1180,7 +1389,17 @@ public:
             m_match_count = size_t(m_state);
         }
         else if (action == act_FindAll) {
+<<<<<<< HEAD
             Array::add_to_column(reinterpret_cast<IntegerColumn*>(m_state), index);
+=======
+            if (m_key_values) {
+                int64_t key_value = m_key_values->get(index) + m_key_offset;
+                Array::add_to_column(reinterpret_cast<KeyColumn*>(m_state), key_value);
+            }
+            else {
+                Array::add_to_column(reinterpret_cast<IntegerColumn*>(m_state), index);
+            }
+>>>>>>> origin/develop12
         }
         else if (action == act_ReturnFirst) {
             m_match_count++;
@@ -1189,6 +1408,32 @@ public:
         }
         return m_limit > m_match_count;
     }
+<<<<<<< HEAD
+=======
+
+private:
+    QueryState(Action action, int64_t akku, size_t limit)
+        : QueryStateBase(limit)
+    {
+        if (action == act_Max)
+            m_state = std::numeric_limits<int64_t>::min();
+        else if (action == act_Min)
+            m_state = std::numeric_limits<int64_t>::max();
+        else if (action == act_ReturnFirst)
+            m_state = not_found;
+        else if (action == act_Sum)
+            m_state = 0;
+        else if (action == act_Count)
+            m_state = 0;
+        else if (action == act_FindAll)
+            m_state = akku;
+        else if (action == act_CallbackIdx) {
+        }
+        else {
+            REALM_ASSERT_DEBUG(false);
+        }
+    }
+>>>>>>> origin/develop12
 };
 
 // Used only for Basic-types: currently float and double
@@ -1196,9 +1441,12 @@ template <class R>
 class QueryState : public QueryStateBase {
 public:
     R m_state;
+<<<<<<< HEAD
     size_t m_match_count;
     size_t m_limit;
     size_t m_minmax_index; // used only for min/max, to save index of current min/max value
+=======
+>>>>>>> origin/develop12
 
     template <Action action>
     bool uses_val()
@@ -1206,6 +1454,7 @@ public:
         return (action == act_Max || action == act_Min || action == act_Sum || action == act_Count);
     }
 
+<<<<<<< HEAD
     void init(Action action, Array*, size_t limit)
     {
         REALM_ASSERT((std::is_same<R, float>::value || std::is_same<R, double>::value));
@@ -1213,12 +1462,23 @@ public:
         m_limit = limit;
         m_minmax_index = not_found;
 
+=======
+    QueryState(Action action, Array* = nullptr, size_t limit = -1)
+        : QueryStateBase(limit)
+    {
+        REALM_ASSERT((std::is_same<R, float>::value || std::is_same<R, double>::value));
+>>>>>>> origin/develop12
         if (action == act_Max)
             m_state = -std::numeric_limits<R>::infinity();
         else if (action == act_Min)
             m_state = std::numeric_limits<R>::infinity();
         else if (action == act_Sum)
             m_state = 0.0;
+<<<<<<< HEAD
+=======
+        else if (action == act_Count)
+            m_state = 0.0;
+>>>>>>> origin/develop12
         else {
             REALM_ASSERT_DEBUG(false);
         }
@@ -1241,13 +1501,31 @@ public:
             if (action == act_Max) {
                 if (value > m_state) {
                     m_state = value;
+<<<<<<< HEAD
                     m_minmax_index = index;
+=======
+                    if (m_key_values) {
+                        m_minmax_index = m_key_values->get(index) + m_key_offset;
+                    }
+                    else {
+                        m_minmax_index = int64_t(index);
+                    }
+>>>>>>> origin/develop12
                 }
             }
             else if (action == act_Min) {
                 if (value < m_state) {
                     m_state = value;
+<<<<<<< HEAD
                     m_minmax_index = index;
+=======
+                    if (m_key_values) {
+                        m_minmax_index = m_key_values->get(index) + m_key_offset;
+                    }
+                    else {
+                        m_minmax_index = int64_t(index);
+                    }
+>>>>>>> origin/develop12
                 }
             }
             else if (action == act_Sum)
@@ -1302,11 +1580,14 @@ inline RefOrTagged::RefOrTagged(int_fast64_t value) noexcept
 {
 }
 
+<<<<<<< HEAD
 inline Array::Array(Allocator& allocator) noexcept
     : m_alloc(allocator)
 {
 }
 
+=======
+>>>>>>> origin/develop12
 inline void Array::create(Type type, bool context_flag, size_t length, int_fast64_t value)
 {
     MemRef mem = create_array(type, context_flag, length, value, m_alloc); // Throws
@@ -1314,6 +1595,7 @@ inline void Array::create(Type type, bool context_flag, size_t length, int_fast6
 }
 
 
+<<<<<<< HEAD
 inline void Array::init_from_ref(ref_type ref) noexcept
 {
     REALM_ASSERT_DEBUG(ref);
@@ -1329,6 +1611,8 @@ inline void Array::init_from_parent() noexcept
 }
 
 
+=======
+>>>>>>> origin/develop12
 inline Array::Type Array::get_type() const noexcept
 {
     if (m_is_inner_bptree_node) {
@@ -1428,7 +1712,11 @@ inline void Array::set_has_refs(bool value) noexcept
     if (m_has_refs != value) {
         REALM_ASSERT(!is_read_only());
         m_has_refs = value;
+<<<<<<< HEAD
         set_header_hasrefs(value);
+=======
+        set_hasrefs_in_header(value, get_header());
+>>>>>>> origin/develop12
     }
 }
 
@@ -1442,6 +1730,7 @@ inline void Array::set_context_flag(bool value) noexcept
     if (m_context_flag != value) {
         REALM_ASSERT(!is_read_only());
         m_context_flag = value;
+<<<<<<< HEAD
         set_header_context_flag(value);
     }
 }
@@ -1465,6 +1754,12 @@ inline void Array::destroy() noexcept
     m_data = nullptr;
 }
 
+=======
+        set_context_flag_in_header(value, get_header());
+    }
+}
+
+>>>>>>> origin/develop12
 inline void Array::destroy_deep() noexcept
 {
     if (!is_attached())
@@ -1544,6 +1839,7 @@ inline void Array::clear_and_destroy_children()
     truncate_and_destroy_children(0);
 }
 
+<<<<<<< HEAD
 inline void Array::destroy(ref_type ref, Allocator& alloc) noexcept
 {
     destroy(MemRef(ref, alloc), alloc);
@@ -1554,6 +1850,8 @@ inline void Array::destroy(MemRef mem, Allocator& alloc) noexcept
     alloc.free_(mem);
 }
 
+=======
+>>>>>>> origin/develop12
 inline void Array::destroy_deep(ref_type ref, Allocator& alloc) noexcept
 {
     destroy_deep(MemRef(ref, alloc), alloc);
@@ -1593,6 +1891,7 @@ inline void Array::adjust(size_t begin, size_t end, int_fast64_t diff)
 
 //-------------------------------------------------
 
+<<<<<<< HEAD
 inline bool Array::get_is_inner_bptree_node_from_header(const char* header) noexcept
 {
     typedef unsigned char uchar;
@@ -1823,12 +2122,19 @@ inline size_t Array::calc_byte_size(WidthType wtype, size_t size, uint_least8_t 
 
     return num_bytes;
 }
+=======
+>>>>>>> origin/develop12
 
 inline size_t Array::get_byte_size() const noexcept
 {
     const char* header = get_header_from_data(m_data);
+<<<<<<< HEAD
     WidthType wtype = get_wtype_from_header(header);
     size_t num_bytes = calc_byte_size(wtype, m_size, m_width);
+=======
+    WidthType wtype = Node::get_wtype_from_header(header);
+    size_t num_bytes = NodeHeader::calc_byte_size(wtype, m_size, m_width);
+>>>>>>> origin/develop12
 
     REALM_ASSERT_7(m_alloc.is_read_only(m_ref), ==, true, ||, num_bytes, <=, get_capacity_from_header(header));
 
@@ -1836,6 +2142,7 @@ inline size_t Array::get_byte_size() const noexcept
 }
 
 
+<<<<<<< HEAD
 inline size_t Array::get_byte_size_from_header(const char* header) noexcept
 {
     size_t size = get_size_from_header(header);
@@ -1864,6 +2171,8 @@ inline void Array::init_header(char* header, bool is_inner_bptree_node, bool has
 }
 
 
+=======
+>>>>>>> origin/develop12
 //-------------------------------------------------
 
 inline MemRef Array::clone_deep(Allocator& target_alloc) const
@@ -1884,6 +2193,7 @@ inline MemRef Array::create_array(Type type, bool context_flag, size_t size, int
     return create(type, context_flag, wtype_Bits, size, value, alloc); // Throws
 }
 
+<<<<<<< HEAD
 inline bool Array::has_parent() const noexcept
 {
     return m_parent != nullptr;
@@ -1945,18 +2255,23 @@ inline bool Array::is_empty() const noexcept
     return size() == 0;
 }
 
+=======
+>>>>>>> origin/develop12
 inline size_t Array::get_max_byte_size(size_t num_elems) noexcept
 {
     int max_bytes_per_elem = 8;
     return header_size + num_elems * max_bytes_per_elem;
 }
 
+<<<<<<< HEAD
 inline void Array::update_parent()
 {
     if (m_parent)
         m_parent->update_child_ref(m_ndx_in_parent, m_ref);
 }
 
+=======
+>>>>>>> origin/develop12
 
 inline void Array::update_child_ref(size_t child_ndx, ref_type new_ref)
 {
@@ -1968,6 +2283,7 @@ inline ref_type Array::get_child_ref(size_t child_ndx) const noexcept
     return get_as_ref(child_ndx);
 }
 
+<<<<<<< HEAD
 inline bool Array::is_read_only() const noexcept
 {
     REALM_ASSERT_DEBUG(is_attached());
@@ -1988,6 +2304,8 @@ inline void Array::copy_on_write()
     }
 }
 
+=======
+>>>>>>> origin/develop12
 inline void Array::ensure_minimum_width(int_fast64_t value)
 {
     if (value >= m_lbound && value <= m_ubound)
@@ -3109,9 +3427,14 @@ template <class cond>
 size_t Array::find_first(int64_t value, size_t start, size_t end) const
 {
     REALM_ASSERT(start <= m_size && (end <= m_size || end == size_t(-1)) && start <= end);
+<<<<<<< HEAD
     QueryState<int64_t> state;
     state.init(act_ReturnFirst, nullptr,
                1); // todo, would be nice to avoid this in order to speed up find_first loops
+=======
+    // todo, would be nice to avoid this in order to speed up find_first loops
+    QueryState<int64_t> state(act_ReturnFirst, 1);
+>>>>>>> origin/develop12
     Finder finder = m_vtable->finder[cond::condition];
     (this->*finder)(value, start, end, 0, &state);
 

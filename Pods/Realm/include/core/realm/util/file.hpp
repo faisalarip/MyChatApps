@@ -33,22 +33,45 @@
 #endif
 
 #if defined(_MSC_VER) && _MSC_VER >= 1900 // compiling with at least Visual Studio 2015
+<<<<<<< HEAD
+=======
+#if _MSVC_LANG >= 201703L
+#include <filesystem>
+#else
+>>>>>>> origin/develop12
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING // switch to <filesystem> once we switch to C++17
 #include <experimental/filesystem>
 namespace std {
     namespace filesystem = std::experimental::filesystem::v1;
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> origin/develop12
 #define REALM_HAVE_STD_FILESYSTEM 1
 #else
 #define REALM_HAVE_STD_FILESYSTEM 0
 #endif
 
 #include <realm/utilities.hpp>
+<<<<<<< HEAD
 #include <realm/util/backtrace.hpp>
 #include <realm/util/features.h>
 #include <realm/util/assert.hpp>
 #include <realm/util/safe_int_ops.hpp>
 
+=======
+#include <realm/util/assert.hpp>
+#include <realm/util/backtrace.hpp>
+#include <realm/util/features.h>
+#include <realm/util/function_ref.hpp>
+#include <realm/util/safe_int_ops.hpp>
+
+#if REALM_IOS_DEVICE
+#define REALM_FILELOCK_EMULATION
+#endif
+
+>>>>>>> origin/develop12
 
 namespace realm {
 namespace util {
@@ -150,8 +173,12 @@ public:
 
     /// Create an instance that is not initially attached to an open
     /// file.
+<<<<<<< HEAD
     File() noexcept;
 
+=======
+    File() = default;
+>>>>>>> origin/develop12
     ~File() noexcept;
 
     File(File&&) noexcept;
@@ -363,7 +390,15 @@ public:
 
     /// Get the encryption key set by set_encryption_key(),
     /// null_ptr if no key set.
+<<<<<<< HEAD
     const char* get_encryption_key();
+=======
+    const char* get_encryption_key() const;
+
+    /// Set the path used for emulating file locks. If not set explicitly,
+    /// the emulation will use the path of the file itself suffixed by ".fifo"
+    void set_fifo_path(const std::string& fifo_path);
+>>>>>>> origin/develop12
     enum {
         /// If possible, disable opportunistic flushing of dirted
         /// pages of a memory mapped file to physical medium. On some
@@ -395,7 +430,12 @@ public:
     /// Calling this function with a size that is greater than the
     /// size of the file has undefined behavior.
     void* map(AccessMode, size_t size, int map_flags = 0, size_t offset = 0) const;
+<<<<<<< HEAD
 
+=======
+    void* map_fixed(AccessMode, void* address, size_t size, int map_flags = 0, size_t offset = 0) const;
+    void* map_reserve(AccessMode, size_t size, size_t offset) const;
+>>>>>>> origin/develop12
     /// The same as unmap(old_addr, old_size) followed by map(a,
     /// new_size, map_flags), but more efficient on some systems.
     ///
@@ -413,6 +453,12 @@ public:
 
 #if REALM_ENABLE_ENCRYPTION
     void* map(AccessMode, size_t size, EncryptedFileMapping*& mapping, int map_flags = 0, size_t offset = 0) const;
+<<<<<<< HEAD
+=======
+    void* map_fixed(AccessMode, void* address, size_t size, EncryptedFileMapping* mapping, int map_flags = 0,
+                    size_t offset = 0) const;
+    void* map_reserve(AccessMode, size_t size, size_t offset, EncryptedFileMapping*& mapping) const;
+>>>>>>> origin/develop12
 #endif
     /// Unmap the specified address range which must have been
     /// previously returned by map().
@@ -523,7 +569,11 @@ public:
     /// string is interpreted as a relative path.
     static std::string resolve(const std::string& path, const std::string& base_dir);
 
+<<<<<<< HEAD
     using ForEachHandler = std::function<bool(const std::string& file, const std::string& dir)>;
+=======
+    using ForEachHandler = util::FunctionRef<bool(const std::string& file, const std::string& dir)>;
+>>>>>>> origin/develop12
 
     /// Scan the specified directory recursivle, and report each file
     /// (nondirectory entry) via the specified handler.
@@ -544,6 +594,19 @@ public:
 #ifdef _WIN32 // Windows version
 // FIXME: This is not implemented for Windows
 #else
+<<<<<<< HEAD
+=======
+        UniqueID()
+            : device(0)
+            , inode(0)
+        {
+        }
+        UniqueID(dev_t d, ino_t i)
+            : device(d)
+            , inode(i)
+        {
+        }
+>>>>>>> origin/develop12
         // NDK r10e has a bug in sys/stat.h dev_t ino_t are 4 bytes,
         // but stat.st_dev and st_ino are 8 bytes. So we just use uint64 instead.
         dev_t device;
@@ -581,10 +644,22 @@ public:
 
 private:
 #ifdef _WIN32
+<<<<<<< HEAD
     void* m_fd;
     bool m_have_lock; // Only valid when m_fd is not null
 #else
     int m_fd;
+=======
+    void* m_fd = nullptr;
+    bool m_have_lock = false; // Only valid when m_fd is not null
+#else
+    int m_fd = -1;
+#ifdef REALM_FILELOCK_EMULATION
+    int m_pipe_fd = -1; // -1 if no pipe has been allocated for emulation
+    bool m_has_exclusive_lock = false;
+    std::string m_fifo_path;
+#endif
+>>>>>>> origin/develop12
 #endif
     std::unique_ptr<const char[]> m_encryption_key = nullptr;
     std::string m_path;
@@ -592,9 +667,23 @@ private:
     bool lock(bool exclusive, bool non_blocking);
     void open_internal(const std::string& path, AccessMode, CreateMode, int flags, bool* success);
 
+<<<<<<< HEAD
     struct MapBase {
         void* m_addr = nullptr;
         size_t m_size = 0;
+=======
+#ifdef REALM_FILELOCK_EMULATION
+    bool has_shared_lock() const noexcept
+    {
+        return m_pipe_fd != -1;
+    }
+#endif
+
+    struct MapBase {
+        void* m_addr = nullptr;
+        mutable size_t m_size = 0;
+        size_t m_offset = 0;
+>>>>>>> origin/develop12
         FileDesc m_fd;
 
         MapBase() noexcept;
@@ -605,12 +694,20 @@ private:
         MapBase(const MapBase&) = delete;
         MapBase& operator=(const MapBase&) = delete;
 
+<<<<<<< HEAD
+=======
+        // Use
+>>>>>>> origin/develop12
         void map(const File&, AccessMode, size_t size, int map_flags, size_t offset = 0);
         void remap(const File&, AccessMode, size_t size, int map_flags);
         void unmap() noexcept;
         void sync();
 #if REALM_ENABLE_ENCRYPTION
+<<<<<<< HEAD
         util::EncryptedFileMapping* m_encrypted_mapping = nullptr;
+=======
+        mutable util::EncryptedFileMapping* m_encrypted_mapping = nullptr;
+>>>>>>> origin/develop12
         inline util::EncryptedFileMapping* get_encrypted_mapping() const
         {
             return m_encrypted_mapping;
@@ -700,13 +797,24 @@ public:
     Map& operator=(const Map&) = delete;
 
     /// Move the mapping from another Map object to this Map object
+<<<<<<< HEAD
     File::Map<T>& operator=(File::Map<T>&& other)
+=======
+    File::Map<T>& operator=(File::Map<T>&& other) noexcept
+>>>>>>> origin/develop12
     {
         if (m_addr)
             unmap();
         m_addr = other.get_addr();
         m_size = other.m_size;
+<<<<<<< HEAD
         other.m_addr = 0;
+=======
+        m_offset = other.m_offset;
+        m_fd = other.m_fd;
+        other.m_offset = 0;
+        other.m_addr = nullptr;
+>>>>>>> origin/develop12
         other.m_size = 0;
 #if REALM_ENABLE_ENCRYPTION
         m_encrypted_mapping = other.m_encrypted_mapping;
@@ -714,6 +822,13 @@ public:
 #endif
         return *this;
     }
+<<<<<<< HEAD
+=======
+    Map(Map&& other) noexcept
+    {
+        *this = std::move(other);
+    }
+>>>>>>> origin/develop12
 
     /// See File::map().
     ///
@@ -946,6 +1061,7 @@ private:
 
 inline File::File(const std::string& path, Mode m)
 {
+<<<<<<< HEAD
 #ifdef _WIN32
     m_fd = nullptr;
 #else
@@ -967,6 +1083,23 @@ inline File::File() noexcept
 inline File::~File() noexcept
 {
     close();
+=======
+    open(path, m);
+}
+
+inline File::~File() noexcept
+{
+    close();
+}
+
+inline void File::set_fifo_path(const std::string& fifo_path)
+{
+#ifdef REALM_FILELOCK_EMULATION
+    m_fifo_path = fifo_path;
+#else
+    static_cast<void>(fifo_path);
+#endif
+>>>>>>> origin/develop12
 }
 
 inline File::File(File&& f) noexcept
@@ -977,6 +1110,15 @@ inline File::File(File&& f) noexcept
     f.m_fd = nullptr;
 #else
     m_fd = f.m_fd;
+<<<<<<< HEAD
+=======
+#ifdef REALM_FILELOCK_EMULATION
+    m_pipe_fd = f.m_pipe_fd;
+    m_has_exclusive_lock = f.m_has_exclusive_lock;
+    f.m_has_exclusive_lock = false;
+    f.m_pipe_fd = -1;
+#endif
+>>>>>>> origin/develop12
     f.m_fd = -1;
 #endif
     m_encryption_key = std::move(f.m_encryption_key);
@@ -992,6 +1134,15 @@ inline File& File::operator=(File&& f) noexcept
 #else
     m_fd = f.m_fd;
     f.m_fd = -1;
+<<<<<<< HEAD
+=======
+#ifdef REALM_FILELOCK_EMULATION
+    m_pipe_fd = f.m_pipe_fd;
+    f.m_pipe_fd = -1;
+    m_has_exclusive_lock = f.m_has_exclusive_lock;
+    f.m_has_exclusive_lock = false;
+#endif
+>>>>>>> origin/develop12
 #endif
     m_encryption_key = std::move(f.m_encryption_key);
     return *this;
@@ -1075,6 +1226,10 @@ inline bool File::try_lock_shared()
 inline File::MapBase::MapBase() noexcept
 {
     m_addr = nullptr;
+<<<<<<< HEAD
+=======
+    m_size = 0;
+>>>>>>> origin/develop12
 }
 
 inline File::MapBase::~MapBase() noexcept
@@ -1082,6 +1237,7 @@ inline File::MapBase::~MapBase() noexcept
     unmap();
 }
 
+<<<<<<< HEAD
 inline void File::MapBase::map(const File& f, AccessMode a, size_t size, int map_flags, size_t offset)
 {
     REALM_ASSERT(!m_addr);
@@ -1124,6 +1280,8 @@ inline void File::MapBase::sync()
 
     File::sync_map(m_fd, m_addr, m_size);
 }
+=======
+>>>>>>> origin/develop12
 
 template <class T>
 inline File::Map<T>::Map(const File& f, AccessMode a, size_t size, int map_flags)
@@ -1163,7 +1321,15 @@ inline void File::Map<T>::unmap() noexcept
 template <class T>
 inline T* File::Map<T>::remap(const File& f, AccessMode a, size_t size, int map_flags)
 {
+<<<<<<< HEAD
     MapBase::remap(f, a, size, map_flags);
+=======
+    //MapBase::remap(f, a, size, map_flags);
+    // missing sync() here?
+    unmap();
+    map(f, a, size, map_flags);
+
+>>>>>>> origin/develop12
     return static_cast<T*>(m_addr);
 }
 

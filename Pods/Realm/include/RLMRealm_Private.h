@@ -24,6 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Disable syncing files to disk. Cannot be re-enabled. Use only for tests.
 FOUNDATION_EXTERN void RLMDisableSyncToDisk(void);
+<<<<<<< HEAD
+=======
+// Set whether the skip backup attribute should be set on temporary files.
+FOUNDATION_EXTERN void RLMSetSkipBackupAttribute(bool value);
+>>>>>>> origin/develop12
 
 FOUNDATION_EXTERN NSData * _Nullable RLMRealmValidatedEncryptionKey(NSData *key);
 
@@ -52,6 +57,11 @@ void RLMRealmTranslateException(NSError **error);
 - (void)verifyThread;
 - (void)verifyNotificationsAreSupported:(bool)isCollection;
 
+<<<<<<< HEAD
+=======
+- (RLMRealm *)frozenCopy NS_RETURNS_RETAINED;
+
+>>>>>>> origin/develop12
 @end
 
 NS_ASSUME_NONNULL_END

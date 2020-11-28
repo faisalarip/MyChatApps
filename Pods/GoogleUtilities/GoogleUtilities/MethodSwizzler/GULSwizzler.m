@@ -17,8 +17,13 @@
 #import <objc/runtime.h>
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #import <GoogleUtilities/GULLogger.h>
 #import "GoogleUtilities/Common/GULLoggerCodes.h"
+=======
+#import "GoogleUtilities/Common/GULLoggerCodes.h"
+#import "GoogleUtilities/Logger/Private/GULLogger.h"
+>>>>>>> origin/develop12
 
 static GULLoggerService kGULLoggerSwizzler = @"[GoogleUtilities/MethodSwizzler]";
 #endif

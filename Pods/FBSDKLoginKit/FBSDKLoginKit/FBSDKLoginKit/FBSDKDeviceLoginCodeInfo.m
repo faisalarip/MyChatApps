@@ -21,10 +21,17 @@
 @implementation FBSDKDeviceLoginCodeInfo
 
 - (instancetype)initWithIdentifier:(NSString *)identifier
+<<<<<<< HEAD
                           loginCode:(NSString *)loginCode
                     verificationURL:(NSURL *)verificationURL
                      expirationDate:(NSDate *)expirationDate
                     pollingInterval:(NSUInteger)pollingInterval
+=======
+                         loginCode:(NSString *)loginCode
+                   verificationURL:(NSURL *)verificationURL
+                    expirationDate:(NSDate *)expirationDate
+                   pollingInterval:(NSUInteger)pollingInterval
+>>>>>>> origin/develop12
 {
   if ((self = [super init])) {
     _identifier = [identifier copy];
@@ -35,4 +42,8 @@
   }
   return self;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 @end

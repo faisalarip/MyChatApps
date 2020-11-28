@@ -20,12 +20,20 @@
 
 #if TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKDeviceViewControllerBase+Internal.h"
 
 #import "FBSDKCoreKit+Internal.h"
 
 #import "FBSDKSmartDeviceDialogView.h"
 #import "FBSDKModalFormPresentationController.h"
+=======
+ #import "FBSDKDeviceViewControllerBase+Internal.h"
+
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKModalFormPresentationController.h"
+ #import "FBSDKSmartDeviceDialogView.h"
+>>>>>>> origin/develop12
 
 static const NSTimeInterval kAnimationDurationTimeInterval = .5;
 
@@ -50,9 +58,15 @@ Subclasses should generally:
   CGRect frame = [UIScreen mainScreen].bounds;
   BOOL smartLoginEnabled = ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled);
   FBSDKDeviceDialogView *deviceView =
+<<<<<<< HEAD
   (smartLoginEnabled ?
    [[FBSDKSmartDeviceDialogView alloc] initWithFrame:frame] :
    [[FBSDKDeviceDialogView alloc] initWithFrame:frame] );
+=======
+  (smartLoginEnabled
+    ? [[FBSDKSmartDeviceDialogView alloc] initWithFrame:frame]
+    : [[FBSDKDeviceDialogView alloc] initWithFrame:frame]);
+>>>>>>> origin/develop12
   deviceView.delegate = self;
   self.view = deviceView;
 }
@@ -62,7 +76,11 @@ Subclasses should generally:
   return (FBSDKDeviceDialogView *)self.view;
 }
 
+<<<<<<< HEAD
 #pragma mark - UIViewControllerAnimatedTransitioning
+=======
+ #pragma mark - UIViewControllerAnimatedTransitioning
+>>>>>>> origin/develop12
 
 // Extract this out to another class if we have other similar transitions.
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
@@ -104,7 +122,11 @@ Subclasses should generally:
   }
 }
 
+<<<<<<< HEAD
 #pragma mark - UIViewControllerTransitioningDelegate
+=======
+ #pragma mark - UIViewControllerTransitioningDelegate
+>>>>>>> origin/develop12
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
@@ -124,12 +146,20 @@ Subclasses should generally:
                                                               presentingViewController:presenting];
 }
 
+<<<<<<< HEAD
 #pragma mark - FBSDKDeviceDialogViewDelegate
+=======
+ #pragma mark - FBSDKDeviceDialogViewDelegate
+>>>>>>> origin/develop12
 
 - (void)deviceDialogViewDidCancel:(FBSDKDeviceDialogView *)deviceDialogView
 {
   [self dismissViewControllerAnimated:YES completion:NULL];
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 @end
 
 #endif

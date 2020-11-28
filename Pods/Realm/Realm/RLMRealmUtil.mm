@@ -27,6 +27,7 @@
 #import <Realm/RLMSchema.h>
 
 #import "binding_context.hpp"
+<<<<<<< HEAD
 
 #import <map>
 #import <mutex>
@@ -40,13 +41,31 @@ static std::mutex& s_realmCacheMutex = *new std::mutex();
 static std::map<std::string, NSMapTable *>& s_realmsPerPath = *new std::map<std::string, NSMapTable *>();
 
 void RLMCacheRealm(std::string const& path, __unsafe_unretained RLMRealm *const realm) {
+=======
+#import "shared_realm.hpp"
+#import "util/scheduler.hpp"
+
+#import <map>
+#import <mutex>
+
+// Global realm state
+static auto& s_realmCacheMutex = *new std::mutex();
+static auto& s_realmsPerPath = *new std::map<std::string, NSMapTable *>();
+static auto& s_frozenRealms = *new std::map<std::string, NSMapTable *>();
+
+void RLMCacheRealm(std::string const& path, void *key, __unsafe_unretained RLMRealm *const realm) {
+>>>>>>> origin/develop12
     std::lock_guard<std::mutex> lock(s_realmCacheMutex);
     NSMapTable *realms = s_realmsPerPath[path];
     if (!realms) {
         s_realmsPerPath[path] = realms = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsOpaquePersonality|NSPointerFunctionsOpaqueMemory
                                                                valueOptions:NSPointerFunctionsWeakMemory];
     }
+<<<<<<< HEAD
     [realms setObject:realm forKey:(__bridge id)pthread_self()];
+=======
+    [realms setObject:realm forKey:(__bridge id)key];
+>>>>>>> origin/develop12
 }
 
 RLMRealm *RLMGetAnyCachedRealmForPath(std::string const& path) {
@@ -54,14 +73,31 @@ RLMRealm *RLMGetAnyCachedRealmForPath(std::string const& path) {
     return [s_realmsPerPath[path] objectEnumerator].nextObject;
 }
 
+<<<<<<< HEAD
 RLMRealm *RLMGetThreadLocalCachedRealmForPath(std::string const& path) {
     std::lock_guard<std::mutex> lock(s_realmCacheMutex);
     return [s_realmsPerPath[path] objectForKey:(__bridge id)pthread_self()];
+=======
+RLMRealm *RLMGetThreadLocalCachedRealmForPath(std::string const& path, void *key) {
+    std::lock_guard<std::mutex> lock(s_realmCacheMutex);
+    RLMRealm *realm = [s_realmsPerPath[path] objectForKey:(__bridge id)key];
+    if (realm && !realm->_realm->scheduler()->is_on_thread()) {
+        // We can get here in two cases: if the user is trying to open a
+        // queue-bound Realm from the wrong queue, or if we have a stale cached
+        // Realm which is bound to a thread that no longer exists. In the first
+        // case we'll throw an error later on; in the second we'll just create
+        // a new RLMRealm and replace the cache entry with one bound to the
+        // thread that now exists.
+        realm = nil;
+    }
+    return realm;
+>>>>>>> origin/develop12
 }
 
 void RLMClearRealmCache() {
     std::lock_guard<std::mutex> lock(s_realmCacheMutex);
     s_realmsPerPath.clear();
+<<<<<<< HEAD
 }
 
 bool RLMIsInRunLoop() {
@@ -78,6 +114,28 @@ bool RLMIsInRunLoop() {
         return true;
     }
     return false;
+=======
+    s_frozenRealms.clear();
+}
+
+RLMRealm *RLMGetFrozenRealmForSourceRealm(__unsafe_unretained RLMRealm *const sourceRealm) {
+    std::lock_guard<std::mutex> lock(s_realmCacheMutex);
+    auto& r = *sourceRealm->_realm;
+    auto& path = r.config().path;
+    NSMapTable *realms = s_realmsPerPath[path];
+    if (!realms) {
+        s_realmsPerPath[path] = realms = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsIntegerPersonality|NSPointerFunctionsOpaqueMemory
+                                                               valueOptions:NSPointerFunctionsWeakMemory];
+    }
+    r.read_group();
+    auto version = reinterpret_cast<void *>(r.read_transaction_version().version);
+    RLMRealm *realm = [realms objectForKey:(__bridge id)version];
+    if (!realm) {
+        realm = [sourceRealm frozenCopy];
+        [realms setObject:realm forKey:(__bridge id)version];
+    }
+    return realm;
+>>>>>>> origin/develop12
 }
 
 namespace {
@@ -85,10 +143,13 @@ class RLMNotificationHelper : public realm::BindingContext {
 public:
     RLMNotificationHelper(RLMRealm *realm) : _realm(realm) { }
 
+<<<<<<< HEAD
     bool can_deliver_notifications() const noexcept override {
         return RLMIsInRunLoop();
     }
 
+=======
+>>>>>>> origin/develop12
     void changes_available() override {
         @autoreleasepool {
             auto realm = _realm;

@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKLoginButton.h"
 
 #ifdef FBSDKCOCOAPODS
@@ -29,6 +30,17 @@
 #endif
 
 #import "FBSDKLoginTooltipView.h"
+=======
+ #import "FBSDKLoginButton.h"
+
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+
+ #import "FBSDKLoginTooltipView.h"
+>>>>>>> origin/develop12
 
 static const CGFloat kFBLogoSize = 16.0;
 static const CGFloat kFBLogoLeftMargin = 6.0;
@@ -36,7 +48,11 @@ static const CGFloat kButtonHeight = 28.0;
 static const CGFloat kRightMargin = 8.0;
 static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
+<<<<<<< HEAD
 @interface FBSDKLoginButton() <FBSDKButtonImpressionTracking>
+=======
+@interface FBSDKLoginButton () <FBSDKButtonImpressionTracking>
+>>>>>>> origin/develop12
 @end
 
 @implementation FBSDKLoginButton
@@ -47,14 +63,22 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   NSString *_userName;
 }
 
+<<<<<<< HEAD
 #pragma mark - Object Lifecycle
+=======
+ #pragma mark - Object Lifecycle
+>>>>>>> origin/develop12
 
 - (void)dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+<<<<<<< HEAD
 #pragma mark - Properties
+=======
+ #pragma mark - Properties
+>>>>>>> origin/develop12
 
 - (FBSDKDefaultAudience)defaultAudience
 {
@@ -77,20 +101,33 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   }
 }
 
+<<<<<<< HEAD
 #pragma mark - UIView
+=======
+ #pragma mark - UIView
+>>>>>>> origin/develop12
 
 - (void)didMoveToWindow
 {
   [super didMoveToWindow];
 
+<<<<<<< HEAD
   if (self.window &&
       ((self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorForceDisplay) || !_hasShownTooltipBubble)) {
+=======
+  if (self.window
+      && ((self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorForceDisplay) || !_hasShownTooltipBubble)) {
+>>>>>>> origin/develop12
     [self performSelector:@selector(_showTooltipIfNeeded) withObject:nil afterDelay:0];
     _hasShownTooltipBubble = YES;
   }
 }
 
+<<<<<<< HEAD
 #pragma mark - Layout
+=======
+ #pragma mark - Layout
+>>>>>>> origin/develop12
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect
 {
@@ -115,9 +152,15 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 {
   CGSize size = self.bounds.size;
   CGSize longTitleSize = [self sizeThatFits:size title:[self _longLogInTitle]];
+<<<<<<< HEAD
   NSString *title = (longTitleSize.width <= size.width ?
                      [self _longLogInTitle] :
                      [self _shortLogInTitle]);
+=======
+  NSString *title = (longTitleSize.width <= size.width
+    ? [self _longLogInTitle]
+    : [self _shortLogInTitle]);
+>>>>>>> origin/develop12
   if (![title isEqualToString:[self titleForState:UIControlStateNormal]]) {
     [self setTitle:title forState:UIControlStateNormal];
   }
@@ -143,7 +186,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   return CGSizeMake(buttonWidth, kButtonHeight);
 }
 
+<<<<<<< HEAD
 #pragma mark - FBSDKButtonImpressionTracking
+=======
+ #pragma mark - FBSDKButtonImpressionTracking
+>>>>>>> origin/develop12
 
 - (NSDictionary *)analyticsParameters
 {
@@ -160,7 +207,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   return @"login";
 }
 
+<<<<<<< HEAD
 #pragma mark - FBSDKButton
+=======
+ #pragma mark - FBSDKButton
+>>>>>>> origin/develop12
 
 - (void)configureButton
 {
@@ -170,6 +221,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   NSString *logOutTitle = [self _logOutTitle];
 
   [self configureWithIcon:nil
+<<<<<<< HEAD
                     title:logInTitle
           backgroundColor:self.backgroundColor
          highlightedColor:nil
@@ -177,6 +229,15 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
              selectedIcon:nil
             selectedColor:self.backgroundColor
  selectedHighlightedColor:nil];
+=======
+                      title:logInTitle
+            backgroundColor:self.backgroundColor
+           highlightedColor:nil
+              selectedTitle:logOutTitle
+               selectedIcon:nil
+              selectedColor:self.backgroundColor
+   selectedHighlightedColor:nil];
+>>>>>>> origin/develop12
   self.titleLabel.textAlignment = NSTextAlignmentCenter;
   [self addConstraint:[NSLayoutConstraint constraintWithItem:self
                                                    attribute:NSLayoutAttributeHeight
@@ -194,7 +255,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
                                              object:nil];
 }
 
+<<<<<<< HEAD
 #pragma mark - Helper Methods
+=======
+ #pragma mark - Helper Methods
+>>>>>>> origin/develop12
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
@@ -211,6 +276,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
     if (_userName) {
       NSString *localizedFormatString =
+<<<<<<< HEAD
       NSLocalizedStringWithDefaultValue(@"LoginButton.LoggedInAs", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"Logged in as %@",
                                         @"The format string for the FBSDKLoginButton label when the user is logged in");
@@ -230,6 +296,43 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
     NSLocalizedStringWithDefaultValue(@"LoginButton.ConfirmLogOut", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                       @"Log Out",
                                       @"The label for the FBSDKLoginButton action sheet to confirm logging out");
+=======
+      NSLocalizedStringWithDefaultValue(
+        @"LoginButton.LoggedInAs",
+        @"FacebookSDK",
+        [FBSDKInternalUtility bundleForStrings],
+        @"Logged in as %@",
+        @"The format string for the FBSDKLoginButton label when the user is logged in"
+      );
+      title = [NSString localizedStringWithFormat:localizedFormatString, _userName];
+    } else {
+      NSString *localizedLoggedIn =
+      NSLocalizedStringWithDefaultValue(
+        @"LoginButton.LoggedIn",
+        @"FacebookSDK",
+        [FBSDKInternalUtility bundleForStrings],
+        @"Logged in using Facebook",
+        @"The fallback string for the FBSDKLoginButton label when the user name is not available yet"
+      );
+      title = localizedLoggedIn;
+    }
+    NSString *cancelTitle =
+    NSLocalizedStringWithDefaultValue(
+      @"LoginButton.CancelLogout",
+      @"FacebookSDK",
+      [FBSDKInternalUtility bundleForStrings],
+      @"Cancel",
+      @"The label for the FBSDKLoginButton action sheet to cancel logging out"
+    );
+    NSString *logOutTitle =
+    NSLocalizedStringWithDefaultValue(
+      @"LoginButton.ConfirmLogOut",
+      @"FacebookSDK",
+      [FBSDKInternalUtility bundleForStrings],
+      @"Log Out",
+      @"The label for the FBSDKLoginButton action sheet to confirm logging out"
+    );
+>>>>>>> origin/develop12
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
                                                                              message:nil
                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
@@ -240,7 +343,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
                                                    handler:nil];
     UIAlertAction *logout = [UIAlertAction actionWithTitle:logOutTitle
                                                      style:UIAlertActionStyleDestructive
+<<<<<<< HEAD
                                                    handler:^(UIAlertAction * _Nonnull action) {
+=======
+                                                   handler:^(UIAlertAction *_Nonnull action) {
+>>>>>>> origin/develop12
                                                      [self->_loginManager logOut];
                                                      [self.delegate loginButtonDidLogOut:self];
                                                    }];
@@ -266,29 +373,62 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
     [_loginManager logInWithPermissions:self.permissions
                      fromViewController:[FBSDKInternalUtility viewControllerForView:self]
                                 handler:handler];
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
   }
 }
 
 - (NSString *)_logOutTitle
 {
+<<<<<<< HEAD
   return NSLocalizedStringWithDefaultValue(@"LoginButton.LogOut", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                            @"Log out",
                                            @"The label for the FBSDKLoginButton when the user is currently logged in");
+=======
+  return NSLocalizedStringWithDefaultValue(
+    @"LoginButton.LogOut",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Log out",
+    @"The label for the FBSDKLoginButton when the user is currently logged in"
+  );
+>>>>>>> origin/develop12
 }
 
 - (NSString *)_longLogInTitle
 {
+<<<<<<< HEAD
   return NSLocalizedStringWithDefaultValue(@"LoginButton.LogInContinue", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                            @"Continue with Facebook",
                                            @"The long label for the FBSDKLoginButton when the user is currently logged out");
+=======
+  return NSLocalizedStringWithDefaultValue(
+    @"LoginButton.LogInContinue",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Continue with Facebook",
+    @"The long label for the FBSDKLoginButton when the user is currently logged out"
+  );
+>>>>>>> origin/develop12
 }
 
 - (NSString *)_shortLogInTitle
 {
+<<<<<<< HEAD
   return NSLocalizedStringWithDefaultValue(@"LoginButton.LogIn", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                            @"Log in",
                                            @"The short label for the FBSDKLoginButton when the user is currently logged out");
+=======
+  return NSLocalizedStringWithDefaultValue(
+    @"LoginButton.LogIn",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Log in",
+    @"The short label for the FBSDKLoginButton when the user is currently logged out"
+  );
+>>>>>>> origin/develop12
 }
 
 - (void)_showTooltipIfNeeded

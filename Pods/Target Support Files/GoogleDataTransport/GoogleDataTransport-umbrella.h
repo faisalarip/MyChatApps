@@ -18,14 +18,23 @@
 #import "GDTCOREventTransformer.h"
 #import "GDTCORLifecycle.h"
 #import "GDTCORPlatform.h"
+<<<<<<< HEAD
 #import "GDTCORPrioritizer.h"
 #import "GDTCORReachability.h"
 #import "GDTCORRegistrar.h"
+=======
+#import "GDTCORReachability.h"
+#import "GDTCORRegistrar.h"
+#import "GDTCORStorageEventSelector.h"
+>>>>>>> origin/develop12
 #import "GDTCORStorageProtocol.h"
 #import "GDTCORTargets.h"
 #import "GDTCORTransport.h"
 #import "GDTCORUploader.h"
+<<<<<<< HEAD
 #import "GDTCORUploadPackage.h"
+=======
+>>>>>>> origin/develop12
 #import "GoogleDataTransport.h"
 
 FOUNDATION_EXPORT double GoogleDataTransportVersionNumber;

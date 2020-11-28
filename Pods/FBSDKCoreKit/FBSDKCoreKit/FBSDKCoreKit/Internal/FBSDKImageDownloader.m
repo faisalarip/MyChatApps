@@ -21,7 +21,12 @@
 static NSString *const kImageDirectory = @"fbsdkimages";
 static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 
+<<<<<<< HEAD
 @implementation FBSDKImageDownloader {
+=======
+@implementation FBSDKImageDownloader
+{
+>>>>>>> origin/develop12
   NSURLCache *_urlCache;
 }
 
@@ -38,6 +43,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 - (instancetype)init
 {
   if ((self = [super init])) {
+<<<<<<< HEAD
 #if TARGET_OS_MACCATALYST
     _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024*1024*8
                                               diskCapacity:1024*1024*100
@@ -47,6 +53,17 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
                                               diskCapacity:1024*1024*100
                                                   diskPath:kImageDirectory];
 #endif
+=======
+  #if TARGET_OS_MACCATALYST
+    _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024 * 1024 * 8
+                                              diskCapacity:1024 * 1024 * 100
+                                              directoryURL:[NSURL URLWithString:kImageDirectory]];
+  #else
+    _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024 * 1024 * 8
+                                              diskCapacity:1024 * 1024 * 100
+                                                  diskPath:kImageDirectory];
+  #endif
+>>>>>>> origin/develop12
   }
   return self;
 }
@@ -65,7 +82,11 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
   NSDate *modificationDate = cachedResponse.userInfo[kCachedResponseUserInfoKeyTimestamp];
   BOOL isExpired = ([[modificationDate dateByAddingTimeInterval:ttl] compare:[NSDate date]] == NSOrderedAscending);
 
+<<<<<<< HEAD
   void (^completionWrapper)(NSCachedURLResponse *) = ^(NSCachedURLResponse *responseData){
+=======
+  void (^completionWrapper)(NSCachedURLResponse *) = ^(NSCachedURLResponse *responseData) {
+>>>>>>> origin/develop12
     if (completion != NULL) {
       UIImage *image = [UIImage imageWithData:responseData.data];
       completion(image);
@@ -77,10 +98,17 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request
                                             completionHandler:
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
+<<<<<<< HEAD
                                     if ([response isKindOfClass:[NSHTTPURLResponse class]] &&
                                         ((NSHTTPURLResponse *)response).statusCode == 200 &&
                                         error == nil &&
                                         data != nil) {
+=======
+                                    if ([response isKindOfClass:[NSHTTPURLResponse class]]
+                                        && ((NSHTTPURLResponse *)response).statusCode == 200
+                                        && error == nil
+                                        && data != nil) {
+>>>>>>> origin/develop12
                                       NSCachedURLResponse *responseToCache =
                                       [[NSCachedURLResponse alloc] initWithResponse:response
                                                                                data:data

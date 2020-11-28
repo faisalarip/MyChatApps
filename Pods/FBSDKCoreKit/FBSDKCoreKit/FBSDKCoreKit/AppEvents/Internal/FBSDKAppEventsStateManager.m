@@ -71,6 +71,10 @@ static BOOL g_canSkipDiskCheck = NO;
   }
   return eventsStates;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 #pragma clang diagnostic pop
 
 #pragma mark - Private Helpers
@@ -79,4 +83,8 @@ static BOOL g_canSkipDiskCheck = NO;
 {
   return [FBSDKBasicUtility persistenceFilePath:@"com-facebook-sdk-AppEventsPersistedEvents.json"];
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 @end

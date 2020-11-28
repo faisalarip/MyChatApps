@@ -121,6 +121,10 @@ NSString *const kGTMSessionFetcherServiceSessionKey
             retryBlock = _retryBlock,
             maxRetryInterval = _maxRetryInterval,
             minRetryInterval = _minRetryInterval,
+<<<<<<< HEAD
+=======
+            metricsCollectionBlock = _metricsCollectionBlock,
+>>>>>>> origin/develop12
             properties = _properties,
             unusedSessionTimeout = _unusedSessionTimeout,
             testBlock = _testBlock;
@@ -186,6 +190,12 @@ NSString *const kGTMSessionFetcherServiceSessionKey
   fetcher.retryBlock = self.retryBlock;
   fetcher.maxRetryInterval = self.maxRetryInterval;
   fetcher.minRetryInterval = self.minRetryInterval;
+<<<<<<< HEAD
+=======
+  if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
+    fetcher.metricsCollectionBlock = self.metricsCollectionBlock;
+  }
+>>>>>>> origin/develop12
   fetcher.properties = self.properties;
   fetcher.service = self;
   if (self.cookieStorageMethod >= 0) {
@@ -1281,6 +1291,17 @@ didCompleteWithError:(NSError *)error {
  didCompleteWithError:error];
 }
 
+<<<<<<< HEAD
+=======
+- (void)URLSession:(NSURLSession *)session
+                          task:(NSURLSessionTask *)task
+    didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
+    API_AVAILABLE(ios(10.0), macosx(10.12), tvos(10.0), watchos(3.0)) {
+  id<NSURLSessionTaskDelegate> fetcher = [self fetcherForTask:task];
+  [fetcher URLSession:session task:task didFinishCollectingMetrics:metrics];
+}
+
+>>>>>>> origin/develop12
 // NSURLSessionDataDelegate protocol methods.
 
 - (void)URLSession:(NSURLSession *)session

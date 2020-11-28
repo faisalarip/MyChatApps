@@ -22,6 +22,7 @@
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKGateKeeperManager.h"
+<<<<<<< HEAD
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKImageDownloader.h"
@@ -31,6 +32,16 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
+=======
+#import "FBSDKGraphRequest.h"
+#import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKImageDownloader.h"
+#import "FBSDKInternalUtility.h"
+#import "FBSDKLogger.h"
+#import "FBSDKServerConfiguration.h"
+#import "FBSDKServerConfiguration+Internal.h"
+#import "FBSDKSettings.h"
+>>>>>>> origin/develop12
 
 #define FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY @"com.facebook.sdk:serverConfiguration%@"
 
@@ -68,11 +79,19 @@ static BOOL _requeryFinishedForAppStart;
 
 typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 {
+<<<<<<< HEAD
   FBSDKServerConfigurationManagerAppEventsFeaturesNone                            = 0,
   FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled            = 1 << 0,
   FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled  = 1 << 1,
   FBSDKServerConfigurationManagerAppEventsFeaturesCodelessEventsTriggerEnabled    = 1 << 5,
   FBSDKServerConfigurationManagerAppEventsFeaturesUninstallTrackingEnabled        = 1 << 7,
+=======
+  FBSDKServerConfigurationManagerAppEventsFeaturesNone = 0,
+  FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled = 1 << 0,
+  FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled = 1 << 1,
+  FBSDKServerConfigurationManagerAppEventsFeaturesCodelessEventsTriggerEnabled = 1 << 5,
+  FBSDKServerConfigurationManagerAppEventsFeaturesUninstallTrackingEnabled = 1 << 7,
+>>>>>>> origin/develop12
 };
 
 #pragma mark - Public Class Methods
@@ -111,6 +130,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationBlock)completionBlock
 {
+<<<<<<< HEAD
   void (^loadBlock)(void) = nil;
   NSString *appID = [FBSDKSettings appID];
   @synchronized(self) {
@@ -172,12 +192,79 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   // Fetch app gatekeepers
   [FBSDKGateKeeperManager loadGateKeepers:nil];
 }
+=======
+  @try {
+    void (^loadBlock)(void) = nil;
+    NSString *appID = [FBSDKSettings appID];
+    @synchronized(self) {
+      // validate the cached configuration has the correct appID
+      if (_serverConfiguration && ![_serverConfiguration.appID isEqualToString:appID]) {
+        _serverConfiguration = nil;
+        _serverConfigurationError = nil;
+        _serverConfigurationErrorTimestamp = nil;
+      }
+
+      // load the configuration from NSUserDefaults
+      if (!_serverConfiguration) {
+        // load the defaults
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
+        NSData *data = [defaults objectForKey:defaultsKey];
+        if ([data isKindOfClass:[NSData class]]) {
+          // decode the configuration
+          FBSDKServerConfiguration *serverConfiguration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+          if ([serverConfiguration isKindOfClass:[FBSDKServerConfiguration class]]) {
+            // ensure that the configuration points to the current appID
+            if ([serverConfiguration.appID isEqualToString:appID]) {
+              _serverConfiguration = serverConfiguration;
+            }
+          }
+        }
+      }
+
+      if (_requeryFinishedForAppStart
+          && ((_serverConfiguration && [self _serverConfigurationTimestampIsValid:_serverConfiguration.timestamp] && _serverConfiguration.version >= FBSDKServerConfigurationVersion))) {
+        // we have a valid server configuration, use that
+        loadBlock = [self _wrapperBlockForLoadBlock:completionBlock];
+      } else {
+        // hold onto the completion block
+        [FBSDKTypeUtility array:_completionBlocks addObject:[completionBlock copy]];
+
+        // check if we are already loading
+        if (!_loadingServerConfiguration) {
+          // load the configuration from the network
+          _loadingServerConfiguration = YES;
+          FBSDKGraphRequest *request = [[self class] requestToLoadServerConfiguration:appID];
+
+          // start request with specified timeout instead of the default 180s
+          FBSDKGraphRequestConnection *requestConnection = [FBSDKGraphRequestConnection new];
+          requestConnection.timeout = kTimeout;
+          [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+            _requeryFinishedForAppStart = YES;
+            [self processLoadRequestResponse:result error:error appID:appID];
+          }];
+          [requestConnection start];
+        }
+      }
+    }
+
+    if (loadBlock) {
+      loadBlock();
+    }
+
+    // Fetch app gatekeepers
+    [FBSDKGateKeeperManager loadGateKeepers:nil];
+  } @catch (NSException *exception) {}
+}
+
+>>>>>>> origin/develop12
 #pragma clang diagnostic pop
 
 #pragma mark - Internal Class Methods
 
 + (void)processLoadRequestResponse:(id)result error:(NSError *)error appID:(NSString *)appID
 {
+<<<<<<< HEAD
   if (error) {
     [self _didProcessConfigurationFromNetwork:nil appID:appID error:error];
     return;
@@ -245,25 +332,112 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   if (smartLoginEnabled &&
       smartLoginMenuIconURL &&
       smartLoginBookmarkIconURL) {
+=======
+  @try {
+    if (error) {
+      [self _didProcessConfigurationFromNetwork:nil appID:appID error:error];
+      return;
+    }
+
+    NSDictionary *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+    NSUInteger appEventsFeatures = [FBSDKTypeUtility unsignedIntegerValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD]];
+    BOOL advertisingIDEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled) != 0;
+    BOOL implicitPurchaseLoggingEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled) != 0;
+    BOOL codelessEventsEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesCodelessEventsTriggerEnabled) != 0;
+    BOOL uninstallTrackingEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesUninstallTrackingEnabled) != 0;
+    NSString *appName = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD]];
+    BOOL loginTooltipEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD]];
+    NSString *loginTooltipText = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD]];
+    NSString *defaultShareMode = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD]];
+    BOOL implicitLoggingEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD]];
+    NSDictionary *dialogConfigurations = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD]];
+    dialogConfigurations = [self _parseDialogConfigurations:dialogConfigurations];
+    NSDictionary *dialogFlows = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD]];
+    FBSDKErrorConfiguration *errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
+    [errorConfiguration parseArray:resultDictionary[FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD]];
+    NSTimeInterval sessionTimeoutInterval = [FBSDKTypeUtility timeIntervalValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD]];
+    NSString *loggingToken = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD]];
+    FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [FBSDKTypeUtility integerValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD]];
+    NSURL *smartLoginBookmarkIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD]];
+    NSURL *smartLoginMenuIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD]];
+    NSString *updateMessage = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD]];
+    NSArray *eventBindings = [FBSDKTypeUtility arrayValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD]];
+    NSDictionary<NSString *, id> *restrictiveParams = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD] error:nil];
+    NSDictionary<NSString *, id> *AAMRules = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD] error:nil];
+    NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD] error:nil];
+    FBSDKMonitoringConfiguration *monitoringConfiguration = [FBSDKMonitoringConfiguration fromDictionary:resultDictionary[FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIG_FIELD]];
+    FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
+                                                                                            appName:appName
+                                                                                loginTooltipEnabled:loginTooltipEnabled
+                                                                                   loginTooltipText:loginTooltipText
+                                                                                   defaultShareMode:defaultShareMode
+                                                                               advertisingIDEnabled:advertisingIDEnabled
+                                                                             implicitLoggingEnabled:implicitLoggingEnabled
+                                                                     implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
+                                                                              codelessEventsEnabled:codelessEventsEnabled
+                                                                           uninstallTrackingEnabled:uninstallTrackingEnabled
+                                                                               dialogConfigurations:dialogConfigurations
+                                                                                        dialogFlows:dialogFlows
+                                                                                          timestamp:[NSDate date]
+                                                                                 errorConfiguration:errorConfiguration
+                                                                             sessionTimeoutInterval:sessionTimeoutInterval
+                                                                                           defaults:NO
+                                                                                       loggingToken:loggingToken
+                                                                                  smartLoginOptions:smartLoginOptions
+                                                                          smartLoginBookmarkIconURL:smartLoginBookmarkIconURL
+                                                                              smartLoginMenuIconURL:smartLoginMenuIconURL
+                                                                                      updateMessage:updateMessage
+                                                                                      eventBindings:eventBindings
+                                                                                  restrictiveParams:restrictiveParams
+                                                                                           AAMRules:AAMRules
+                                                                             suggestedEventsSetting:suggestedEventsSetting
+                                                                            monitoringConfiguration:monitoringConfiguration];
+  #if TARGET_OS_TV
+    // don't download icons more than once a day.
+    static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
+
+    BOOL smartLoginEnabled = (smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled);
+    // for TVs go ahead and prime the images
+    if (smartLoginEnabled
+        && smartLoginMenuIconURL
+        && smartLoginBookmarkIconURL) {
+>>>>>>> origin/develop12
       [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginBookmarkIconURL
                                                               ttl:kSmartLoginIconsTTL
                                                        completion:nil];
       [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginMenuIconURL
                                                               ttl:kSmartLoginIconsTTL
                                                        completion:nil];
+<<<<<<< HEAD
   }
 #endif
   [self _didProcessConfigurationFromNetwork:serverConfiguration appID:appID error:nil];
+=======
+    }
+  #endif
+    [self _didProcessConfigurationFromNetwork:serverConfiguration appID:appID error:nil];
+  } @catch (NSException *exception) {}
+>>>>>>> origin/develop12
 }
 
 + (FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID
 {
   NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility operatingSystemVersion];
+<<<<<<< HEAD
   NSString *dialogFlowsField = [NSString stringWithFormat:@"%@.os_version(%ti.%ti.%ti)",
                                 FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD,
                                 operatingSystemVersion.majorVersion,
                                 operatingSystemVersion.minorVersion,
                                 operatingSystemVersion.patchVersion];
+=======
+  NSString *osVersion = [NSString stringWithFormat:@"%ti.%ti.%ti",
+                         operatingSystemVersion.majorVersion,
+                         operatingSystemVersion.minorVersion,
+                         operatingSystemVersion.patchVersion];
+  NSString *dialogFlowsField = [NSString stringWithFormat:@"%@.os_version(%@)",
+                                FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD,
+                                osVersion];
+>>>>>>> origin/develop12
   NSArray *fields = @[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD,
                       FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD,
                       FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD,
@@ -278,6 +452,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD,
                       FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD
+<<<<<<< HEAD
 #if !TARGET_OS_TV
                       ,FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
 #endif
@@ -291,6 +466,22 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 #endif
                       ];
   NSDictionary<NSString *, NSString *> *parameters = @{ @"fields": [fields componentsJoinedByString:@","]};
+=======
+                    #if !TARGET_OS_TV
+                      , FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
+                    #endif
+                    #ifdef DEBUG
+                      , FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD
+                    #endif
+                    #if TARGET_OS_TV
+                      , FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD,
+                      FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD,
+                      FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD
+                    #endif
+  ];
+  NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : [fields componentsJoinedByString:@","],
+                                                        @"os_version" : osVersion};
+>>>>>>> origin/develop12
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID
                                                                  parameters:parameters
@@ -327,13 +518,21 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       _serverConfigurationError = nil;
       _serverConfigurationErrorTimestamp = nil;
 
+<<<<<<< HEAD
 #ifdef DEBUG
+=======
+    #ifdef DEBUG
+>>>>>>> origin/develop12
       NSString *updateMessage = _serverConfiguration.updateMessage;
       if (updateMessage && updateMessage.length > 0 && !_printedUpdateMessage) {
         _printedUpdateMessage = YES;
         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:updateMessage];
       }
+<<<<<<< HEAD
 #endif
+=======
+    #endif
+>>>>>>> origin/develop12
 
       if (!_printedUpdateMessage) {
         _printedUpdateMessage = _printedUpdateMessage;
@@ -344,10 +543,17 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
     if (serverConfiguration) {
+<<<<<<< HEAD
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration];
 #pragma clang diagnostic pop
+=======
+      #pragma clang diagnostic push
+      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+      NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration];
+      #pragma clang diagnostic pop
+>>>>>>> origin/develop12
       [defaults setObject:data forKey:defaultsKey];
     }
 
@@ -377,8 +583,13 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
         NSURL *URL = [FBSDKTypeUtility URLValue:dialogConfigurationDictionary[@"url"]];
         NSArray *appVersions = [FBSDKTypeUtility arrayValue:dialogConfigurationDictionary[@"versions"]];
         [FBSDKTypeUtility dictionary:dialogConfigurations setObject:[[FBSDKDialogConfiguration alloc] initWithName:name
+<<<<<<< HEAD
                                                                                 URL:URL
                                                                         appVersions:appVersions] forKey:name];
+=======
+                                                                                                               URL:URL
+                                                                                                       appVersions:appVersions] forKey:name];
+>>>>>>> origin/develop12
       }
     }
   }

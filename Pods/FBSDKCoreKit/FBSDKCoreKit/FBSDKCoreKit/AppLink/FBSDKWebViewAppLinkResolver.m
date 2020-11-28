@@ -27,7 +27,11 @@
 
 #import "FBSDKAppLink.h"
 #import "FBSDKAppLinkTarget.h"
+<<<<<<< HEAD
 #import "FBSDKTypeUtility.h"
+=======
+#import "FBSDKInternalUtility.h"
+>>>>>>> origin/develop12
 
 /**
  Describes the callback for appLinkFromURLInBackground.

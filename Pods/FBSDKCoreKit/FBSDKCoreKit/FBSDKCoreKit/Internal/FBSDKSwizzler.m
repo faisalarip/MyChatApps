@@ -30,8 +30,11 @@
 #define FB_REMOVE_SELECTOR \
   [FBSDKSwizzler object:self ofClass:swizzlingOnClass.bindingClass removeSelector:_cmd];
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/develop12
 @interface FBSDKSwizzle : NSObject
 
 @property (nonatomic, assign) Class class;
@@ -49,7 +52,10 @@
 
 @end
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 @interface FBSDKSwizzlingOnClass : NSObject
 
 @property FBSDKSwizzle *bindingSwizzle;
@@ -60,7 +66,10 @@
 
 @end
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 @interface FBSDKSwizzler ()
 
 + (void)object:(id)anObject ofClass:(Class)aClass addSelector:(SEL)aSelector;
@@ -69,12 +78,20 @@
 
 @end
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 static NSMapTable *swizzles;
 static NSMutableSet<NSString *> *selectorCallingSet;
 static dispatch_queue_t swizzleQueue;
 
+<<<<<<< HEAD
 static FBSDKSwizzlingOnClass* fb_findSwizzle(id self, SEL _cmd){
+=======
+static FBSDKSwizzlingOnClass *fb_findSwizzle(id self, SEL _cmd)
+{
+>>>>>>> origin/develop12
   Method aMethod = class_getInstanceMethod([self class], _cmd);
   Class this_class = [self class];
   FBSDKSwizzle *swizzle = nil;
@@ -83,7 +100,11 @@ static FBSDKSwizzlingOnClass* fb_findSwizzle(id self, SEL _cmd){
     swizzle = (FBSDKSwizzle *)[swizzles objectForKey:MAPTABLE_ID(aMethod)];
   }
 
+<<<<<<< HEAD
   while (!swizzle && class_getSuperclass(this_class)){
+=======
+  while (!swizzle && class_getSuperclass(this_class)) {
+>>>>>>> origin/develop12
     this_class = class_getSuperclass(this_class);
     aMethod = class_getInstanceMethod(this_class, _cmd);
 
@@ -104,7 +125,11 @@ static void fb_swizzledMethod_2(id self, SEL _cmd)
 {
   FB_FIND_SWIZZLE;
   if (swizzle) {
+<<<<<<< HEAD
     ((void(*)(id, SEL))swizzle.originalMethod)(self, _cmd);
+=======
+    ((void (*)(id, SEL))swizzle.originalMethod)(self, _cmd);
+>>>>>>> origin/develop12
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
     swizzleBlock block;
@@ -119,7 +144,11 @@ static void fb_swizzledMethod_3(id self, SEL _cmd, id arg)
 {
   FB_FIND_SWIZZLE;
   if (swizzle) {
+<<<<<<< HEAD
     ((void(*)(id, SEL, id))swizzle.originalMethod)(self, _cmd, arg);
+=======
+    ((void (*)(id, SEL, id))swizzle.originalMethod)(self, _cmd, arg);
+>>>>>>> origin/develop12
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
     swizzleBlock block;
@@ -134,7 +163,11 @@ static void fb_swizzledMethod_4(id self, SEL _cmd, id arg, id arg2)
 {
   FB_FIND_SWIZZLE;
   if (swizzle) {
+<<<<<<< HEAD
     ((void(*)(id, SEL, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2);
+=======
+    ((void (*)(id, SEL, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2);
+>>>>>>> origin/develop12
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
     swizzleBlock block;
@@ -149,7 +182,11 @@ static void fb_swizzledMethod_5(id self, SEL _cmd, id arg, id arg2, id arg3)
 {
   FB_FIND_SWIZZLE;
   if (swizzle) {
+<<<<<<< HEAD
     ((void(*)(id, SEL, id, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2, arg3);
+=======
+    ((void (*)(id, SEL, id, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2, arg3);
+>>>>>>> origin/develop12
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
     swizzleBlock block;
@@ -164,7 +201,11 @@ static void fb_swizzleMethod_4_io(id self, SEL _cmd, NSInteger arg, id arg2)
 {
   FB_FIND_SWIZZLE;
   if (swizzle) {
+<<<<<<< HEAD
     ((void(*)(id, SEL, NSInteger, id))swizzle.originalMethod)(self, _cmd, arg, arg2);
+=======
+    ((void (*)(id, SEL, NSInteger, id))swizzle.originalMethod)(self, _cmd, arg, arg2);
+>>>>>>> origin/develop12
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
     swizzleBlock block;
@@ -186,10 +227,17 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 
 + (void)initialize
 {
+<<<<<<< HEAD
   swizzles = [NSMapTable mapTableWithKeyOptions:(NSPointerFunctionsOpaqueMemory |
                                                  NSPointerFunctionsOpaquePersonality)
                                    valueOptions:(NSPointerFunctionsStrongMemory |
                                                  NSPointerFunctionsObjectPointerPersonality)];
+=======
+  swizzles = [NSMapTable mapTableWithKeyOptions:(NSPointerFunctionsOpaqueMemory
+                           | NSPointerFunctionsOpaquePersonality)
+                                   valueOptions:(NSPointerFunctionsStrongMemory
+                                     | NSPointerFunctionsObjectPointerPersonality)];
+>>>>>>> origin/develop12
   selectorCallingSet = [NSMutableSet set];
   swizzleQueue = dispatch_queue_create("com.facebook.swizzler", DISPATCH_QUEUE_SERIAL);
   [FBSDKSwizzler resolveConflict];
@@ -247,6 +295,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 + (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(swizzleBlock)aBlock named:(NSString *)aName
 {
   dispatch_async(swizzleQueue, ^{
+<<<<<<< HEAD
     Method aMethod = class_getInstanceMethod(aClass, aSelector);
     if (aMethod) {
       uint numArgs = method_getNumberOfArguments(aMethod);
@@ -298,6 +347,61 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
           [FBSDKSwizzler setSwizzle:newSwizzle forMethod:newMethod];
         }
       }
+=======
+    @try {
+      Method aMethod = class_getInstanceMethod(aClass, aSelector);
+      if (aMethod) {
+        uint numArgs = method_getNumberOfArguments(aMethod);
+        if (numArgs >= MIN_ARGS && numArgs <= MAX_ARGS) {
+          BOOL isLocal = [FBSDKSwizzler isLocallyDefinedMethod:aMethod onClass:aClass];
+          IMP swizzledMethod = (IMP)fb_swizzledMethods[numArgs - 2];
+          // Check whether the first parameter is integer
+          if (4 == numArgs) {
+            char *type = method_copyArgumentType(aMethod, 2);
+            NSString *firstType = [NSString stringWithCString:type encoding:NSUTF8StringEncoding];
+            NSString *integerTypes = @"islq";
+            if ([integerTypes containsString:firstType.lowercaseString]) {
+              swizzledMethod = (IMP)fb_swizzleMethod_4_io;
+            }
+            free(type);
+          }
+
+          FBSDKSwizzle *swizzle = [FBSDKSwizzler swizzleForMethod:aMethod];
+
+          if (isLocal) {
+            if (!swizzle) {
+              IMP originalMethod = method_getImplementation(aMethod);
+
+              // Replace the local implementation of this method with the swizzled one
+              method_setImplementation(aMethod, swizzledMethod);
+
+              // Create and add the swizzle
+              swizzle = [[FBSDKSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod withNumArgs:numArgs];
+              [FBSDKSwizzler setSwizzle:swizzle forMethod:aMethod];
+            } else {
+              [swizzle.blocks setObject:aBlock forKey:aName];
+            }
+          } else {
+            IMP originalMethod = swizzle ? swizzle.originalMethod : method_getImplementation(aMethod);
+
+            // Add the swizzle as a new local method on the class.
+            if (!class_addMethod(aClass, aSelector, swizzledMethod, method_getTypeEncoding(aMethod))) {
+              return;
+            }
+            // Now re-get the Method, it should be the one we just added.
+            Method newMethod = class_getInstanceMethod(aClass, aSelector);
+            if (aMethod == newMethod) {
+              return;
+            }
+
+            FBSDKSwizzle *newSwizzle = [[FBSDKSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod withNumArgs:numArgs];
+            [FBSDKSwizzler setSwizzle:newSwizzle forMethod:newMethod];
+          }
+        }
+      }
+    } @catch (NSException *exception) {
+      NSLog(@"Fail to swizzle selector. Exception reason: %@", exception.reason);
+>>>>>>> origin/develop12
     }
   });
 }
@@ -318,6 +422,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 */
 + (void)unswizzleSelector:(SEL)aSelector onClass:(Class)aClass named:(NSString *)aName
 {
+<<<<<<< HEAD
   Method aMethod = class_getInstanceMethod(aClass, aSelector);
   FBSDKSwizzle *swizzle = [FBSDKSwizzler swizzleForMethod:aMethod];
   if (swizzle) {
@@ -328,13 +433,33 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
       method_setImplementation(aMethod, swizzle.originalMethod);
       [FBSDKSwizzler removeSwizzleForMethod:aMethod];
     }
+=======
+  @try {
+    Method aMethod = class_getInstanceMethod(aClass, aSelector);
+    FBSDKSwizzle *swizzle = [FBSDKSwizzler swizzleForMethod:aMethod];
+    if (swizzle) {
+      if (aName) {
+        [swizzle.blocks removeObjectForKey:aName];
+      }
+      if (!aName || swizzle.blocks.count == 0) {
+        method_setImplementation(aMethod, swizzle.originalMethod);
+        [FBSDKSwizzler removeSwizzleForMethod:aMethod];
+      }
+    }
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to remove the named swizzle from given class/selector. Exception reason: %@", exception.reason);
+>>>>>>> origin/develop12
   }
 }
 
 + (void)object:(id)anObject ofClass:(Class)aClass addSelector:(SEL)aSelector
 {
   NSString *objectClassSelectorString = [NSString stringWithFormat:@"%p %@ %@", anObject, NSStringFromClass(aClass), NSStringFromSelector(aSelector)];
+<<<<<<< HEAD
   @synchronized (selectorCallingSet) {
+=======
+  @synchronized(selectorCallingSet) {
+>>>>>>> origin/develop12
     [selectorCallingSet addObject:objectClassSelectorString];
   }
 }
@@ -342,7 +467,11 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 + (void)object:(id)anObject ofClass:(Class)aClass removeSelector:(SEL)aSelector
 {
   NSString *objectClassSelectorString = [NSString stringWithFormat:@"%p %@ %@", anObject, NSStringFromClass(aClass), NSStringFromSelector(aSelector)];
+<<<<<<< HEAD
   @synchronized (selectorCallingSet) {
+=======
+  @synchronized(selectorCallingSet) {
+>>>>>>> origin/develop12
     [selectorCallingSet removeObject:objectClassSelectorString];
   }
 }
@@ -358,16 +487,25 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 
 @end
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 @implementation FBSDKSwizzle
 
 - (instancetype)init
 {
   if (self = [super init]) {
     self.blocks = [NSMapTable mapTableWithKeyOptions:(NSPointerFunctionsStrongMemory
+<<<<<<< HEAD
                                                       | NSPointerFunctionsObjectPersonality)
                                         valueOptions:(NSPointerFunctionsStrongMemory
                                                       | NSPointerFunctionsObjectPointerPersonality)];
+=======
+                                | NSPointerFunctionsObjectPersonality)
+                                        valueOptions:(NSPointerFunctionsStrongMemory
+                                          | NSPointerFunctionsObjectPointerPersonality)];
+>>>>>>> origin/develop12
   }
   return self;
 }
@@ -403,7 +541,10 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 
 @end
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 @implementation FBSDKSwizzlingOnClass
 
 - (instancetype)initWithSwizzle:(FBSDKSwizzle *)aSwizzle

@@ -15,8 +15,19 @@
  */
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import <FirebaseCore/FIRComponentType.h>
 #import <FirebaseCore/FIRLibrary.h>
+=======
+// The has_include is a workaround so the old IID needed for the FIS tests can find the headers.
+#if __has_include("FirebaseCore/Sources/Private/FIRComponentType.h")
+#import "FirebaseCore/Sources/Private/FIRComponentType.h"
+#import "FirebaseCore/Sources/Private/FIRLibrary.h"
+#else
+#import <FirebaseCore/FIRComponentType.h>
+#import <FirebaseCore/FIRLibrary.h>
+#endif
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 

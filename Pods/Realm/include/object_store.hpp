@@ -27,8 +27,16 @@
 #include <functional>
 #include <string>
 #include <vector>
+<<<<<<< HEAD
 namespace realm {
 class Group;
+=======
+#include <limits>
+
+namespace realm {
+class Group;
+class Transaction;
+>>>>>>> origin/develop12
 class Schema;
 class SchemaChange;
 class StringData;
@@ -82,7 +90,11 @@ public:
     // passed in target schema is updated with the correct column mapping
     // optionally runs migration function if schema is out of date
     // NOTE: must be performed within a write transaction
+<<<<<<< HEAD
     static void apply_schema_changes(Group& group, uint64_t schema_version,
+=======
+    static void apply_schema_changes(Transaction& group, uint64_t schema_version,
+>>>>>>> origin/develop12
                                      Schema& target_schema, uint64_t target_schema_version,
                                      SchemaMode mode, std::vector<SchemaChange> const& changes,
                                      util::Optional<std::string> sync_user_id,
@@ -99,9 +111,15 @@ public:
 
     // get the property for a existing column in the given table. return none if the column is reserved internally.
     // NOTE: is_primary won't be set for the returned property.
+<<<<<<< HEAD
     static util::Optional<Property> property_for_column_index(ConstTableRef& table, size_t column_index);
 
     static void set_schema_columns(Group const& group, Schema& schema);
+=======
+    static util::Optional<Property> property_for_column_index(ConstTableRef& table, ColKey column_key);
+
+    static void set_schema_keys(Group const& group, Schema& schema);
+>>>>>>> origin/develop12
 
     // deletes the table for the given type
     static void delete_data_for_object(Group& group, StringData object_type);
@@ -123,7 +141,11 @@ public:
     static StringData object_type_for_table_name(StringData table_name);
 
     // creates the private role for the given user if it does not exist
+<<<<<<< HEAD
     static void ensure_private_role_exists_for_user(Group& group, StringData sync_user_id);
+=======
+    static void ensure_private_role_exists_for_user(Transaction& group, StringData sync_user_id);
+>>>>>>> origin/develop12
 
 private:
     friend class ObjectSchema;
@@ -138,6 +160,7 @@ private:
     uint64_t m_old_version, m_new_version;
 };
 
+<<<<<<< HEAD
 class DuplicatePrimaryKeyValueException : public std::logic_error {
 public:
     DuplicatePrimaryKeyValueException(std::string object_type, std::string property);
@@ -149,6 +172,8 @@ private:
     std::string m_property;
 };
 
+=======
+>>>>>>> origin/develop12
 // Schema validation exceptions
 struct ObjectSchemaValidationException : public std::logic_error {
     ObjectSchemaValidationException(std::string message) : logic_error(std::move(message)) {}

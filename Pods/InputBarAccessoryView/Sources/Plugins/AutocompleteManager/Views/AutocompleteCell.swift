@@ -2,7 +2,11 @@
 //  AutocompleteCell.swift
 //  InputBarAccessoryView
 //
+<<<<<<< HEAD
 //  Copyright © 2017-2019 Nathan Tannar.
+=======
+//  Copyright © 2017-2020 Nathan Tannar.
+>>>>>>> origin/develop12
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +62,15 @@ open class AutocompleteCell: UITableViewCell {
         detailTextLabel?.text = nil
         imageView?.image = nil
         imageViewEdgeInsets = .zero
+<<<<<<< HEAD
         separatorLine.backgroundColor = .lightGray
+=======
+        if #available(iOS 13, *) {
+            separatorLine.backgroundColor = .systemGray2
+        } else {
+            separatorLine.backgroundColor = .lightGray
+        }
+>>>>>>> origin/develop12
         separatorLine.isHidden = false
     }
     

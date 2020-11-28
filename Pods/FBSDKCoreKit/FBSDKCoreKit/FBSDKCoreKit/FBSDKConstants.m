@@ -28,7 +28,10 @@ NSString *const FBSDKErrorDomain = @"com.facebook.sdk.core";
 
 #endif
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 NSErrorUserInfoKey const FBSDKErrorArgumentCollectionKey = @"com.facebook.sdk:FBSDKErrorArgumentCollectionKey";

@@ -22,6 +22,10 @@
  SOFTWARE.
  */
 
+<<<<<<< HEAD
+=======
+import Foundation
+>>>>>>> origin/develop12
 import UIKit
 import AVFoundation
 
@@ -169,6 +173,10 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
     lazy open var audioMessageSizeCalculator = AudioMessageSizeCalculator(layout: self)
     lazy open var contactMessageSizeCalculator = ContactMessageSizeCalculator(layout: self)
     lazy open var typingIndicatorSizeCalculator = TypingCellSizeCalculator(layout: self)
+<<<<<<< HEAD
+=======
+    lazy open var linkPreviewMessageSizeCalculator = LinkPreviewMessageSizeCalculator(layout: self)
+>>>>>>> origin/develop12
 
     /// Note:
     /// - If you override this method, remember to call MessageLayoutDelegate's
@@ -197,6 +205,11 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
             return audioMessageSizeCalculator
         case .contact:
             return contactMessageSizeCalculator
+<<<<<<< HEAD
+=======
+        case .linkPreview:
+            return linkPreviewMessageSizeCalculator
+>>>>>>> origin/develop12
         case .custom:
             return messagesLayoutDelegate.customCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView)
         }
@@ -321,7 +334,12 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
                 videoMessageSizeCalculator,
                 locationMessageSizeCalculator,
                 audioMessageSizeCalculator,
+<<<<<<< HEAD
                 contactMessageSizeCalculator
+=======
+                contactMessageSizeCalculator,
+                linkPreviewMessageSizeCalculator
+>>>>>>> origin/develop12
         ]
     }
     

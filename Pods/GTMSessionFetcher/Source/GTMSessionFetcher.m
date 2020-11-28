@@ -551,8 +551,16 @@ static GTMSessionFetcherTestBlock GTM_NULLABLE_TYPE gGlobalTestBlock;
                            fetchRequest);
     }
 #endif
+<<<<<<< HEAD
     [self setSessionIdentifierInternal:nil];
     self.useBackgroundSession = NO;
+=======
+    // If priorSessionIdentifier is allowed to stay non-nil, a background session can
+    // still be created.
+    priorSessionIdentifier = nil;
+    [self setSessionIdentifierInternal:nil];
+    self.usingBackgroundSession = NO;
+>>>>>>> origin/develop12
   }
 
 #if GTM_ALLOW_INSECURE_REQUESTS
@@ -902,7 +910,11 @@ static GTMSessionFetcherTestBlock GTM_NULLABLE_TYPE gGlobalTestBlock;
 #if GTM_BACKGROUND_TASK_FETCHING
   id<GTMUIApplicationProtocol> app = [[self class] fetcherUIApplication];
   // Background tasks seem to interfere with out-of-process uploads and downloads.
+<<<<<<< HEAD
   if (app && !self.skipBackgroundTask && !self.useBackgroundSession) {
+=======
+  if (app && !self.skipBackgroundTask && !self.usingBackgroundSession) {
+>>>>>>> origin/develop12
     // Tell UIApplication that we want to continue even when the app is in the
     // background.
 #if DEBUG
@@ -1792,6 +1804,12 @@ NSData * GTM_NULLABLE_TYPE GTMDataFromInputStream(NSInputStream *inputStream, NS
   self.retryBlock = nil;
   self.testBlock = nil;
   self.resumeDataBlock = nil;
+<<<<<<< HEAD
+=======
+  if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
+    self.metricsCollectionBlock = nil;
+  }
+>>>>>>> origin/develop12
 }
 
 - (void)forgetSessionIdentifierForFetcher {
@@ -2850,6 +2868,24 @@ didCompleteWithError:(NSError *)error {
   }];
 }
 
+<<<<<<< HEAD
+=======
+- (void)URLSession:(NSURLSession *)session
+                          task:(NSURLSessionTask *)task
+    didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
+    API_AVAILABLE(ios(10.0), macosx(10.12), tvos(10.0), watchos(3.0)) {
+  @synchronized(self) {
+    GTMSessionMonitorSynchronized(self);
+    GTMSessionFetcherMetricsCollectionBlock metricsCollectionBlock = _metricsCollectionBlock;
+    if (metricsCollectionBlock) {
+      [self invokeOnCallbackQueueUnlessStopped:^{
+        metricsCollectionBlock(metrics);
+      }];
+    }
+  }
+}
+
+>>>>>>> origin/develop12
 #if TARGET_OS_IPHONE
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
   GTM_LOG_SESSION_DELEGATE(@"%@ %p URLSessionDidFinishEventsForBackgroundURLSession:%@",
@@ -3459,6 +3495,10 @@ static NSMutableDictionary *gSystemCompletionHandlers = nil;
             sendProgressBlock = _sendProgressBlock,
             willCacheURLResponseBlock = _willCacheURLResponseBlock,
             retryBlock = _retryBlock,
+<<<<<<< HEAD
+=======
+            metricsCollectionBlock = _metricsCollectionBlock,
+>>>>>>> origin/develop12
             retryFactor = _retryFactor,
             allowedInsecureSchemes = _allowedInsecureSchemes,
             allowLocalhostRequest = _allowLocalhostRequest,

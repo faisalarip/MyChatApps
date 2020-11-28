@@ -16,6 +16,7 @@
 - [x] Compatible with all iPhones and iPads
 - [x] RTL Support
 
+<<<<<<< HEAD
 ### Installation via CocoaPods
 
 ```ruby
@@ -23,21 +24,66 @@
 pod 'InputBarAccessoryView'
 # Swift 4.2
 pod 'InputBarAccessoryView', '4.2.2'
+=======
+### Installation via Swift Package Manager (SPM)
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
+Once you have your Swift package set up, adding InputBarAccessoryView as a dependency is as easy as adding it to the dependencies value of your Package.swift.
+
+```
+dependencies: [
+    .package(url: "https://github.com/nathantannar4/InputBarAccessoryView.git", .upToNextMajor(from: "4.5.0"))
+]
+```
+You can also add it via XCode SPM editor with URL:
+```
+https://github.com/nathantannar4/InputBarAccessoryView.git
+```
+To make `RxSwift`/`RxCocoa` extensions work you need to explicitly import `Rx` dependencies.
+
+### Installation via CocoaPods
+
+```ruby
+# Swift 5.3
+pod 'InputBarAccessoryView'
+
+# Swift 5.0
+pod 'InputBarAccessoryView', '5.1.0'
+>>>>>>> origin/develop12
 ```
 
 ### Installation via Carthage
 
 ```ruby
+<<<<<<< HEAD
 # Swift 5.0
 github "nathantannar4/InputBarAccessoryView"
 # Swift 4.2
 github "nathantannar4/InputBarAccessoryView" "4.2.2"
+=======
+# Swift 5.3
+github "nathantannar4/InputBarAccessoryView"
+
+# Swift 5.0
+github "nathantannar4/InputBarAccessoryView" "5.1.0"
+>>>>>>> origin/develop12
 ```
 
 ### Requirements
 
+<<<<<<< HEAD
 iOS 9.0+
 Swift 5.0
+=======
+iOS 12.0+
+Swift 5.3
+
+> The latest iOS 11 release is v5.1.0
+
+> The latest iOS 9 + iOS 10 release is v4.3.3
+
+> The latest Swift 5.0 release is v5.1.0 
+>>>>>>> origin/develop12
 
 > The latest Swift 4.2 release is v4.2.2 
 
@@ -70,6 +116,7 @@ Add your app to the list of apps using this library and make a pull request.
 iMessage style [TypingIndicator](https://github.com/nathantannar4/TypingIndicator) for chat apps
 
 ## Latest Releases
+<<<<<<< HEAD
 - 4.3.2
     - Fixed a bug where editing immediately before a tag prefix would break the tag
 - 4.3.1
@@ -93,6 +140,23 @@ iMessage style [TypingIndicator](https://github.com/nathantannar4/TypingIndicato
         - Add `InputBarSendButton` to use as the `sendButton` in `InputBarAccessoryView`. This subclass of `InputBarButtonItem` has a `UIActivityIndicatorView` to show a spinner when making HTTP requests
 
 ### [CHANGELOG](./CHANGELOG.md)
+=======
+5.2.0
+   - Drop support for iOS 11 and bump minimum version to iOS 12+
+   - Support Swift 5.3 and higher for XCode 12
+- 5.1.0
+    - Added support for smooth height transitions when the text view expands, set `shouldAnimateTextDidChangeLayout` to `true`
+    - Fixed accessibility of `HorizontalEdgePadding` initializers and a typo in its filename
+    - Added support for Dark Mode on iOS 13+
+- 5.0.0
+    - Drop support for iOS 9 and iOS 10
+    - Remove `RxSwift`/`RxCocoa`  from SPM
+    - Fix image paste logic
+    - Fixed Getting started preview and hashtag typo
+    - Update documentation for setStackViewItems
+    
+See [CHANGELOG](./CHANGELOG.md) for more details and older releases.
+>>>>>>> origin/develop12
 
 **Find a bug? Open an issue!**
 

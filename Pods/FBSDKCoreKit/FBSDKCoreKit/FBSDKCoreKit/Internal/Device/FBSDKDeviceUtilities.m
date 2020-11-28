@@ -20,7 +20,11 @@
 
 #if TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKDeviceUtilities.h"
+=======
+ #import "FBSDKDeviceUtilities.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKDeviceUtilities
 
@@ -41,8 +45,15 @@
   CGSize qrOutputSize = CGSizeMake(200, 200);
 
   CIImage *resizedImage =
+<<<<<<< HEAD
   [qrCodeImage imageByApplyingTransform: CGAffineTransformMakeScale(qrOutputSize.width / CGRectGetWidth(qrImageSize),
                                                                     qrOutputSize.height / CGRectGetHeight(qrImageSize))];
+=======
+  [qrCodeImage imageByApplyingTransform:CGAffineTransformMakeScale(
+    qrOutputSize.width / CGRectGetWidth(qrImageSize),
+    qrOutputSize.height / CGRectGetHeight(qrImageSize)
+   )];
+>>>>>>> origin/develop12
 
   return [UIImage imageWithCIImage:resizedImage];
 }

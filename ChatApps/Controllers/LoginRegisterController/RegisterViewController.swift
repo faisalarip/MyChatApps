@@ -85,7 +85,11 @@ class RegisterViewController: UIViewController {
         textFeild.placeholder = "Password"
         textFeild.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         textFeild.leftViewMode = .always
+<<<<<<< HEAD
         textFeild.isSecureTextEntry = true
+=======
+//        textFeild.isSecureTextEntry = true        
+>>>>>>> origin/develop12
         return textFeild
     }()
     

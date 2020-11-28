@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "GDTCORLibrary/Public/GDTCORConsoleLogger.h"
+=======
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORConsoleLogger.h"
+>>>>>>> origin/develop12
 
 volatile NSInteger GDTCORConsoleLoggerLoggingLevel = GDTCORLoggingLevelErrors;
 

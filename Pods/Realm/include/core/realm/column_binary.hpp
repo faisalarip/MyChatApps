@@ -19,12 +19,19 @@
 #ifndef REALM_COLUMN_BINARY_HPP
 #define REALM_COLUMN_BINARY_HPP
 
+<<<<<<< HEAD
 #include <realm/column.hpp>
 #include <realm/array_binary.hpp>
+=======
+#include <realm/bplustree.hpp>
+#include <realm/array_binary.hpp>
+#include <realm/array_blobs_small.hpp>
+>>>>>>> origin/develop12
 #include <realm/array_blobs_big.hpp>
 
 namespace realm {
 
+<<<<<<< HEAD
 
 /// A binary column (BinaryColumn) is a single B+-tree, and the root
 /// of the column is the root of the B+-tree. Leaf nodes are either of
@@ -138,6 +145,12 @@ private:
 
     friend class BpTreeNode;
     friend class ColumnBase;
+=======
+class BinaryColumn : public BPlusTree<BinaryData> {
+public:
+    using BPlusTree::BPlusTree;
+    BinaryData get_at(size_t ndx, size_t& pos) const noexcept;
+>>>>>>> origin/develop12
 };
 
 class BinaryIterator {
@@ -181,6 +194,7 @@ private:
     BinaryData m_binary;
 };
 
+<<<<<<< HEAD
 
 // Implementation
 
@@ -430,6 +444,8 @@ inline size_t BinaryColumn::get_size_from_ref(ref_type root_ref, Allocator& allo
 }
 
 
+=======
+>>>>>>> origin/develop12
 } // namespace realm
 
 #endif // REALM_COLUMN_BINARY_HPP

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseStorage/FIRStorageReference.h>
+=======
+#import "FirebaseStorage/Sources/Public/FirebaseStorage/FIRStorageReference.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseStorage/Sources/FIRStoragePath.h"
 

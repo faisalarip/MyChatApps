@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import <Foundation/Foundation.h>
+=======
+ #import <Foundation/Foundation.h>
+>>>>>>> origin/develop12
 
 @interface FBSDKModelUtility : NSObject
 

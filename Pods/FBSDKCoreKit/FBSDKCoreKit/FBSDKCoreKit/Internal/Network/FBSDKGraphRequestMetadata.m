@@ -24,8 +24,13 @@
 
 - (instancetype)initWithRequest:(FBSDKGraphRequest *)request
               completionHandler:(FBSDKGraphRequestBlock)handler
+<<<<<<< HEAD
                 batchParameters:(NSDictionary *)batchParameters {
 
+=======
+                batchParameters:(NSDictionary *)batchParameters
+{
+>>>>>>> origin/develop12
   if ((self = [super init])) {
     _request = request;
     _batchParameters = [batchParameters copy];
@@ -36,7 +41,12 @@
 
 - (void)invokeCompletionHandlerForConnection:(FBSDKGraphRequestConnection *)connection
                                  withResults:(id)results
+<<<<<<< HEAD
                                        error:(NSError *)error {
+=======
+                                       error:(NSError *)error
+{
+>>>>>>> origin/develop12
   if (self.completionHandler) {
     self.completionHandler(connection, results, error);
   }

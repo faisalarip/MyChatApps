@@ -14,12 +14,22 @@
 
 #import "FirebaseStorage/Sources/FIRStorageTokenAuthorizer.h"
 
+<<<<<<< HEAD
 #import <FirebaseStorage/FIRStorage.h>
 #import <FirebaseStorage/FIRStorageConstants.h>
 #import "FirebaseStorage/Sources/FIRStorageConstants_Private.h"
 #import "FirebaseStorage/Sources/FIRStorageErrors.h"
 
 #import <FirebaseAuthInterop/FIRAuthInterop.h>
+=======
+#import "FirebaseStorage/Sources/Public/FirebaseStorage/FIRStorage.h"
+#import "FirebaseStorage/Sources/Public/FirebaseStorage/FIRStorageConstants.h"
+
+#import "FirebaseStorage/Sources/FIRStorageConstants_Private.h"
+#import "FirebaseStorage/Sources/FIRStorageErrors.h"
+
+#import "Interop/Auth/Public/FIRAuthInterop.h"
+>>>>>>> origin/develop12
 
 @implementation FIRStorageTokenAuthorizer {
  @private

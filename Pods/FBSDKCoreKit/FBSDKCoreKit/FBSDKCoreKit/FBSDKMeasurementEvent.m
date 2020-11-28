@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKMeasurementEvent_Internal.h"
 
 #import "FBSDKLogger.h"
@@ -34,6 +35,21 @@ NSNotificationName const FBSDKMeasurementEventNotification = @"com.facebook.face
 NSString *const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
 
 #endif
+=======
+ #import "FBSDKLogger.h"
+ #import "FBSDKMeasurementEvent_Internal.h"
+ #import "FBSDKSettings.h"
+
+ #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+NSNotificationName const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
+
+ #else
+
+NSString *const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
+
+ #endif
+>>>>>>> origin/develop12
 
 NSString *const FBSDKMeasurementEventNotificationName = @"com.facebook.facebook-objc-sdk.measurement_event";
 
@@ -48,6 +64,7 @@ NSString *const FBSDKAppLinkNavigateInEventName = @"al_nav_in";
 NSString *const FBSDKAppLinkNavigateOutEventName = @"al_nav_out";
 NSString *const FBSDKAppLinkNavigateBackToReferrerEventName = @"al_ref_back_out";
 
+<<<<<<< HEAD
 @implementation FBSDKMeasurementEvent {
     NSString *_name;
     NSDictionary<NSString *, id> *_args;
@@ -81,6 +98,45 @@ NSString *const FBSDKAppLinkNavigateBackToReferrerEventName = @"al_ref_back_out"
 + (void)postNotificationForEventName:(NSString *)name
                                 args:(NSDictionary<NSString *, id> *)args {
     [[[self alloc] initEventWithName:name args:args] postNotification];
+=======
+@implementation FBSDKMeasurementEvent
+{
+  NSString *_name;
+  NSDictionary<NSString *, id> *_args;
+}
+
+- (void)postNotification
+{
+  if (!_name) {
+    [FBSDKLogger
+     singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+     logEntry:@"Warning: Missing event name when logging FBSDK measurement event.\nIgnoring this event in logging."];
+    return;
+  }
+  NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+  NSDictionary<NSString *, id> *userInfo = @{FBSDKMeasurementEventNameKey : _name,
+                                             FBSDKMeasurementEventArgsKey : _args};
+
+  [center postNotificationName:FBSDKMeasurementEventNotification
+                        object:self
+                      userInfo:userInfo];
+}
+
+- (instancetype)initEventWithName:(NSString *)name
+                             args:(NSDictionary<NSString *, id> *)args
+{
+  if ((self = [super init])) {
+    _name = name;
+    _args = args ? args : @{};
+  }
+  return self;
+}
+
++ (void)postNotificationForEventName:(NSString *)name
+                                args:(NSDictionary<NSString *, id> *)args
+{
+  [[[self alloc] initEventWithName:name args:args] postNotification];
+>>>>>>> origin/develop12
 }
 
 @end

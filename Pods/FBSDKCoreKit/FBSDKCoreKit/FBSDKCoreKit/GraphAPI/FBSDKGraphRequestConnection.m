@@ -31,7 +31,10 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
+<<<<<<< HEAD
 #import "FBSDKURLSessionTask.h"
+=======
+>>>>>>> origin/develop12
 
 NSString *const FBSDKNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
 
@@ -73,21 +76,36 @@ static FBSDKAccessToken *_CreateExpiredAccessToken(FBSDKAccessToken *accessToken
   return [[FBSDKAccessToken alloc] initWithTokenString:accessToken.tokenString
                                            permissions:accessToken.permissions.allObjects
                                    declinedPermissions:accessToken.declinedPermissions.allObjects
+<<<<<<< HEAD
                                    expiredPermissions:accessToken.expiredPermissions.allObjects
+=======
+                                    expiredPermissions:accessToken.expiredPermissions.allObjects
+>>>>>>> origin/develop12
                                                  appID:accessToken.appID
                                                 userID:accessToken.userID
                                         expirationDate:expirationDate
                                            refreshDate:expirationDate
+<<<<<<< HEAD
                                            dataAccessExpirationDate:expirationDate
                                            graphDomain:accessToken.graphDomain];
 }
+=======
+                              dataAccessExpirationDate:expirationDate
+                                           graphDomain:accessToken.graphDomain];
+}
+
+>>>>>>> origin/develop12
 #endif
 
 // ----------------------------------------------------------------------------
 // FBSDKGraphRequestConnectionState
 
+<<<<<<< HEAD
 typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 {
+=======
+typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
+>>>>>>> origin/develop12
   kStateCreated,
   kStateSerialized,
   kStateStarted,
@@ -99,9 +117,15 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 // Private properties and methods
 
 @interface FBSDKGraphRequestConnection () <
+<<<<<<< HEAD
 NSURLSessionDataDelegate
 #if !TARGET_OS_TV
 , FBSDKGraphErrorRecoveryProcessorDelegate
+=======
+  NSURLSessionDataDelegate
+#if !TARGET_OS_TV
+  , FBSDKGraphErrorRecoveryProcessorDelegate
+>>>>>>> origin/develop12
 #endif
 >
 
@@ -153,27 +177,49 @@ NSURLSessionDataDelegate
   }
 }
 
+<<<<<<< HEAD
 + (NSTimeInterval)defaultConnectionTimeout {
   return g_defaultTimeout;
 }
 
 - (void)addRequest:(FBSDKGraphRequest *)request
  completionHandler:(FBSDKGraphRequestBlock)handler
+=======
++ (NSTimeInterval)defaultConnectionTimeout
+{
+  return g_defaultTimeout;
+}
+
+- (void) addRequest:(FBSDKGraphRequest *)request
+  completionHandler:(FBSDKGraphRequestBlock)handler
+>>>>>>> origin/develop12
 {
   [self addRequest:request batchEntryName:@"" completionHandler:handler];
 }
 
+<<<<<<< HEAD
 - (void)addRequest:(FBSDKGraphRequest *)request
     batchEntryName:(NSString *)name
  completionHandler:(FBSDKGraphRequestBlock)handler
+=======
+- (void) addRequest:(FBSDKGraphRequest *)request
+     batchEntryName:(NSString *)name
+  completionHandler:(FBSDKGraphRequestBlock)handler
+>>>>>>> origin/develop12
 {
   NSDictionary<NSString *, id> *batchParams = name.length > 0 ? @{kBatchEntryName : name } : nil;
   [self addRequest:request batchParameters:batchParams completionHandler:handler];
 }
 
+<<<<<<< HEAD
 - (void)addRequest:(FBSDKGraphRequest *)request
    batchParameters:(NSDictionary<NSString *, id> *)batchParameters
  completionHandler:(FBSDKGraphRequestBlock)handler
+=======
+- (void) addRequest:(FBSDKGraphRequest *)request
+    batchParameters:(NSDictionary<NSString *, id> *)batchParameters
+  completionHandler:(FBSDKGraphRequestBlock)handler
+>>>>>>> origin/develop12
 {
   if (self.state != kStateCreated) {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -219,7 +265,11 @@ NSURLSessionDataDelegate
     return;
   }
 
+<<<<<<< HEAD
   //optimistically check for updated server configuration;
+=======
+  // optimistically check for updated server configuration;
+>>>>>>> origin/develop12
   g_errorConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration].errorConfiguration ?: g_errorConfiguration;
 
   if (self.state != kStateCreated && self.state != kStateSerialized) {
@@ -244,8 +294,13 @@ NSURLSessionDataDelegate
                                    networkError:errorV2];
     };
 
+<<<<<<< HEAD
     if(errorV1) {
       [self taskDidCompleteWithError:errorV1 handler:handler];
+=======
+    if (errorV1) {
+      [self _taskDidCompleteWithError:errorV1 handler:handler];
+>>>>>>> origin/develop12
     } else {
       [self taskDidCompleteWithResponse:responseV1 data:responseDataV1 requestStartTime:self.requestStartTime handler:handler];
     }
@@ -277,7 +332,11 @@ NSURLSessionDataDelegate
 
 - (FBSDKURLSession *)session
 {
+<<<<<<< HEAD
     return _session;
+=======
+  return _session;
+>>>>>>> origin/develop12
 }
 
 #pragma mark - Private methods (request generation)
@@ -370,8 +429,13 @@ NSURLSessionDataDelegate
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     NSString *individualToken = [self accessTokenWithRequest:metadata.request];
     BOOL isClientToken = [FBSDKSettings clientToken] && [individualToken hasSuffix:[FBSDKSettings clientToken]];
+<<<<<<< HEAD
     if (!batchToken &&
         !isClientToken) {
+=======
+    if (!batchToken
+        && !isClientToken) {
+>>>>>>> origin/develop12
       batchToken = individualToken;
     }
     [self addRequest:metadata
@@ -410,10 +474,17 @@ NSURLSessionDataDelegate
 {
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     FBSDKGraphRequest *request = metadata.request;
+<<<<<<< HEAD
     if ([request.HTTPMethod.uppercaseString isEqualToString:@"GET"] &&
         [self _shouldWarnOnMissingFieldsParam:request] &&
         !request.parameters[@"fields"] &&
         [request.graphPath rangeOfString:@"fields="].location == NSNotFound) {
+=======
+    if ([request.HTTPMethod.uppercaseString isEqualToString:@"GET"]
+        && [self _shouldWarnOnMissingFieldsParam:request]
+        && !request.parameters[@"fields"]
+        && [request.graphPath rangeOfString:@"fields="].location == NSNotFound) {
+>>>>>>> origin/develop12
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                          formatString:@"starting with Graph API v2.4, GET requests for /%@ should contain an explicit \"fields\" parameter", request.graphPath];
     }
@@ -439,7 +510,10 @@ NSURLSessionDataDelegate
                              reason:@"FBSDKGraphRequestConnection: Must have at least one request or urlRequest not specified."
                            userInfo:nil]
      raise];
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
   }
 
   [self _validateFieldsParamForGetRequests:requests];
@@ -548,8 +622,13 @@ NSURLSessionDataDelegate
     // We special case a graph post to <id>/videos and send it to graph-video.facebook.com
     // We only do this for non batch post requests
     NSString *graphPath = request.graphPath.lowercaseString;
+<<<<<<< HEAD
     if ([request.HTTPMethod.uppercaseString isEqualToString:@"POST"] &&
         [graphPath hasSuffix:@"/videos"]) {
+=======
+    if ([request.HTTPMethod.uppercaseString isEqualToString:@"POST"]
+        && [graphPath hasSuffix:@"/videos"]) {
+>>>>>>> origin/develop12
       graphPath = [graphPath stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
       NSArray *components = [graphPath componentsSeparatedByString:@"/"];
       if (components.count == 2) {
@@ -558,11 +637,19 @@ NSURLSessionDataDelegate
     }
 
     baseURL = [FBSDKInternalUtility
+<<<<<<< HEAD
                 facebookURLWithHostPrefix:prefix
                 path:request.graphPath
                 queryParameters:@{}
                 defaultVersion:request.version
                 error:NULL].absoluteString;
+=======
+               facebookURLWithHostPrefix:prefix
+               path:request.graphPath
+               queryParameters:@{}
+               defaultVersion:request.version
+               error:NULL].absoluteString;
+>>>>>>> origin/develop12
   }
 
   NSString *url = [FBSDKGraphRequest serializeURL:baseURL
@@ -579,20 +666,38 @@ NSURLSessionDataDelegate
                                networkError:(NSError *)error
 {
   if (self.state != kStateCancelled) {
+<<<<<<< HEAD
     NSAssert(self.state == kStateStarted,
              @"Unexpected state %lu in completeWithResponse",
              (unsigned long)self.state);
+=======
+    NSAssert(
+      self.state == kStateStarted,
+      @"Unexpected state %lu in completeWithResponse",
+      (unsigned long)self.state
+    );
+>>>>>>> origin/develop12
     self.state = kStateCompleted;
   }
 
   NSArray *results = nil;
   _urlResponse = (NSHTTPURLResponse *)response;
   if (response) {
+<<<<<<< HEAD
     NSAssert([response isKindOfClass:[NSHTTPURLResponse class]],
              @"Expected NSHTTPURLResponse, got %@",
              response);
 
 NSInteger statusCode = _urlResponse.statusCode;
+=======
+    NSAssert(
+      [response isKindOfClass:[NSHTTPURLResponse class]],
+      @"Expected NSHTTPURLResponse, got %@",
+      response
+    );
+
+    NSInteger statusCode = _urlResponse.statusCode;
+>>>>>>> origin/develop12
 
     if (!error && [response.MIMEType hasPrefix:@"image"]) {
       error = [FBSDKError errorWithCode:FBSDKErrorGraphRequestNonTextMimeTypeReturned
@@ -629,7 +734,11 @@ NSInteger statusCode = _urlResponse.statusCode;
   }
   [_logger emitToNSLog];
 
+<<<<<<< HEAD
   [self completeWithResults:results networkError:error];
+=======
+  [self _completeWithResults:results networkError:error];
+>>>>>>> origin/develop12
 
   [self.session invalidateAndCancel];
 }
@@ -638,10 +747,17 @@ NSInteger statusCode = _urlResponse.statusCode;
 // If there is one request, the JSON is the response.
 // If there are multiple requests, the JSON has an array of dictionaries whose
 // body property is the response.
+<<<<<<< HEAD
 //   [{ "code":200,
 //      "body":"JSON-response-as-a-string" },
 //    { "code":200,
 //      "body":"JSON-response-as-a-string" }]
+=======
+// [{ "code":200,
+// "body":"JSON-response-as-a-string" },
+// { "code":200,
+// "body":"JSON-response-as-a-string" }]
+>>>>>>> origin/develop12
 //
 // In both cases, this function returns an NSArray containing the results.
 // The NSArray looks just like the multiple request case except the body
@@ -668,19 +784,33 @@ NSInteger statusCode = _urlResponse.statusCode;
   NSDictionary *responseError = nil;
   if (!response) {
     if ((error != NULL) && (*error == nil)) {
+<<<<<<< HEAD
       *error = [self errorWithCode:FBSDKErrorUnknown
                         statusCode:statusCode
                 parsedJSONResponse:nil
                         innerError:nil
                            message:@"The server returned an unexpected response."];
+=======
+      *error = [self _errorWithCode:FBSDKErrorUnknown
+                         statusCode:statusCode
+                 parsedJSONResponse:nil
+                         innerError:nil
+                            message:@"The server returned an unexpected response."];
+>>>>>>> origin/develop12
     }
   } else if (self.requests.count == 1) {
     // response is the entry, so put it in a dictionary under "body" and add
     // that to array of responses.
     [FBSDKTypeUtility array:results addObject:@{
+<<<<<<< HEAD
                          @"code":@(statusCode),
                          @"body":response
                          }];
+=======
+       @"code" : @(statusCode),
+       @"body" : response
+     }];
+>>>>>>> origin/develop12
   } else if ([response isKindOfClass:[NSArray class]]) {
     // response is the array of responses, but the body element of each needs
     // to be decoded from JSON.
@@ -701,6 +831,7 @@ NSInteger statusCode = _urlResponse.statusCode;
         *error = batchResultError;
       }
     }
+<<<<<<< HEAD
   } else if ([response isKindOfClass:[NSDictionary class]] &&
              (responseError = [FBSDKTypeUtility dictionaryValue:response[@"error"]]) != nil &&
              [responseError[@"type"] isEqualToString:@"OAuthException"]) {
@@ -710,26 +841,56 @@ NSInteger statusCode = _urlResponse.statusCode;
                              @"code":@(statusCode),
                              @"body":response
                              };
+=======
+  } else if ([response isKindOfClass:[NSDictionary class]]
+             && (responseError = [FBSDKTypeUtility dictionaryValue:response[@"error"]]) != nil
+             && [responseError[@"type"] isEqualToString:@"OAuthException"]) {
+    // if there was one request then return the only result. if there were multiple requests
+    // but only one error then the server rejected the batch access token
+    NSDictionary *result = @{
+      @"code" : @(statusCode),
+      @"body" : response
+    };
+>>>>>>> origin/develop12
 
     for (NSUInteger resultIndex = 0, resultCount = self.requests.count; resultIndex < resultCount; ++resultIndex) {
       [FBSDKTypeUtility array:results addObject:result];
     }
   } else if (error != NULL) {
+<<<<<<< HEAD
     *error = [self errorWithCode:FBSDKErrorGraphRequestProtocolMismatch
                       statusCode:statusCode
               parsedJSONResponse:results
                       innerError:nil
                          message:nil];
+=======
+    *error = [self _errorWithCode:FBSDKErrorGraphRequestProtocolMismatch
+                       statusCode:statusCode
+               parsedJSONResponse:results
+                       innerError:nil
+                          message:nil];
+>>>>>>> origin/develop12
   }
 
   return results;
 }
 
+<<<<<<< HEAD
 - (id)parseJSONOrOtherwise:(NSString *)utf8
                      error:(NSError **)error
 {
   id parsed = nil;
   if (!(*error) && [utf8 isKindOfClass:[NSString class]]) {
+=======
+- (id)parseJSONOrOtherwise:(NSString *)unsafeString
+                     error:(NSError **)error
+{
+  id parsed = nil;
+
+  // Historically, people have passed-in `id` here. So, gotta double-check.
+  NSString *const utf8 = FBSDK_CAST_TO_CLASS_OR_NIL(unsafeString, NSString);
+  if (!(*error) && utf8) {
+>>>>>>> origin/develop12
     parsed = [FBSDKBasicUtility objectForJSONString:utf8 error:error];
     // if we fail parse we attempt a re-parse of a modified input to support results in the form "foo=bar", "true", etc.
     // which is shouldn't be necessary since Graph API v2.1.
@@ -737,10 +898,22 @@ NSInteger statusCode = _urlResponse.statusCode;
       // we round-trip our hand-wired response through the parser in order to remain
       // consistent with the rest of the output of this function (note, if perf turns out
       // to be a problem -- unlikely -- we can return the following dictionary outright)
+<<<<<<< HEAD
       NSDictionary *original = @{ FBSDKNonJSONResponseProperty : utf8 };
       NSString *jsonrep = [FBSDKBasicUtility JSONStringForObject:original error:NULL invalidObjectHandler:NULL];
       NSError *reparseError = nil;
       parsed = [FBSDKBasicUtility objectForJSONString:jsonrep error:&reparseError];
+=======
+      NSError *reparseError = nil;
+      parsed =
+      [FBSDKBasicUtility
+       objectForJSONString:
+       [FBSDKBasicUtility JSONStringForObject:@{ FBSDKNonJSONResponseProperty : utf8 }
+                                        error:NULL
+                         invalidObjectHandler:NULL]
+       error:&reparseError];
+
+>>>>>>> origin/develop12
       if (!reparseError) {
         *error = nil;
       }
@@ -749,8 +922,13 @@ NSInteger statusCode = _urlResponse.statusCode;
   return parsed;
 }
 
+<<<<<<< HEAD
 - (void)completeWithResults:(NSArray *)results
                networkError:(NSError *)networkError
+=======
+- (void)_completeWithResults:(NSArray *)results
+                networkError:(NSError *)networkError
+>>>>>>> origin/develop12
 {
   NSUInteger count = self.requests.count;
   _expectingResults = count;
@@ -766,7 +944,11 @@ NSInteger statusCode = _urlResponse.statusCode;
 
   [self.requests enumerateObjectsUsingBlock:^(FBSDKGraphRequestMetadata *metadata, NSUInteger i, BOOL *stop) {
     id result = networkError ? nil : [FBSDKTypeUtility array:results objectAtIndex:i];
+<<<<<<< HEAD
     NSError *resultError = networkError ?: [self errorFromResult:result request:metadata.request];
+=======
+    NSError *const resultError = networkError ?: errorFromResult(result, metadata.request);
+>>>>>>> origin/develop12
 
     id body = nil;
     if (!resultError && [result isKindOfClass:[NSDictionary class]]) {
@@ -774,7 +956,11 @@ NSInteger statusCode = _urlResponse.statusCode;
       body = [FBSDKTypeUtility dictionaryValue:resultDictionary[@"body"]];
     }
 
+<<<<<<< HEAD
 #if !TARGET_OS_TV
+=======
+  #if !TARGET_OS_TV
+>>>>>>> origin/develop12
     if (resultError && !metadata.request.graphErrorRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
       self->_errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc] init];
@@ -782,7 +968,11 @@ NSInteger statusCode = _urlResponse.statusCode;
         return;
       }
     }
+<<<<<<< HEAD
 #endif
+=======
+  #endif
+>>>>>>> origin/develop12
 
     [self processResultBody:body error:resultError metadata:metadata canNotifyDelegate:networkError == nil];
   }];
@@ -799,7 +989,11 @@ NSInteger statusCode = _urlResponse.statusCode;
   void (^finishAndInvokeCompletionHandler)(void) = ^{
     NSDictionary<NSString *, id> *graphDebugDict = body[@"__debug__"];
     if ([graphDebugDict isKindOfClass:[NSDictionary class]]) {
+<<<<<<< HEAD
       [self processResultDebugDictionary: graphDebugDict];
+=======
+      [self processResultDebugDictionary:graphDebugDict];
+>>>>>>> origin/develop12
     }
     [metadata invokeCompletionHandlerForConnection:self withResults:body error:error];
 
@@ -811,7 +1005,11 @@ NSInteger statusCode = _urlResponse.statusCode;
   };
 
 #if !TARGET_OS_TV
+<<<<<<< HEAD
   void (^clearToken)(NSInteger) = ^(NSInteger errorSubcode){
+=======
+  void (^clearToken)(NSInteger) = ^(NSInteger errorSubcode) {
+>>>>>>> origin/develop12
     if (metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError) {
       return;
     }
@@ -820,7 +1018,10 @@ NSInteger statusCode = _urlResponse.statusCode;
     } else {
       [FBSDKAccessToken setCurrentAccessToken:nil];
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
   };
 
   NSString *metadataTokenString = metadata.request.tokenString;
@@ -864,6 +1065,7 @@ NSInteger statusCode = _urlResponse.statusCode;
 
     [FBSDKLogger singleShotLogEntry:loggingBehavior logEntry:message];
   }];
+<<<<<<< HEAD
 
 }
 
@@ -916,6 +1118,67 @@ NSInteger statusCode = _urlResponse.statusCode;
                 innerError:(NSError *)innerError
                    message:(NSString *)message {
   NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+=======
+}
+
+static NSError *_Nullable errorFromResult(id untypedParam, FBSDKGraphRequest *request)
+{
+  NSDictionary *const result = FBSDK_CAST_TO_CLASS_OR_NIL(untypedParam, NSDictionary);
+  if (!result) {
+    return nil;
+  }
+
+  NSDictionary *const body = FBSDK_CAST_TO_CLASS_OR_NIL(result[@"body"], NSDictionary);
+  if (!body) {
+    return nil;
+  }
+
+  NSDictionary *const errorDictionary = FBSDK_CAST_TO_CLASS_OR_NIL(body[@"error"], NSDictionary);
+  if (!errorDictionary) {
+    return nil;
+  }
+
+  NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"code"] forKey:FBSDKGraphRequestErrorGraphErrorCodeKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"error_subcode"] forKey:FBSDKGraphRequestErrorGraphErrorSubcodeKey];
+  // "message" is preferred over error_msg or error_reason.
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"error_msg"] forKey:FBSDKErrorDeveloperMessageKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"error_reason"] forKey:FBSDKErrorDeveloperMessageKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"message"] forKey:FBSDKErrorDeveloperMessageKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"error_user_title"] forKey:FBSDKErrorLocalizedTitleKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"error_user_msg"] forKey:FBSDKErrorLocalizedDescriptionKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"error_user_msg"] forKey:NSLocalizedDescriptionKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:result[@"code"] forKey:FBSDKGraphRequestErrorHTTPStatusCodeKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:result forKey:FBSDKGraphRequestErrorParsedJSONResponseKey];
+
+  FBSDKErrorRecoveryConfiguration *recoveryConfiguration = [g_errorConfiguration
+                                                            recoveryConfigurationForCode:[userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] stringValue]
+                                                            subcode:[userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey] stringValue]
+                                                            request:request];
+  if ([errorDictionary[@"is_transient"] boolValue]) {
+    [FBSDKTypeUtility dictionary:userInfo setObject:@(FBSDKGraphRequestErrorTransient) forKey:FBSDKGraphRequestErrorKey];
+  } else {
+    [FBSDKTypeUtility dictionary:userInfo setObject:@(recoveryConfiguration.errorCategory) forKey:FBSDKGraphRequestErrorKey];
+  }
+  [FBSDKTypeUtility dictionary:userInfo setObject:recoveryConfiguration.localizedRecoveryDescription forKey:NSLocalizedRecoverySuggestionErrorKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:recoveryConfiguration.localizedRecoveryOptionDescriptions forKey:NSLocalizedRecoveryOptionsErrorKey];
+  FBSDKErrorRecoveryAttempter *attempter = [FBSDKErrorRecoveryAttempter recoveryAttempterFromConfiguration:recoveryConfiguration];
+  [FBSDKTypeUtility dictionary:userInfo setObject:attempter forKey:NSRecoveryAttempterErrorKey];
+
+  return [FBSDKError errorWithCode:FBSDKErrorGraphRequestGraphAPI
+                          userInfo:userInfo
+                           message:nil
+                   underlyingError:nil];
+}
+
+- (NSError *)_errorWithCode:(FBSDKCoreError)code
+                 statusCode:(NSInteger)statusCode
+         parsedJSONResponse:(id<NSObject>)response
+                 innerError:(NSError *)innerError
+                    message:(NSString *)message
+{
+  NSMutableDictionary *const userInfo = [[NSMutableDictionary alloc] init];
+>>>>>>> origin/develop12
   [FBSDKTypeUtility dictionary:userInfo setObject:@(statusCode) forKey:FBSDKGraphRequestErrorHTTPStatusCodeKey];
 
   if (response) {
@@ -930,12 +1193,20 @@ NSInteger statusCode = _urlResponse.statusCode;
     [FBSDKTypeUtility dictionary:userInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
   }
 
+<<<<<<< HEAD
   NSError *error = [[NSError alloc]
                     initWithDomain:FBSDKErrorDomain
                     code:code
                     userInfo:userInfo];
 
   return error;
+=======
+  return
+  [[NSError alloc]
+   initWithDomain:FBSDKErrorDomain
+   code:code
+   userInfo:userInfo];
+>>>>>>> origin/develop12
 }
 
 #pragma mark - Private methods (logging and completion)
@@ -1009,8 +1280,15 @@ NSInteger statusCode = _urlResponse.statusCode;
   } @finally {}
 }
 
+<<<<<<< HEAD
 - (void)taskDidCompleteWithError:(NSError *)error
                          handler:(FBSDKURLSessionTaskBlock)handler
+=======
+#pragma mark - Private methods (miscellaneous)
+
+- (void)_taskDidCompleteWithError:(NSError *)error
+                          handler:(FBSDKURLSessionTaskBlock)handler
+>>>>>>> origin/develop12
 {
   @try {
     if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == kCFURLErrorSecureConnectionFailed) {
@@ -1025,8 +1303,11 @@ NSInteger statusCode = _urlResponse.statusCode;
   } @finally {}
 }
 
+<<<<<<< HEAD
 #pragma mark - Private methods (miscellaneous)
 
+=======
+>>>>>>> origin/develop12
 - (void)logRequest:(NSMutableURLRequest *)request
         bodyLength:(NSUInteger)bodyLength
         bodyLogger:(FBSDKLogger *)bodyLogger
@@ -1096,15 +1377,27 @@ NSInteger statusCode = _urlResponse.statusCode;
 
   return agentWithSuffix ?: agent;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 #pragma clang diagnostic pop
 
 #pragma mark - NSURLSessionDataDelegate
 
+<<<<<<< HEAD
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
    didSendBodyData:(int64_t)bytesSent
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
+=======
+- (void)        URLSession:(NSURLSession *)session
+                      task:(NSURLSessionTask *)task
+           didSendBodyData:(int64_t)bytesSent
+            totalBytesSent:(int64_t)totalBytesSent
+  totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
+>>>>>>> origin/develop12
 {
   id<FBSDKGraphRequestConnectionDelegate> delegate = self.delegate;
 
@@ -1121,6 +1414,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 #if !TARGET_OS_TV
 - (void)processorDidAttemptRecovery:(FBSDKGraphErrorRecoveryProcessor *)processor didRecover:(BOOL)didRecover error:(NSError *)error
 {
+<<<<<<< HEAD
   if (didRecover) {
     FBSDKGraphRequest *originalRequest = _recoveringRequestMetadata.request;
     FBSDKGraphRequest *retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
@@ -1142,6 +1436,32 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
     _recoveringRequestMetadata = nil;
   }
 }
+=======
+  @try {
+    if (didRecover) {
+      FBSDKGraphRequest *originalRequest = _recoveringRequestMetadata.request;
+      FBSDKGraphRequest *retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
+                                                                          parameters:originalRequest.parameters
+                                                                         tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                                                                             version:originalRequest.version
+                                                                          HTTPMethod:originalRequest.HTTPMethod];
+      // prevent further attempts at recovery (i.e., additional retries).
+      [retryRequest setGraphErrorRecoveryDisabled:YES];
+      FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
+      [retryRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *retriedError) {
+        [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];
+        self->_errorRecoveryProcessor = nil;
+        self->_recoveringRequestMetadata = nil;
+      }];
+    } else {
+      [self processResultBody:nil error:error metadata:_recoveringRequestMetadata canNotifyDelegate:YES];
+      _errorRecoveryProcessor = nil;
+      _recoveringRequestMetadata = nil;
+    }
+  } @catch (NSException *exception) {}
+}
+
+>>>>>>> origin/develop12
 #endif
 
 #pragma mark - Debugging helpers
@@ -1163,7 +1483,10 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
   }
   [result appendString:@"\n)>"];
   return result;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 }
 
 @end

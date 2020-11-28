@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/AuthProvider/Google/FIRGoogleAuthCredential.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRGoogleAuthProvider.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRGoogleAuthProvider.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Backend/RPC/FIRVerifyAssertionRequest.h"
 #import "FirebaseAuth/Sources/Utilities/FIRAuthExceptionUtils.h"

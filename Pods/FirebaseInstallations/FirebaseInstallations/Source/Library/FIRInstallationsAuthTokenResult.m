@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "FIRInstallationsAuthTokenResultInternal.h"
+=======
+#import "FirebaseInstallations/Source/Library/FIRInstallationsAuthTokenResultInternal.h"
+>>>>>>> origin/develop12
 
 @implementation FIRInstallationsAuthTokenResult
 

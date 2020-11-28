@@ -48,6 +48,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         }
         
         UserDefaults.standard.set(email, forKey: "email")
+<<<<<<< HEAD
+=======
+        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+>>>>>>> origin/develop12
         
         DatabaseManager.shared.validationNewUser(with: email) { (exist) in
             if !exist {

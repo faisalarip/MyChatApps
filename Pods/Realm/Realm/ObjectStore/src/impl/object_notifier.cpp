@@ -23,6 +23,7 @@
 using namespace realm;
 using namespace realm::_impl;
 
+<<<<<<< HEAD
 ObjectNotifier::ObjectNotifier(Row const& row, std::shared_ptr<Realm> realm)
 : CollectionNotifier(std::move(realm))
 {
@@ -51,10 +52,18 @@ void ObjectNotifier::do_detach_from(SharedGroup& sg)
         m_handover = sg.export_for_handover(*m_row);
         m_row = nullptr;
     }
+=======
+ObjectNotifier::ObjectNotifier(std::shared_ptr<Realm> realm, TableKey table, ObjKey obj)
+: CollectionNotifier(std::move(realm))
+, m_table(table)
+, m_obj(obj)
+{
+>>>>>>> origin/develop12
 }
 
 bool ObjectNotifier::do_add_required_change_info(TransactionChangeInfo& info)
 {
+<<<<<<< HEAD
     REALM_ASSERT(!m_handover);
     m_info = &info;
     if (m_row && m_row->is_attached()) {
@@ -63,11 +72,16 @@ bool ObjectNotifier::do_add_required_change_info(TransactionChangeInfo& info)
             info.table_modifications_needed.resize(table_ndx + 1);
         info.table_modifications_needed[table_ndx] = true;
     }
+=======
+    m_info = &info;
+    info.tables[m_table.value];
+>>>>>>> origin/develop12
     return false;
 }
 
 void ObjectNotifier::run()
 {
+<<<<<<< HEAD
     if (!m_row)
         return;
     if (!m_row->is_attached()) {
@@ -95,3 +109,28 @@ void ObjectNotifier::do_prepare_handover(SharedGroup&)
 {
     add_changes(std::move(m_change));
 }
+=======
+    if (!m_table)
+        return;
+
+    auto it = m_info->tables.find(m_table.value);
+    if (it == m_info->tables.end())
+        return;
+    auto& change = it->second;
+
+    if (change.deletions_contains(m_obj.value)) {
+        m_change.deletions.add(0);
+        m_table = {};
+        m_obj = {};
+        return;
+    }
+
+    auto column_modifications = change.get_columns_modified(m_obj.value);
+    if (!column_modifications)
+        return;
+    m_change.modifications.add(0);
+    for (auto col : *column_modifications) {
+        m_change.columns[col].add(0);
+    }
+}
+>>>>>>> origin/develop12

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRAuthDataResult.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthDataResult.h"
+>>>>>>> origin/develop12
 
 @class FIROAuthCredential;
 

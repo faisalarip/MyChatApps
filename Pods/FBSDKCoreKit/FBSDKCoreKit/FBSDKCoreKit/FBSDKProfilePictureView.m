@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKProfilePictureView.h"
 
 #import "FBSDKAccessToken.h"
@@ -27,6 +28,15 @@
 #import "FBSDKMaleSilhouetteIcon.h"
 #import "FBSDKMath.h"
 #import "FBSDKUtility.h"
+=======
+ #import "FBSDKProfilePictureView.h"
+
+ #import "FBSDKAccessToken.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKMaleSilhouetteIcon.h"
+ #import "FBSDKMath.h"
+ #import "FBSDKUtility.h"
+>>>>>>> origin/develop12
 
 @interface FBSDKProfilePictureViewState : NSObject
 
@@ -36,11 +46,19 @@
                       pictureMode:(FBSDKProfilePictureMode)pictureMode
                    imageShouldFit:(BOOL)imageShouldFit;
 
+<<<<<<< HEAD
 @property (nonatomic, assign, readonly) BOOL imageShouldFit;
 @property (nonatomic, assign, readonly) FBSDKProfilePictureMode pictureMode;
 @property (nonatomic, copy, readonly) NSString *profileID;
 @property (nonatomic, assign, readonly) CGFloat scale;
 @property (nonatomic, assign, readonly) CGSize size;
+=======
+@property (nonatomic, readonly, assign) BOOL imageShouldFit;
+@property (nonatomic, readonly, assign) FBSDKProfilePictureMode pictureMode;
+@property (nonatomic, readonly, copy) NSString *profileID;
+@property (nonatomic, readonly, assign) CGFloat scale;
+@property (nonatomic, readonly, assign) CGSize size;
+>>>>>>> origin/develop12
 
 - (BOOL)isEqualToState:(FBSDKProfilePictureViewState *)other;
 - (BOOL)isValidForState:(FBSDKProfilePictureViewState *)other;
@@ -89,17 +107,30 @@
 
 - (BOOL)isEqualToState:(FBSDKProfilePictureViewState *)other
 {
+<<<<<<< HEAD
   return ([self isValidForState:other] &&
           CGSizeEqualToSize(_size, other->_size) &&
           (_scale == other->_scale));
+=======
+  return ([self isValidForState:other]
+    && CGSizeEqualToSize(_size, other->_size)
+    && (_scale == other->_scale));
+>>>>>>> origin/develop12
 }
 
 - (BOOL)isValidForState:(FBSDKProfilePictureViewState *)other
 {
+<<<<<<< HEAD
   return (other != nil &&
           (_imageShouldFit == other->_imageShouldFit) &&
           (_pictureMode == other->_pictureMode) &&
           [FBSDKInternalUtility object:_profileID isEqualToObject:other->_profileID]);
+=======
+  return (other != nil
+    && (_imageShouldFit == other->_imageShouldFit)
+    && (_pictureMode == other->_pictureMode)
+    && [FBSDKInternalUtility object:_profileID isEqualToObject:other->_profileID]);
+>>>>>>> origin/develop12
 }
 
 @end
@@ -113,7 +144,11 @@
   BOOL _placeholderImageIsValid;
 }
 
+<<<<<<< HEAD
 #pragma mark - Object Lifecycle
+=======
+ #pragma mark - Object Lifecycle
+>>>>>>> origin/develop12
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -152,7 +187,11 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+<<<<<<< HEAD
 #pragma mark - Properties
+=======
+ #pragma mark - Properties
+>>>>>>> origin/develop12
 
 - (void)setBounds:(CGRect)bounds
 {
@@ -199,7 +238,11 @@
   }
 }
 
+<<<<<<< HEAD
 #pragma mark - Public Methods
+=======
+ #pragma mark - Public Methods
+>>>>>>> origin/develop12
 
 - (void)setNeedsImageUpdate
 {
@@ -223,7 +266,11 @@
   });
 }
 
+<<<<<<< HEAD
 #pragma mark - Helper Methods
+=======
+ #pragma mark - Helper Methods
+>>>>>>> origin/develop12
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
@@ -278,7 +325,11 @@
   // get the image size based on the contentMode and pictureMode
   CGSize size = self.bounds.size;
   switch (_pictureMode) {
+<<<<<<< HEAD
     case FBSDKProfilePictureModeSquare:{
+=======
+    case FBSDKProfilePictureModeSquare: {
+>>>>>>> origin/develop12
       CGFloat imageSize;
       if (imageShouldFit) {
         imageSize = MIN(size.width, size.height);
@@ -289,6 +340,12 @@
       break;
     }
     case FBSDKProfilePictureModeNormal:
+<<<<<<< HEAD
+=======
+    case FBSDKProfilePictureModeAlbum:
+    case FBSDKProfilePictureModeSmall:
+    case FBSDKProfilePictureModeLarge:
+>>>>>>> origin/develop12
       // use the bounds size
       break;
   }
@@ -354,7 +411,11 @@
 
 - (void)_setPlaceholderImage
 {
+<<<<<<< HEAD
   UIColor *fillColor = [UIColor colorWithRed:157.0/255.0 green:177.0/255.0 blue:204.0/255.0 alpha:1.0];
+=======
+  UIColor *fillColor = [UIColor colorWithRed:157.0 / 255.0 green:177.0 / 255.0 blue:204.0 / 255.0 alpha:1.0];
+>>>>>>> origin/develop12
   _placeholderImageIsValid = YES;
   _hasProfileImage = NO;
 

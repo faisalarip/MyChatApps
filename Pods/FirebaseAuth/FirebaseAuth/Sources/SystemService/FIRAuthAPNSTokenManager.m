@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if !TARGET_OS_OSX
 
 #import <FirebaseCore/FIRLogger.h>
 #import <GoogleUtilities/GULAppEnvironmentUtil.h>
+=======
+#import <TargetConditionals.h>
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
+
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+#import "GoogleUtilities/Environment/Private/GULAppEnvironmentUtil.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthGlobalWorkQueue.h"
 #import "FirebaseAuth/Sources/SystemService/FIRAuthAPNSToken.h"

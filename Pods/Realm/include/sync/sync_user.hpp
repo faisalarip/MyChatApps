@@ -172,7 +172,11 @@ private:
     // FIXME: remove this flag once bindings take responsible for admin token users
     TokenType m_token_type;
 
+<<<<<<< HEAD
     bool m_is_admin;
+=======
+    bool m_is_admin = false;
+>>>>>>> origin/develop12
 
     // The user's refresh token.
     std::string m_refresh_token;

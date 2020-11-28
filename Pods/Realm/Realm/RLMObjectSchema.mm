@@ -343,12 +343,15 @@ using namespace realm;
         return _swiftGenericProperties;
     }
 
+<<<<<<< HEAD
     // This check isn't semantically required, but avoiding accessing the local
     // static helps perf in the obj-c case
     if (!_isSwiftClass) {
         return _swiftGenericProperties = @[];
     }
 
+=======
+>>>>>>> origin/develop12
     // Check if it's a swift class using the obj-c API
     static Class s_swiftObjectClass = NSClassFromString(@"RealmSwiftObject");
     if (![_accessorClass isSubclassOfClass:s_swiftObjectClass]) {

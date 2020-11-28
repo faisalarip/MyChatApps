@@ -50,8 +50,13 @@ enum DataType {
     type_Binary = 4,
     type_OldDateTime = 7,
     type_Timestamp = 8,
+<<<<<<< HEAD
     type_Table = 5,
     type_Mixed = 6,
+=======
+    type_OldTable = 5,
+    type_OldMixed = 6,
+>>>>>>> origin/develop12
     type_Link = 12,
     type_LinkList = 13
 };
@@ -62,6 +67,11 @@ enum LinkType {
     link_Weak,
 };
 
+<<<<<<< HEAD
+=======
+const char* get_data_type_name(DataType type) noexcept;
+
+>>>>>>> origin/develop12
 } // namespace realm
 
 #endif // REALM_DATA_TYPE_HPP

@@ -23,6 +23,10 @@
 #include "sync/impl/sync_metadata.hpp"
 #include "sync/sync_session.hpp"
 #include "sync/sync_user.hpp"
+<<<<<<< HEAD
+=======
+#include "util/uuid.hpp"
+>>>>>>> origin/develop12
 
 using namespace realm;
 using namespace realm::_impl;
@@ -68,6 +72,12 @@ void SyncManager::configure(SyncClientConfig config)
 
         // Set up the metadata manager, and perform initial loading/purging work.
         if (m_metadata_manager || m_config.metadata_mode == MetadataMode::NoMetadata) {
+<<<<<<< HEAD
+=======
+            // No metadata means we use a new client uuid each time
+            if (!m_metadata_manager)
+                m_client_uuid = uuid_string();
+>>>>>>> origin/develop12
             return;
         }
 

@@ -25,6 +25,10 @@
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Native;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC;
+<<<<<<< HEAD
+=======
+FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink;
+>>>>>>> origin/develop12
 
 
 NS_SWIFT_NAME(LoginManagerLogger)

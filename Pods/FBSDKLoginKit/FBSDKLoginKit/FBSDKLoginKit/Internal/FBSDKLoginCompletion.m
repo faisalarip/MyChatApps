@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKLoginCompletion+Internal.h"
 
 #if SWIFT_PACKAGE
@@ -37,6 +38,25 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 {
   __block NSUInteger pendingCount = 1;
   void(^didCompleteBlock)(void) = ^{
+=======
+ #import "FBSDKLoginCompletion+Internal.h"
+
+ #if SWIFT_PACKAGE
+@import FBSDKCoreKit;
+ #else
+  #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #endif
+
+ #import "FBSDKLoginConstants.h"
+ #import "FBSDKLoginError.h"
+ #import "FBSDKLoginManager+Internal.h"
+ #import "FBSDKLoginUtility.h"
+
+static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *parameters, void (^completionBlock)(void))
+{
+  __block NSUInteger pendingCount = 1;
+  void (^didCompleteBlock)(void) = ^{
+>>>>>>> origin/develop12
     if (--pendingCount == 0) {
       completionBlock();
     }
@@ -55,6 +75,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   [connection addRequest:userIDRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
                                                            id result,
                                                            NSError *error) {
+<<<<<<< HEAD
     parameters.userID = result[@"id"];
     if (error) {
       parameters.error = error;
@@ -65,6 +86,18 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   pendingCount++;
   FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
                                                                             parameters:@{@"fields":@""}
+=======
+                                                             parameters.userID = result[@"id"];
+                                                             if (error) {
+                                                               parameters.error = error;
+                                                             }
+                                                             didCompleteBlock();
+                                                           }];
+
+  pendingCount++;
+  FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
+                                                                            parameters:@{@"fields" : @""}
+>>>>>>> origin/develop12
                                                                            tokenString:tokenString
                                                                             HTTPMethod:nil
                                                                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -72,6 +105,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   [connection addRequest:permissionsRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
                                                                 id result,
                                                                 NSError *error) {
+<<<<<<< HEAD
     NSMutableSet *grantedPermissions = [NSMutableSet set];
     NSMutableSet *declinedPermissions = [NSMutableSet set];
     NSMutableSet *expiredPermissions = [NSMutableSet set];
@@ -89,6 +123,25 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     }
     didCompleteBlock();
   }];
+=======
+                                                                  NSMutableSet *grantedPermissions = [NSMutableSet set];
+                                                                  NSMutableSet *declinedPermissions = [NSMutableSet set];
+                                                                  NSMutableSet *expiredPermissions = [NSMutableSet set];
+
+                                                                  [FBSDKInternalUtility extractPermissionsFromResponse:result
+                                                                                                    grantedPermissions:grantedPermissions
+                                                                                                   declinedPermissions:declinedPermissions
+                                                                                                    expiredPermissions:expiredPermissions];
+
+                                                                  parameters.permissions = [grantedPermissions copy];
+                                                                  parameters.declinedPermissions = [declinedPermissions copy];
+                                                                  parameters.expiredPermissions = [expiredPermissions copy];
+                                                                  if (error) {
+                                                                    parameters.error = error;
+                                                                  }
+                                                                  didCompleteBlock();
+                                                                }];
+>>>>>>> origin/develop12
 
   [connection start];
   didCompleteBlock();
@@ -111,7 +164,11 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
 @end
 
+<<<<<<< HEAD
 #pragma mark - Completers
+=======
+ #pragma mark - Completers
+>>>>>>> origin/develop12
 
 @implementation FBSDKLoginURLCompleter
 {
@@ -141,10 +198,17 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
   if (_parameters.nonceString) {
+<<<<<<< HEAD
     [self _exchangeNonceForTokenWithHandler:handler];
     return;
   } else if (_parameters.accessTokenString && !_parameters.userID) {
     void(^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
+=======
+    [self exchangeNonceForTokenWithHandler:handler];
+    return;
+  } else if (_parameters.accessTokenString && !_parameters.userID) {
+    void (^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
+>>>>>>> origin/develop12
     FBSDKLoginRequestMeAndPermissions(_parameters, ^{
       handlerCopy(self->_parameters);
     });
@@ -207,8 +271,13 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 {
   NSString *legacyErrorReason = parameters[@"error"];
 
+<<<<<<< HEAD
   if ([legacyErrorReason isEqualToString:@"service_disabled_use_browser"] ||
       [legacyErrorReason isEqualToString:@"service_disabled"]) {
+=======
+  if ([legacyErrorReason isEqualToString:@"service_disabled_use_browser"]
+      || [legacyErrorReason isEqualToString:@"service_disabled"]) {
+>>>>>>> origin/develop12
     _performExplicitFallback = YES;
   }
 
@@ -217,7 +286,12 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   _parameters.error = [NSError fbErrorFromReturnURLParameters:parameters];
 }
 
+<<<<<<< HEAD
 - (void)attemptBrowserLogIn:(FBSDKLoginManager *)loginManager {
+=======
+- (void)attemptBrowserLogIn:(FBSDKLoginManager *)loginManager
+{
+>>>>>>> origin/develop12
   if (_observer != nil) {
     [[NSNotificationCenter defaultCenter] removeObserver:_observer];
     _observer = nil;
@@ -234,10 +308,17 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   }
 }
 
+<<<<<<< HEAD
 - (void)_exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
   if (!handler) {
       return;
+=======
+- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
+{
+  if (!handler) {
+    return;
+>>>>>>> origin/develop12
   }
 
   NSString *nonce = _parameters.nonceString ?: @"";
@@ -257,12 +338,18 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
                                                    @"fb_exchange_nonce" : nonce,
                                                    @"client_id" : appID,
                                                    @"fields" : @"" }
+<<<<<<< HEAD
                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
                                      FBSDKGraphRequestFlagDisableErrorRecovery];
+=======
+                                     flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
+                                     | FBSDKGraphRequestFlagDisableErrorRecovery];
+>>>>>>> origin/develop12
   __block FBSDKLoginCompletionParameters *parameters = _parameters;
   [connection addRequest:tokenRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
                                                           id result,
                                                           NSError *error) {
+<<<<<<< HEAD
     if (!error) {
       parameters.accessTokenString = result[@"access_token"];
       NSDate *expirationDate = [NSDate distantFuture];
@@ -282,6 +369,27 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
     handler(parameters);
   }];
+=======
+                                                            if (!error) {
+                                                              parameters.accessTokenString = result[@"access_token"];
+                                                              NSDate *expirationDate = [NSDate distantFuture];
+                                                              if (result[@"expires_in"] && [result[@"expires_in"] integerValue] > 0) {
+                                                                expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
+                                                              }
+                                                              parameters.expirationDate = expirationDate;
+
+                                                              NSDate *dataAccessExpirationDate = [NSDate distantFuture];
+                                                              if (result[@"data_access_expiration_time"] && [result[@"data_access_expiration_time"] integerValue] > 0) {
+                                                                dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[result[@"data_access_expiration_time"] integerValue]];
+                                                              }
+                                                              parameters.dataAccessExpirationDate = dataAccessExpirationDate;
+                                                            } else {
+                                                              parameters.error = error;
+                                                            }
+
+                                                            handler(parameters);
+                                                          }];
+>>>>>>> origin/develop12
 
   [connection start];
 }

@@ -20,9 +20,16 @@
 
 #if TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKModalFormPresentationController.h"
 
 @implementation FBSDKModalFormPresentationController {
+=======
+ #import "FBSDKModalFormPresentationController.h"
+
+@implementation FBSDKModalFormPresentationController
+{
+>>>>>>> origin/develop12
   UIView *_dimmedView;
 }
 
@@ -35,16 +42,26 @@
   return _dimmedView;
 }
 
+<<<<<<< HEAD
 #pragma mark - UIPresentationController overrides
+=======
+ #pragma mark - UIPresentationController overrides
+>>>>>>> origin/develop12
 
 - (void)presentationTransitionWillBegin
 {
   [self.containerView addSubview:[self dimmedView]];
   [self.containerView addSubview:[self presentedView]];
   [self.presentingViewController.transitionCoordinator
+<<<<<<< HEAD
     animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
     [self dimmedView].alpha = 1.0;
   } completion:NULL];
+=======
+   animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
+     [self dimmedView].alpha = 1.0;
+   } completion:NULL];
+>>>>>>> origin/develop12
 }
 
 - (void)presentationTransitionDidEnd:(BOOL)completed
@@ -57,9 +74,15 @@
 - (void)dismissalTransitionWillBegin
 {
   [self.presentingViewController.transitionCoordinator
+<<<<<<< HEAD
    animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
     [self dimmedView].alpha = 0;
   } completion:NULL];
+=======
+   animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
+     [self dimmedView].alpha = 0;
+   } completion:NULL];
+>>>>>>> origin/develop12
 }
 
 - (void)dismissalTransitionDidEnd:(BOOL)completed
@@ -73,9 +96,15 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
   [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+<<<<<<< HEAD
   [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
     [self dimmedView].frame = self.containerView.bounds;
   } completion:NULL];
+=======
+  [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
+                 [self dimmedView].frame = self.containerView.bounds;
+               } completion:NULL];
+>>>>>>> origin/develop12
 }
 
 @end

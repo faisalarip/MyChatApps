@@ -110,7 +110,11 @@ First note that at array level, nulls are distinguished between non-null in diff
 String:
     m_data == 0 && m_size == 0
 
+<<<<<<< HEAD
 Integer, Bool, OldDateTime stored in ArrayIntNull:
+=======
+Integer, Bool stored in ArrayIntNull:
+>>>>>>> origin/develop12
     value == get(0) (entry 0 determins a magic value that represents nulls)
 
 Float/double:
@@ -127,6 +131,7 @@ The Columns class encapsulates all this into a simple class that, for any type T
 #ifndef REALM_QUERY_EXPRESSION_HPP
 #define REALM_QUERY_EXPRESSION_HPP
 
+<<<<<<< HEAD
 #include <realm/column_link.hpp>
 #include <realm/column_linklist.hpp>
 #include <realm/column_table.hpp>
@@ -137,6 +142,22 @@ The Columns class encapsulates all this into a simple class that, for any type T
 #include <realm/link_view.hpp>
 #include <realm/metrics/query_info.hpp>
 #include <realm/query_operators.hpp>
+=======
+#include <realm/array_timestamp.hpp>
+#include <realm/array_binary.hpp>
+#include <realm/array_string.hpp>
+#include <realm/array_backlink.hpp>
+#include <realm/array_list.hpp>
+#include <realm/array_key.hpp>
+#include <realm/array_bool.hpp>
+#include <realm/column_integer.hpp>
+#include <realm/column_type_traits.hpp>
+#include <realm/table.hpp>
+#include <realm/index_string.hpp>
+#include <realm/query.hpp>
+#include <realm/list.hpp>
+#include <realm/metrics/query_info.hpp>
+>>>>>>> origin/develop12
 #include <realm/util/optional.hpp>
 #include <realm/util/serializer.hpp>
 
@@ -308,6 +329,7 @@ struct Common<T1, T2, true, false, b> {
 };
 
 
+<<<<<<< HEAD
 struct RowIndex {
     enum DetachedTag {
         Detached,
@@ -350,6 +372,8 @@ private:
     util::Optional<size_t> m_row_index;
 };
 
+=======
+>>>>>>> origin/develop12
 struct ValueBase {
     static const size_t chunk_size = 8;
     virtual void export_bool(ValueBase& destination) const = 0;
@@ -360,7 +384,10 @@ struct ValueBase {
     virtual void export_double(ValueBase& destination) const = 0;
     virtual void export_StringData(ValueBase& destination) const = 0;
     virtual void export_BinaryData(ValueBase& destination) const = 0;
+<<<<<<< HEAD
     virtual void export_RowIndex(ValueBase& destination) const = 0;
+=======
+>>>>>>> origin/develop12
     virtual void export_null(ValueBase& destination) const = 0;
     virtual void import(const ValueBase& destination) = 0;
 
@@ -387,6 +414,7 @@ public:
     }
 
     virtual size_t find_first(size_t start, size_t end) const = 0;
+<<<<<<< HEAD
     virtual void set_base_table(const Table* table) = 0;
     virtual void verify_column() const = 0;
     virtual const Table* get_base_table() const = 0;
@@ -396,6 +424,17 @@ public:
     virtual void apply_handover_patch(QueryNodeHandoverPatches&, Group&)
     {
     }
+=======
+    virtual void set_base_table(ConstTableRef table) = 0;
+    virtual void set_cluster(const Cluster*) = 0;
+    virtual void collect_dependencies(std::vector<TableKey>&) const
+    {
+    }
+    virtual ConstTableRef get_base_table() const = 0;
+    virtual std::string description(util::serializer::SerialisationState& state) const = 0;
+
+    virtual std::unique_ptr<Expression> clone() const = 0;
+>>>>>>> origin/develop12
 };
 
 template <typename T, typename... Args>
@@ -410,10 +449,14 @@ public:
     {
     }
 
+<<<<<<< HEAD
     virtual std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches* = nullptr) const = 0;
     virtual void apply_handover_patch(QueryNodeHandoverPatches&, Group&)
     {
     }
+=======
+    virtual std::unique_ptr<Subexpr> clone() const = 0;
+>>>>>>> origin/develop12
 
     // When the user constructs a query, it always "belongs" to one single base/parent table (regardless of
     // any links or not and regardless of any queries assembled with || or &&). When you do a Query::find(),
@@ -422,6 +465,7 @@ public:
     //
     // During thread-handover of a Query, set_base_table() is also called to make objects point at the new table
     // instead of the old one from the old thread.
+<<<<<<< HEAD
     virtual void set_base_table(const Table*)
     {
     }
@@ -433,10 +477,31 @@ public:
     // and
     // binds it to a Query at a later time
     virtual const Table* get_base_table() const
+=======
+    virtual void set_base_table(ConstTableRef) {}
+
+    virtual std::string description(util::serializer::SerialisationState& state) const = 0;
+
+    virtual void set_cluster(const Cluster*)
+    {
+    }
+
+    // Recursively fetch tables of columns in expression tree. Used when user first builds a stand-alone expression
+    // and
+    // binds it to a Query at a later time
+    virtual ConstTableRef get_base_table() const
+>>>>>>> origin/develop12
     {
         return nullptr;
     }
 
+<<<<<<< HEAD
+=======
+    virtual void collect_dependencies(std::vector<TableKey>&) const
+    {
+    }
+
+>>>>>>> origin/develop12
     virtual bool has_constant_evaluation() const
     {
         return false;
@@ -447,12 +512,24 @@ public:
         return false;
     }
 
+<<<<<<< HEAD
     virtual std::vector<size_t> find_all(util::Optional<Mixed>) const
+=======
+    virtual std::vector<ObjKey> find_all(Mixed) const
+>>>>>>> origin/develop12
     {
         return {};
     }
 
     virtual void evaluate(size_t index, ValueBase& destination) = 0;
+<<<<<<< HEAD
+=======
+    // This function supports SubColumnAggregate
+    virtual void evaluate(ObjKey, ValueBase&)
+    {
+        REALM_ASSERT(false); // Unimplemented
+    }
+>>>>>>> origin/develop12
 };
 
 template <typename T, typename... Args>
@@ -503,6 +580,7 @@ Query create(L left, const Subexpr2<R>& right)
                    (std::is_same<L, StringData>::value && std::is_same<R, StringData>::value) ||
                    (std::is_same<L, BinaryData>::value && std::is_same<R, BinaryData>::value)) &&
         !column->links_exist()) {
+<<<<<<< HEAD
         const Table* t = column->get_base_table();
         Query q = Query(*t);
 
@@ -538,6 +616,43 @@ Query create(L left, const Subexpr2<R>& right)
             q.like(column->column_ndx(), _impl::only_string_op_types(left));
         else if (std::is_same<Cond, LikeIns>::value)
             q.like(column->column_ndx(), _impl::only_string_op_types(left), false);
+=======
+        ConstTableRef t = column->get_base_table();
+        Query q = Query(t);
+
+        if (std::is_same<Cond, Less>::value)
+            q.greater(column->column_key(), _impl::only_numeric<R>(left));
+        else if (std::is_same<Cond, Greater>::value)
+            q.less(column->column_key(), _impl::only_numeric<R>(left));
+        else if (std::is_same<Cond, Equal>::value)
+            q.equal(column->column_key(), left);
+        else if (std::is_same<Cond, NotEqual>::value)
+            q.not_equal(column->column_key(), left);
+        else if (std::is_same<Cond, LessEqual>::value)
+            q.greater_equal(column->column_key(), _impl::only_numeric<R>(left));
+        else if (std::is_same<Cond, GreaterEqual>::value)
+            q.less_equal(column->column_key(), _impl::only_numeric<R>(left));
+        else if (std::is_same<Cond, EqualIns>::value)
+            q.equal(column->column_key(), _impl::only_string_op_types(left), false);
+        else if (std::is_same<Cond, NotEqualIns>::value)
+            q.not_equal(column->column_key(), _impl::only_string_op_types(left), false);
+        else if (std::is_same<Cond, BeginsWith>::value)
+            q.begins_with(column->column_key(), _impl::only_string_op_types(left));
+        else if (std::is_same<Cond, BeginsWithIns>::value)
+            q.begins_with(column->column_key(), _impl::only_string_op_types(left), false);
+        else if (std::is_same<Cond, EndsWith>::value)
+            q.ends_with(column->column_key(), _impl::only_string_op_types(left));
+        else if (std::is_same<Cond, EndsWithIns>::value)
+            q.ends_with(column->column_key(), _impl::only_string_op_types(left), false);
+        else if (std::is_same<Cond, Contains>::value)
+            q.contains(column->column_key(), _impl::only_string_op_types(left));
+        else if (std::is_same<Cond, ContainsIns>::value)
+            q.contains(column->column_key(), _impl::only_string_op_types(left), false);
+        else if (std::is_same<Cond, Like>::value)
+            q.like(column->column_key(), _impl::only_string_op_types(left));
+        else if (std::is_same<Cond, LikeIns>::value)
+            q.like(column->column_key(), _impl::only_string_op_types(left), false);
+>>>>>>> origin/develop12
         else {
             // query_engine.hpp does not support this Cond. Please either add support for it in query_engine.hpp or
             // fallback to using use 'return new Compare<>' instead.
@@ -655,6 +770,7 @@ public:
         if (left_col && right_col && std::is_same<L, R>::value && !left_col->is_nullable() &&
             !right_col->is_nullable() && !left_col->links_exist() && !right_col->links_exist() &&
             !std::is_same<L, Timestamp>::value) {
+<<<<<<< HEAD
             const Table* t = left_col->get_base_table();
             Query q = Query(*t);
 
@@ -671,12 +787,31 @@ public:
                     q.less_equal_int(left_col->column_ndx(), right_col->column_ndx());
                 else if (std::is_same<Cond, GreaterEqual>::value)
                     q.greater_equal_int(left_col->column_ndx(), right_col->column_ndx());
+=======
+            ConstTableRef t = left_col->get_base_table();
+            Query q = Query(t);
+
+            if (std::numeric_limits<L>::is_integer) {
+                if (std::is_same<Cond, Less>::value)
+                    q.less_int(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, Greater>::value)
+                    q.greater_int(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, Equal>::value)
+                    q.equal_int(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, NotEqual>::value)
+                    q.not_equal_int(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, LessEqual>::value)
+                    q.less_equal_int(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, GreaterEqual>::value)
+                    q.greater_equal_int(left_col->column_key(), right_col->column_key());
+>>>>>>> origin/develop12
                 else {
                     REALM_ASSERT(false);
                 }
             }
             else if (std::is_same<L, float>::value) {
                 if (std::is_same<Cond, Less>::value)
+<<<<<<< HEAD
                     q.less_float(left_col->column_ndx(), right_col->column_ndx());
                 else if (std::is_same<Cond, Greater>::value)
                     q.greater_float(left_col->column_ndx(), right_col->column_ndx());
@@ -688,12 +823,26 @@ public:
                     q.less_equal_float(left_col->column_ndx(), right_col->column_ndx());
                 else if (std::is_same<Cond, GreaterEqual>::value)
                     q.greater_equal_float(left_col->column_ndx(), right_col->column_ndx());
+=======
+                    q.less_float(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, Greater>::value)
+                    q.greater_float(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, Equal>::value)
+                    q.equal_float(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, NotEqual>::value)
+                    q.not_equal_float(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, LessEqual>::value)
+                    q.less_equal_float(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, GreaterEqual>::value)
+                    q.greater_equal_float(left_col->column_key(), right_col->column_key());
+>>>>>>> origin/develop12
                 else {
                     REALM_ASSERT(false);
                 }
             }
             else if (std::is_same<L, double>::value) {
                 if (std::is_same<Cond, Less>::value)
+<<<<<<< HEAD
                     q.less_double(left_col->column_ndx(), right_col->column_ndx());
                 else if (std::is_same<Cond, Greater>::value)
                     q.greater_double(left_col->column_ndx(), right_col->column_ndx());
@@ -705,6 +854,19 @@ public:
                     q.less_equal_double(left_col->column_ndx(), right_col->column_ndx());
                 else if (std::is_same<Cond, GreaterEqual>::value)
                     q.greater_equal_double(left_col->column_ndx(), right_col->column_ndx());
+=======
+                    q.less_double(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, Greater>::value)
+                    q.greater_double(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, Equal>::value)
+                    q.equal_double(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, NotEqual>::value)
+                    q.not_equal_double(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, LessEqual>::value)
+                    q.less_equal_double(left_col->column_key(), right_col->column_key());
+                else if (std::is_same<Cond, GreaterEqual>::value)
+                    q.greater_equal_double(left_col->column_key(), right_col->column_key());
+>>>>>>> origin/develop12
                 else {
                     REALM_ASSERT(false);
                 }
@@ -763,7 +925,10 @@ class Subexpr2 : public Subexpr,
                  public Overloads<T, StringData>,
                  public Overloads<T, bool>,
                  public Overloads<T, Timestamp>,
+<<<<<<< HEAD
                  public Overloads<T, OldDateTime>,
+=======
+>>>>>>> origin/develop12
                  public Overloads<T, null> {
 public:
     virtual ~Subexpr2()
@@ -776,7 +941,11 @@ public:
     RLM_U2(float, o)                                                                                                 \
     RLM_U2(double, o)                                                                                                \
     RLM_U2(int64_t, o)                                                                                               \
+<<<<<<< HEAD
     RLM_U2(StringData, o) RLM_U2(bool, o) RLM_U2(OldDateTime, o) RLM_U2(Timestamp, o) RLM_U2(null, o)
+=======
+    RLM_U2(StringData, o) RLM_U2(bool, o) RLM_U2(Timestamp, o) RLM_U2(null, o)
+>>>>>>> origin/develop12
     RLM_U(+) RLM_U(-) RLM_U(*) RLM_U(/) RLM_U(>) RLM_U(<) RLM_U(==) RLM_U(!=) RLM_U(>=) RLM_U(<=)
 };
 
@@ -821,7 +990,11 @@ public:
 
 
 /*
+<<<<<<< HEAD
 This class is used to store N values of type T = {int64_t, bool, OldDateTime or StringData}, and allows an entry
+=======
+This class is used to store N values of type T = {int64_t, bool or StringData}, and allows an entry
+>>>>>>> origin/develop12
 to be null too. It's used by the Value class for internal storage.
 
 To indicate nulls, we could have chosen a separate bool vector or some other bitmask construction. But for
@@ -917,8 +1090,13 @@ struct NullableVector {
     }
 
     template <typename Type = T>
+<<<<<<< HEAD
     typename std::enable_if<realm::is_any<Type, float, double, OldDateTime, BinaryData, StringData, RowIndex,
                                           Timestamp, ConstTableRef, null>::value,
+=======
+    typename std::enable_if<realm::is_any<Type, float, double, BinaryData, StringData, ObjKey, Timestamp, ref_type,
+                                          SizeOfList, null>::value,
+>>>>>>> origin/develop12
                             void>::type
     set(size_t index, t_storage value)
     {
@@ -975,6 +1153,18 @@ struct NullableVector {
         fill(values);
     }
 
+<<<<<<< HEAD
+=======
+    void init(const std::vector<T>& values)
+    {
+        size_t sz = values.size();
+        init(sz);
+        for (size_t t = 0; t < sz; t++) {
+            set(t, values[t]);
+        }
+    }
+
+>>>>>>> origin/develop12
     void dealloc()
     {
         if (m_first) {
@@ -1031,6 +1221,7 @@ inline bool NullableVector<null>::is_null(size_t) const
     return true;
 }
 
+<<<<<<< HEAD
 
 // OldDateTime
 template <>
@@ -1046,6 +1237,8 @@ inline void NullableVector<OldDateTime>::set_null(size_t index)
     m_first[index] = m_null;
 }
 
+=======
+>>>>>>> origin/develop12
 // StringData
 
 template <>
@@ -1074,6 +1267,7 @@ inline void NullableVector<BinaryData>::set_null(size_t index)
     m_first[index] = BinaryData();
 }
 
+<<<<<<< HEAD
 // RowIndex
 template <>
 inline bool NullableVector<RowIndex>::is_null(size_t index) const
@@ -1111,6 +1305,56 @@ template <>
 inline void NullableVector<ConstTableRef>::set_null(size_t index)
 {
     m_first[index].reset();
+=======
+// Timestamp
+
+template <>
+inline bool NullableVector<Timestamp>::is_null(size_t index) const
+{
+    return m_first[index].is_null();
+}
+
+template <>
+inline void NullableVector<Timestamp>::set_null(size_t index)
+{
+    m_first[index] = Timestamp{};
+}
+
+// ref_type
+template <>
+inline bool NullableVector<ref_type>::is_null(size_t index) const
+{
+    return m_first[index] == 0;
+}
+template <>
+inline void NullableVector<ref_type>::set_null(size_t index)
+{
+    m_first[index] = 0;
+}
+
+// SizeOfList
+template <>
+inline bool NullableVector<SizeOfList>::is_null(size_t index) const
+{
+    return m_first[index].is_null();
+}
+template <>
+inline void NullableVector<SizeOfList>::set_null(size_t index)
+{
+    m_first[index].set_null();
+}
+
+// Key
+template <>
+inline bool NullableVector<ObjKey>::is_null(size_t index) const
+{
+    return m_first[index] == null_key;
+}
+template <>
+inline void NullableVector<ObjKey>::set_null(size_t index)
+{
+    m_first[index] = ObjKey{};
+>>>>>>> origin/develop12
 }
 
 template <typename Operator>
@@ -1142,6 +1386,7 @@ struct TrueExpression : Expression {
 
         return realm::not_found;
     }
+<<<<<<< HEAD
     void set_base_table(const Table*) override
     {
     }
@@ -1152,11 +1397,25 @@ struct TrueExpression : Expression {
     void verify_column() const override
     {
     }
+=======
+    void set_base_table(ConstTableRef) override {}
+    void set_cluster(const Cluster*) override
+    {
+    }
+    ConstTableRef get_base_table() const override
+    {
+        return nullptr;
+    }
+>>>>>>> origin/develop12
     std::string description(util::serializer::SerialisationState&) const override
     {
         return "TRUEPREDICATE";
     }
+<<<<<<< HEAD
     std::unique_ptr<Expression> clone(QueryNodeHandoverPatches*) const override
+=======
+    std::unique_ptr<Expression> clone() const override
+>>>>>>> origin/develop12
     {
         return std::unique_ptr<Expression>(new TrueExpression(*this));
     }
@@ -1168,21 +1427,34 @@ struct FalseExpression : Expression {
     {
         return realm::not_found;
     }
+<<<<<<< HEAD
     void set_base_table(const Table*) override
     {
     }
     void verify_column() const override
+=======
+    void set_base_table(ConstTableRef) override {}
+    void set_cluster(const Cluster*) override
+>>>>>>> origin/develop12
     {
     }
     std::string description(util::serializer::SerialisationState&) const override
     {
         return "FALSEPREDICATE";
     }
+<<<<<<< HEAD
     const Table* get_base_table() const override
     {
         return nullptr;
     }
     std::unique_ptr<Expression> clone(QueryNodeHandoverPatches*) const override
+=======
+    ConstTableRef get_base_table() const override
+    {
+        return nullptr;
+    }
+    std::unique_ptr<Expression> clone() const override
+>>>>>>> origin/develop12
     {
         return std::unique_ptr<Expression>(new FalseExpression(*this));
     }
@@ -1229,15 +1501,28 @@ public:
         ValueBase::m_values = values;
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
+=======
+    void init(bool from_link_list, const std::vector<T>& values)
+    {
+        m_storage.init(values);
+        ValueBase::m_from_link_list = from_link_list;
+        ValueBase::m_values = values.size();
+>>>>>>> origin/develop12
     }
 
     std::string description(util::serializer::SerialisationState&) const override
     {
         if (ValueBase::m_from_link_list) {
+<<<<<<< HEAD
             return util::serializer::print_value(util::to_string(ValueBase::m_values)
                                         + (ValueBase::m_values == 1 ? " value" : " values"));
+=======
+            return util::serializer::print_value(util::to_string(ValueBase::m_values) +
+                                                 (ValueBase::m_values == 1 ? " value" : " values"));
+>>>>>>> origin/develop12
         }
         if (m_storage.m_size > 0) {
             return util::serializer::print_value(m_storage[0]);
@@ -1369,10 +1654,13 @@ public:
     {
         export2<BinaryData>(destination);
     }
+<<<<<<< HEAD
     REALM_FORCEINLINE void export_RowIndex(ValueBase& destination) const override
     {
         export2<RowIndex>(destination);
     }
+=======
+>>>>>>> origin/develop12
     REALM_FORCEINLINE void export_null(ValueBase& destination) const override
     {
         Value<null>& d = static_cast<Value<null>&>(destination);
@@ -1391,15 +1679,22 @@ public:
             source.export_float(*this);
         else if (std::is_same<T, double>::value)
             source.export_double(*this);
+<<<<<<< HEAD
         else if (std::is_same<T, int64_t>::value || std::is_same<T, bool>::value ||
                  std::is_same<T, OldDateTime>::value)
+=======
+        else if (std::is_same<T, int64_t>::value || std::is_same<T, bool>::value)
+>>>>>>> origin/develop12
             source.export_int64_t(*this);
         else if (std::is_same<T, StringData>::value)
             source.export_StringData(*this);
         else if (std::is_same<T, BinaryData>::value)
             source.export_BinaryData(*this);
+<<<<<<< HEAD
         else if (std::is_same<T, RowIndex>::value)
             source.export_RowIndex(*this);
+=======
+>>>>>>> origin/develop12
         else if (std::is_same<T, null>::value)
             source.export_null(*this);
         else
@@ -1464,7 +1759,11 @@ public:
         return not_found; // no match
     }
 
+<<<<<<< HEAD
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches*) const override
+=======
+    std::unique_ptr<Subexpr> clone() const override
+>>>>>>> origin/develop12
     {
         return make_subexpr<Value<T>>(*this);
     }
@@ -1481,7 +1780,11 @@ public:
         init(false, 1, m_string);
     }
 
+<<<<<<< HEAD
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches*) const override
+=======
+    std::unique_ptr<Subexpr> clone() const override
+>>>>>>> origin/develop12
     {
         return std::unique_ptr<Subexpr>(new ConstantStringValue(*this));
     }
@@ -1581,6 +1884,14 @@ Query operator==(Timestamp left, const Subexpr2<R>& right)
     return create<Equal>(left, right);
 }
 template <class R>
+<<<<<<< HEAD
+=======
+Query operator==(bool left, const Subexpr2<R>& right)
+{
+    return create<Equal>(left, right);
+}
+template <class R>
+>>>>>>> origin/develop12
 Query operator>=(double left, const Subexpr2<R>& right)
 {
     return create<GreaterEqual>(left, right);
@@ -1655,6 +1966,14 @@ Query operator!=(Timestamp left, const Subexpr2<R>& right)
 {
     return create<NotEqual>(left, right);
 }
+<<<<<<< HEAD
+=======
+template <class R>
+Query operator!=(bool left, const Subexpr2<R>& right)
+{
+    return create<NotEqual>(left, right);
+}
+>>>>>>> origin/develop12
 
 // Arithmetic
 template <class R>
@@ -1747,6 +2066,7 @@ UnaryOperator<Pow<T>> power(const Subexpr2<T>& left)
 
 // Classes used for LinkMap (see below).
 struct LinkMapFunction {
+<<<<<<< HEAD
     // Your consume() method is given row index of the linked-to table as argument, and you must return whether or
     // not you want the LinkMapFunction to exit (return false) or continue (return true) harvesting the link tree
     // for the current main table row index (it will be a link tree if you have multiple type_LinkList columns
@@ -1760,17 +2080,36 @@ struct FindNullLinks : public LinkMapFunction {
         static_cast<void>(row_index);
         m_has_link = true;
         return false; // we've found a row index, so this can't be a null-link, so exit link harvesting
+=======
+    // Your consume() method is given key within the linked-to table as argument, and you must return whether or
+    // not you want the LinkMapFunction to exit (return false) or continue (return true) harvesting the link tree
+    // for the current main table object (it will be a link tree if you have multiple type_LinkList columns
+    // in a link()->link() query.
+    virtual bool consume(ObjKey) = 0;
+};
+
+struct FindNullLinks : public LinkMapFunction {
+    bool consume(ObjKey) override
+    {
+        m_has_link = true;
+        return false; // we've found a key, so this can't be a null-link, so exit link harvesting
+>>>>>>> origin/develop12
     }
 
     bool m_has_link = false;
 };
 
 struct MakeLinkVector : public LinkMapFunction {
+<<<<<<< HEAD
     MakeLinkVector(std::vector<size_t>& result)
+=======
+    MakeLinkVector(std::vector<ObjKey>& result)
+>>>>>>> origin/develop12
         : m_links(result)
     {
     }
 
+<<<<<<< HEAD
     bool consume(size_t row_index) override
     {
         m_links.push_back(row_index);
@@ -1794,6 +2133,27 @@ struct UnaryLinkResult : public LinkMapFunction {
 
 struct CountLinks : public LinkMapFunction {
     bool consume(size_t) override
+=======
+    bool consume(ObjKey key) override
+    {
+        m_links.push_back(key);
+        return true; // continue evaluation
+    }
+    std::vector<ObjKey>& m_links;
+};
+
+struct UnaryLinkResult : public LinkMapFunction {
+    bool consume(ObjKey key) override
+    {
+        m_result = key;
+        return false; // exit search, only one result ever expected
+    }
+    ObjKey m_result;
+};
+
+struct CountLinks : public LinkMapFunction {
+    bool consume(ObjKey) override
+>>>>>>> origin/develop12
     {
         m_link_count++;
         return true;
@@ -1808,14 +2168,24 @@ struct CountLinks : public LinkMapFunction {
 };
 
 struct CountBacklinks : public LinkMapFunction {
+<<<<<<< HEAD
     CountBacklinks(const Table* t)
+=======
+    CountBacklinks(ConstTableRef t)
+>>>>>>> origin/develop12
         : m_table(t)
     {
     }
 
+<<<<<<< HEAD
     bool consume(size_t row_index) override
     {
         m_link_count += m_table->get_backlink_count(row_index);
+=======
+    bool consume(ObjKey key) override
+    {
+        m_link_count += m_table.unchecked_ptr()->get_object(key).get_backlink_count();
+>>>>>>> origin/develop12
         return true;
     }
 
@@ -1824,7 +2194,11 @@ struct CountBacklinks : public LinkMapFunction {
         return m_link_count;
     }
 
+<<<<<<< HEAD
     const Table* m_table;
+=======
+    ConstTableRef m_table;
+>>>>>>> origin/develop12
     size_t m_link_count = 0;
 };
 
@@ -1833,6 +2207,7 @@ struct CountBacklinks : public LinkMapFunction {
 The LinkMap and LinkMapFunction classes are used for query conditions on links themselves (contrary to conditions on
 the value payload they point at).
 
+<<<<<<< HEAD
 MapLink::map_links() takes a row index of the link column as argument and follows any link chain stated in the query
 (through the link()->link() methods) until the final payload table is reached, and then applies LinkMapFunction on
 the linked-to row index(es).
@@ -1842,17 +2217,34 @@ columns are type_LinkList, then it may result in multiple row indexes.
 
 The reason we use this map pattern is that we can exit the link-tree-traversal as early as possible, e.g. when we've
 found the first link that points to row '5'. Other solutions could be a std::vector<size_t> harvest_all_links(), or an
+=======
+MapLink::map_links() takes a row index of the link array as argument and follows any link chain stated in the query
+(through the link()->link() methods) until the final payload table is reached, and then applies LinkMapFunction on
+the linked-to key(s).
+
+If all link columns are type_Link, then LinkMapFunction is only invoked for a single key. If one or more
+columns are type_LinkList, then it may result in multiple keys.
+
+The reason we use this map pattern is that we can exit the link-tree-traversal as early as possible, e.g. when we've
+found the first link that points to key '5'. Other solutions could be a std::vector<ColKey> harvest_all_links(), or an
+>>>>>>> origin/develop12
 iterator pattern. First solution can't exit, second solution requires internal state.
 */
 class LinkMap {
 public:
     LinkMap() = default;
+<<<<<<< HEAD
     LinkMap(const Table* table, std::vector<size_t> columns)
         : m_link_column_indexes(std::move(columns))
+=======
+    LinkMap(ConstTableRef table, std::vector<ColKey> columns)
+        : m_link_column_keys(std::move(columns))
+>>>>>>> origin/develop12
     {
         set_base_table(table);
     }
 
+<<<<<<< HEAD
     LinkMap(LinkMap const& other, QueryNodeHandoverPatches* patches)
         : LinkMap(other)
     {
@@ -1931,6 +2323,55 @@ public:
     }
 
     size_t get_unary_link_or_not_found(size_t index) const
+=======
+    LinkMap(LinkMap const& other)
+    {
+        m_link_column_keys = other.m_link_column_keys;
+        m_tables = other.m_tables;
+        m_link_types = other.m_link_types;
+        m_only_unary_links = other.m_only_unary_links;
+    }
+
+    size_t get_nb_hops() const
+    {
+        return m_link_column_keys.size();
+    }
+
+    bool has_links() const
+    {
+        return m_link_column_keys.size() > 0;
+    }
+
+    void set_base_table(ConstTableRef table);
+
+    void set_cluster(const Cluster* cluster)
+    {
+        Allocator& alloc = get_base_table()->get_alloc();
+        m_array_ptr = nullptr;
+        switch (m_link_types[0]) {
+            case col_type_Link:
+                m_array_ptr = LeafPtr(new (&m_storage.m_list) ArrayKey(alloc));
+                break;
+            case col_type_LinkList:
+                m_array_ptr = LeafPtr(new (&m_storage.m_linklist) ArrayList(alloc));
+                break;
+            case col_type_BackLink:
+                m_array_ptr = LeafPtr(new (&m_storage.m_backlink) ArrayBacklink(alloc));
+                break;
+            default:
+                break;
+        }
+        // m_tables[0]->report_invalid_key(m_link_column_keys[0]);
+        cluster->init_leaf(m_link_column_keys[0], m_array_ptr.get());
+        m_leaf_ptr = m_array_ptr.get();
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const;
+
+    virtual std::string description(util::serializer::SerialisationState& state) const;
+
+    ObjKey get_unary_link_or_not_found(size_t index) const
+>>>>>>> origin/develop12
     {
         REALM_ASSERT(m_only_unary_links);
         UnaryLinkResult res;
@@ -1938,25 +2379,43 @@ public:
         return res.m_result;
     }
 
+<<<<<<< HEAD
     std::vector<size_t> get_links(size_t index) const
     {
         std::vector<size_t> res;
+=======
+    std::vector<ObjKey> get_links(size_t index) const
+    {
+        std::vector<ObjKey> res;
+>>>>>>> origin/develop12
         get_links(index, res);
         return res;
     }
 
+<<<<<<< HEAD
     std::vector<size_t> get_origin_ndxs(size_t index, size_t column = 0) const;
 
     size_t count_links(size_t row)
+=======
+    std::vector<ObjKey> get_origin_ndxs(ObjKey key, size_t column = 0) const;
+
+    size_t count_links(size_t row) const
+>>>>>>> origin/develop12
     {
         CountLinks counter;
         map_links(row, counter);
         return counter.result();
     }
 
+<<<<<<< HEAD
     size_t count_all_backlinks(size_t row)
     {
         CountBacklinks counter(target_table());
+=======
+    size_t count_all_backlinks(size_t row) const
+    {
+        CountBacklinks counter(get_target_table());
+>>>>>>> origin/develop12
         map_links(row, counter);
         return counter.result();
     }
@@ -1971,12 +2430,20 @@ public:
         return m_only_unary_links;
     }
 
+<<<<<<< HEAD
     const Table* base_table() const
+=======
+    ConstTableRef get_base_table() const
+>>>>>>> origin/develop12
     {
         return m_tables.empty() ? nullptr : m_tables[0];
     }
 
+<<<<<<< HEAD
     const Table* target_table() const
+=======
+    ConstTableRef get_target_table() const
+>>>>>>> origin/develop12
     {
         REALM_ASSERT(!m_tables.empty());
         return m_tables.back();
@@ -1984,6 +2451,7 @@ public:
 
     bool links_exist() const
     {
+<<<<<<< HEAD
         return !m_link_columns.empty();
     }
 
@@ -2039,11 +2507,22 @@ private:
     }
 
     void get_links(size_t row, std::vector<size_t>& result) const
+=======
+        return !m_link_column_keys.empty();
+    }
+
+private:
+    void map_links(size_t column, ObjKey key, LinkMapFunction& lm) const;
+    void map_links(size_t column, size_t row, LinkMapFunction& lm) const;
+
+    void get_links(size_t row, std::vector<ObjKey>& result) const
+>>>>>>> origin/develop12
     {
         MakeLinkVector mlv = MakeLinkVector(result);
         map_links(row, mlv);
     }
 
+<<<<<<< HEAD
     std::vector<size_t> m_link_column_indexes;
     std::vector<ColumnType> m_link_types;
     std::vector<const Table*> m_tables;
@@ -2051,6 +2530,25 @@ private:
 
     template <class>
     friend Query compare(const Subexpr2<Link>&, const ConstRow&);
+=======
+    mutable std::vector<ColKey> m_link_column_keys;
+    std::vector<ColumnType> m_link_types;
+    std::vector<ConstTableRef> m_tables;
+    bool m_only_unary_links = true;
+    // Leaf cache
+    using LeafPtr = std::unique_ptr<ArrayPayload, PlacementDelete>;
+    union Storage {
+        typename std::aligned_storage<sizeof(ArrayKey), alignof(ArrayKey)>::type m_list;
+        typename std::aligned_storage<sizeof(ArrayList), alignof(ArrayList)>::type m_linklist;
+        typename std::aligned_storage<sizeof(ArrayList), alignof(ArrayList)>::type m_backlink;
+    };
+    Storage m_storage;
+    LeafPtr m_array_ptr;
+    const ArrayPayload* m_leaf_ptr = nullptr;
+
+    template <class>
+    friend Query compare(const Subexpr2<Link>&, const ConstObj&);
+>>>>>>> origin/develop12
 };
 
 template <class T, class S, class I>
@@ -2084,15 +2582,23 @@ Value<T> make_value_for_link(bool only_unary_links, size_t size)
 template <class T>
 class SimpleQuerySupport : public Subexpr2<T> {
 public:
+<<<<<<< HEAD
     SimpleQuerySupport(size_t column, const Table* table, std::vector<size_t> links = {})
         : m_column_ndx(column)
         , m_link_map(table, std::move(links))
     {
         m_column = &m_link_map.target_table()->get_column_base(m_column_ndx);
+=======
+    SimpleQuerySupport(ColKey column, ConstTableRef table, std::vector<ColKey> links = {})
+        : m_link_map(table, std::move(links))
+        , m_column_key(column)
+    {
+>>>>>>> origin/develop12
     }
 
     bool is_nullable() const noexcept
     {
+<<<<<<< HEAD
         return m_link_map.base_table()->is_nullable(m_column->get_column_index());
     }
 
@@ -2106,11 +2612,41 @@ public:
         if (table != get_base_table()) {
             m_link_map.set_base_table(table);
             m_column = &m_link_map.target_table()->get_column_base(m_column_ndx);
+=======
+        return m_link_map.get_base_table()->is_nullable(m_column_key);
+    }
+
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+    {
+        if (table != get_base_table()) {
+            m_link_map.set_base_table(table);
+        }
+    }
+
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_array_ptr = nullptr;
+        m_leaf_ptr = nullptr;
+        if (links_exist()) {
+            m_link_map.set_cluster(cluster);
+        }
+        else {
+            // Create new Leaf
+            m_array_ptr = LeafPtr(new (&m_leaf_cache_storage) LeafType(m_link_map.get_base_table()->get_alloc()));
+            cluster->init_leaf(m_column_key, m_array_ptr.get());
+            m_leaf_ptr = m_array_ptr.get();
+>>>>>>> origin/develop12
         }
     }
 
     bool has_search_index() const override
     {
+<<<<<<< HEAD
         return m_link_map.target_table()->has_search_index(m_column_ndx);
     }
 
@@ -2135,10 +2671,33 @@ public:
             ret.insert(ret.end(), ndxs.begin(), ndxs.end());
         }
         result.destroy();
+=======
+        return m_link_map.get_target_table()->has_search_index(m_column_key);
+    }
+
+    std::vector<ObjKey> find_all(Mixed value) const override
+    {
+        std::vector<ObjKey> ret;
+        std::vector<ObjKey> result;
+
+        T val{};
+        if (!value.is_null()) {
+            val = value.get<T>();
+        }
+
+        StringIndex* index = m_link_map.get_target_table()->get_search_index(m_column_key);
+        index->find_all(result, val);
+
+        for (ObjKey k : result) {
+            auto ndxs = m_link_map.get_origin_ndxs(k);
+            ret.insert(ret.end(), ndxs.begin(), ndxs.end());
+        }
+>>>>>>> origin/develop12
 
         return ret;
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         // verify links
@@ -2148,11 +2707,17 @@ public:
         if (target_table && m_column_ndx != npos) {
             target_table->verify_column(m_column_ndx, m_column);
         }
+=======
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override
     {
         Value<T>& d = static_cast<Value<T>&>(destination);
+<<<<<<< HEAD
         size_t col = column_ndx();
 
         if (links_exist()) {
@@ -2172,22 +2737,62 @@ public:
                 for (size_t t = 0; t < links.size(); t++) {
                     size_t link_to = links[t];
                     v.m_storage.set(t, m_link_map.target_table()->template get<T>(col, link_to));
+=======
+
+        if (links_exist()) {
+            REALM_ASSERT(m_leaf_ptr == nullptr);
+
+            if (m_link_map.only_unary_links()) {
+                d.init(false, 1);
+                d.m_storage.set_null(0);
+                auto link_translation_key = this->m_link_map.get_unary_link_or_not_found(index);
+                if (link_translation_key) {
+                    ConstObj obj = m_link_map.get_target_table()->get_object(link_translation_key);
+                    d.m_storage.set(0, obj.get<T>(m_column_key));
+                }
+            }
+            else {
+                std::vector<ObjKey> links = m_link_map.get_links(index);
+                Value<T> v = make_value_for_link<T>(false /*only_unary_links*/, links.size());
+                for (size_t t = 0; t < links.size(); t++) {
+                    ConstObj obj = m_link_map.get_target_table()->get_object(links[t]);
+                    v.m_storage.set(t, obj.get<T>(m_column_key));
+>>>>>>> origin/develop12
                 }
                 destination.import(v);
             }
         }
         else {
+<<<<<<< HEAD
             // Not a link column
             const Table* target_table = m_link_map.target_table();
             for (size_t t = 0; t < destination.m_values && index + t < target_table->size(); t++) {
                 d.m_storage.set(t, target_table->get<T>(col, index + t));
+=======
+            REALM_ASSERT(m_leaf_ptr != nullptr);
+            // Not a link column
+            for (size_t t = 0; t < destination.m_values && index + t < m_leaf_ptr->size(); t++) {
+                d.m_storage.set(t, m_leaf_ptr->get(index + t));
+>>>>>>> origin/develop12
             }
         }
     }
 
+<<<<<<< HEAD
     bool links_exist() const
     {
         return m_link_map.m_link_columns.size() > 0;
+=======
+    void evaluate(ObjKey key, ValueBase& destination) override
+    {
+        Value<T>& d = static_cast<Value<T>&>(destination);
+        d.m_storage.set(0, m_link_map.get_target_table()->get_object(key).template get<T>(m_column_key));
+    }
+
+    bool links_exist() const
+    {
+        return m_link_map.has_links();
+>>>>>>> origin/develop12
     }
 
     bool only_unary_links() const
@@ -2202,6 +2807,7 @@ public:
 
     virtual std::string description(util::serializer::SerialisationState& state) const override
     {
+<<<<<<< HEAD
         return state.describe_columns(m_link_map, m_column_ndx);
     }
 
@@ -2237,6 +2843,46 @@ private:
     mutable size_t m_column_ndx;
     const ColumnBase* m_column;
     LinkMap m_link_map;
+=======
+        return state.describe_columns(m_link_map, m_column_key);
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<Columns<T>>(static_cast<const Columns<T>&>(*this));
+    }
+
+    SimpleQuerySupport(SimpleQuerySupport const& other)
+        : Subexpr2<T>(other)
+        , m_link_map(other.m_link_map)
+        , m_column_key(other.m_column_key)
+    {
+    }
+
+    ColKey column_key() const
+    {
+        return m_column_key;
+    }
+
+    SizeOperator<T> size()
+    {
+        return SizeOperator<T>(this->clone());
+    }
+
+private:
+    LinkMap m_link_map;
+
+    // Column key of payload column of m_table
+    mutable ColKey m_column_key;
+
+    // Leaf cache
+    using LeafType = typename ColumnTypeTraits<T>::cluster_leaf_type;
+    using LeafCacheStorage = typename std::aligned_storage<sizeof(LeafType), alignof(LeafType)>::type;
+    using LeafPtr = std::unique_ptr<LeafType, PlacementDelete>;
+    LeafCacheStorage m_leaf_cache_storage;
+    LeafPtr m_array_ptr;
+    LeafType* m_leaf_ptr = nullptr;
+>>>>>>> origin/develop12
 };
 
 
@@ -2253,11 +2899,16 @@ class Columns<BinaryData> : public SimpleQuerySupport<BinaryData> {
 template <>
 class Columns<StringData> : public SimpleQuerySupport<StringData> {
 public:
+<<<<<<< HEAD
     Columns(size_t column, const Table* table, std::vector<size_t> links = {})
+=======
+    Columns(ColKey column, ConstTableRef table, std::vector<ColKey> links = {})
+>>>>>>> origin/develop12
         : SimpleQuerySupport(column, table, links)
     {
     }
 
+<<<<<<< HEAD
     Columns(Columns const& other, QueryNodeHandoverPatches* patches = nullptr)
         : SimpleQuerySupport(other, patches)
     {
@@ -2267,6 +2918,18 @@ public:
         : SimpleQuerySupport(other)
     {
     }
+=======
+    Columns(Columns const& other)
+        : SimpleQuerySupport(other)
+    {
+    }
+
+    Columns(Columns&& other) noexcept
+        : SimpleQuerySupport(other)
+    {
+    }
+    using SimpleQuerySupport::size;
+>>>>>>> origin/develop12
 };
 
 template <class T, class S, class I>
@@ -2378,26 +3041,52 @@ inline Query operator!=(BinaryData left, const Columns<BinaryData>& right)
 template <bool has_links>
 class UnaryLinkCompare : public Expression {
 public:
+<<<<<<< HEAD
     UnaryLinkCompare(LinkMap lm)
         : m_link_map(std::move(lm))
     {
     }
 
     void set_base_table(const Table* table) override
+=======
+    UnaryLinkCompare(const LinkMap& lm)
+        : m_link_map(lm)
+    {
+    }
+
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_link_map.set_base_table(table);
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_link_map.verify_columns();
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_link_map.set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     // Return main table of query (table on which table->where()... is invoked). Note that this is not the same as
     // any linked-to payload tables
+<<<<<<< HEAD
     const Table* get_base_table() const override
     {
         return m_link_map.base_table();
+=======
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+>>>>>>> origin/develop12
     }
 
     size_t find_first(size_t start, size_t end) const override
@@ -2416,6 +3105,7 @@ public:
 
     virtual std::string description(util::serializer::SerialisationState& state) const override
     {
+<<<<<<< HEAD
         return state.describe_columns(m_link_map, realm::npos) + (has_links ? " != NULL" : " == NULL");
     }
 
@@ -2428,6 +3118,20 @@ private:
     UnaryLinkCompare(const UnaryLinkCompare& other, QueryNodeHandoverPatches* patches = nullptr)
         : Expression(other)
         , m_link_map(other.m_link_map, patches)
+=======
+        return state.describe_columns(m_link_map, ColKey()) + (has_links ? " != NULL" : " == NULL");
+    }
+
+    std::unique_ptr<Expression> clone() const override
+    {
+        return std::unique_ptr<Expression>(new UnaryLinkCompare(*this));
+    }
+
+private:
+    UnaryLinkCompare(const UnaryLinkCompare& other)
+        : Expression(other)
+        , m_link_map(other.m_link_map)
+>>>>>>> origin/develop12
     {
     }
 
@@ -2436,6 +3140,7 @@ private:
 
 class LinkCount : public Subexpr2<Int> {
 public:
+<<<<<<< HEAD
     LinkCount(LinkMap link_map)
         : m_link_map(std::move(link_map))
     {
@@ -2457,13 +3162,47 @@ public:
     }
 
     void set_base_table(const Table* table) override
+=======
+    LinkCount(const LinkMap& link_map)
+        : m_link_map(link_map)
+    {
+    }
+    LinkCount(LinkCount const& other)
+        : Subexpr2<Int>(other)
+        , m_link_map(other.m_link_map)
+    {
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<LinkCount>(*this);
+    }
+
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_link_map.set_base_table(table);
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_link_map.verify_columns();
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_link_map.set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override
@@ -2474,7 +3213,11 @@ public:
 
     virtual std::string description(util::serializer::SerialisationState& state) const override
     {
+<<<<<<< HEAD
         return state.describe_columns(m_link_map, realm::npos) + util::serializer::value_separator + "@count";
+=======
+        return state.describe_columns(m_link_map, ColKey()) + util::serializer::value_separator + "@count";
+>>>>>>> origin/develop12
     }
 
 private:
@@ -2486,6 +3229,7 @@ private:
 template <class>
 class BacklinkCount : public Subexpr2<Int> {
 public:
+<<<<<<< HEAD
     BacklinkCount(LinkMap link_map)
     : m_link_map(std::move(link_map))
     {
@@ -2511,23 +3255,81 @@ public:
     }
 
     void set_base_table(const Table* table) override
+=======
+    BacklinkCount(const LinkMap& link_map)
+        : m_link_map(link_map)
+    {
+    }
+    BacklinkCount(LinkMap&& link_map)
+        : m_link_map(std::move(link_map))
+    {
+    }
+    BacklinkCount(ConstTableRef table, std::vector<ColKey> links = {})
+        : m_link_map(table, std::move(links))
+    {
+    }
+    BacklinkCount(BacklinkCount const& other)
+        : Subexpr2<Int>(other)
+        , m_link_map(other.m_link_map)
+    {
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<BacklinkCount<Int>>(*this);
+    }
+
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_link_map.set_base_table(table);
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_link_map.verify_columns();
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        if (m_link_map.has_links()) {
+            m_link_map.set_cluster(cluster);
+        }
+        else {
+            m_keys = cluster->get_key_array();
+            m_offset = cluster->get_offset();
+        }
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override
     {
         size_t count;
+<<<<<<< HEAD
         if (m_link_map.links_exist()) {
             count = m_link_map.count_all_backlinks(index);
         }
         else {
             count = m_link_map.target_table()->get_backlink_count(index);
+=======
+        if (m_link_map.has_links()) {
+            count = m_link_map.count_all_backlinks(index);
+        }
+        else {
+            ObjKey key(m_keys->get(index) + m_offset);
+            ConstObj obj = m_link_map.get_base_table()->get_object(key);
+            count = obj.get_backlink_count();
+>>>>>>> origin/develop12
         }
         destination.import(Value<Int>(false, 1, count));
     }
@@ -2536,17 +3338,32 @@ public:
     {
         std::string s;
         if (m_link_map.links_exist()) {
+<<<<<<< HEAD
             s += state.describe_columns(m_link_map, realm::npos) + util::serializer::value_separator;
+=======
+            s += state.describe_columns(m_link_map, ColKey()) + util::serializer::value_separator;
+>>>>>>> origin/develop12
         }
         s += "@links.@count";
         return s;
     }
+<<<<<<< HEAD
 private:
     LinkMap m_link_map;
 };
 
 
 template <class oper, class TExpr>
+=======
+
+private:
+    const ClusterKeyArray* m_keys = nullptr;
+    uint64_t m_offset = 0;
+    LinkMap m_link_map;
+};
+
+template <class T, class TExpr>
+>>>>>>> origin/develop12
 class SizeOperator : public Subexpr2<Int> {
 public:
     SizeOperator(std::unique_ptr<TExpr> left)
@@ -2554,20 +3371,40 @@ public:
     {
     }
 
+<<<<<<< HEAD
     // See comment in base class
     void set_base_table(const Table* table) override
+=======
+    SizeOperator(const SizeOperator& other)
+        : m_expr(other.m_expr->clone())
+    {
+    }
+
+    // See comment in base class
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_expr->set_base_table(table);
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_expr->verify_column();
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_expr->set_cluster(cluster);
+>>>>>>> origin/develop12
     }
 
     // Recursively fetch tables of columns in expression tree. Used when user first builds a stand-alone expression
     // and binds it to a Query at a later time
+<<<<<<< HEAD
     const Table* get_base_table() const override
+=======
+    ConstTableRef get_base_table() const override
+>>>>>>> origin/develop12
     {
         return m_expr->get_base_table();
     }
@@ -2591,7 +3428,11 @@ public:
                 d->m_storage.set_null(i);
             }
             else {
+<<<<<<< HEAD
                 d->m_storage.set(i, oper()(*elem));
+=======
+                d->m_storage.set(i, elem->size());
+>>>>>>> origin/develop12
             }
         }
     }
@@ -2604,6 +3445,7 @@ public:
         return "@size";
     }
 
+<<<<<<< HEAD
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches* patches) const override
     {
         return std::unique_ptr<Subexpr>(new SizeOperator(*this, patches));
@@ -2644,12 +3486,34 @@ public:
     }
 
     const Table* get_base_table() const override
+=======
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return std::unique_ptr<Subexpr>(new SizeOperator(*this));
+    }
+
+private:
+    std::unique_ptr<TExpr> m_expr;
+};
+
+class KeyValue : public Subexpr2<Link> {
+public:
+    KeyValue(ObjKey key)
+        : m_key(key)
+    {
+    }
+
+    void set_base_table(ConstTableRef) override {}
+
+    ConstTableRef get_base_table() const override
+>>>>>>> origin/develop12
     {
         return nullptr;
     }
 
     void evaluate(size_t, ValueBase& destination) override
     {
+<<<<<<< HEAD
         if (m_row.is_attached()) {
             Value<RowIndex> v(RowIndex(m_row.get_index()));
             destination.import(v);
@@ -2658,10 +3522,18 @@ public:
             Value<RowIndex> v(RowIndex::Detached);
             destination.import(v);
         }
+=======
+        // Destination must be of Key type. It only makes sense to
+        // compare keys with keys
+        REALM_ASSERT_DEBUG(dynamic_cast<Value<ObjKey>*>(&destination));
+        auto d = static_cast<Value<ObjKey>*>(&destination);
+        d->init(false, 1, m_key);
+>>>>>>> origin/develop12
     }
 
     virtual std::string description(util::serializer::SerialisationState&) const override
     {
+<<<<<<< HEAD
         throw SerialisationError("Serialising a query which links to an object is currently unsupported.");
         // TODO: we can do something like the following when core gets stable keys:
         //if (!m_row.is_attached()) {
@@ -2700,6 +3572,23 @@ private:
     }
 
     ConstRow m_row;
+=======
+        return util::serializer::print_value(m_key);
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return std::unique_ptr<Subexpr>(new KeyValue(*this));
+    }
+
+private:
+    KeyValue(const KeyValue& source)
+        : m_key(source.m_key)
+    {
+    }
+
+    ObjKey m_key;
+>>>>>>> origin/develop12
 };
 
 template <typename T>
@@ -2709,9 +3598,21 @@ class SubColumns;
 template <>
 class Columns<Link> : public Subexpr2<Link> {
 public:
+<<<<<<< HEAD
     Query is_null()
     {
         if (m_link_map.m_link_columns.size() > 1)
+=======
+    Columns(const Columns& other)
+        : Subexpr2<Link>(other)
+        , m_link_map(other.m_link_map)
+    {
+    }
+
+    Query is_null()
+    {
+        if (m_link_map.get_nb_hops() > 1)
+>>>>>>> origin/develop12
             throw util::runtime_error("Combining link() and is_null() is currently not supported");
         // Todo, it may be useful to support the above, but we would need to figure out an intuitive behaviour
         return make_expression<UnaryLinkCompare<false>>(m_link_map);
@@ -2719,7 +3620,11 @@ public:
 
     Query is_not_null()
     {
+<<<<<<< HEAD
         if (m_link_map.m_link_columns.size() > 1)
+=======
+        if (m_link_map.get_nb_hops() > 1)
+>>>>>>> origin/develop12
             throw util::runtime_error("Combining link() and is_not_null() is currently not supported");
         // Todo, it may be useful to support the above, but we would need to figure out an intuitive behaviour
         return make_expression<UnaryLinkCompare<true>>(m_link_map);
@@ -2737,9 +3642,15 @@ public:
     }
 
     template <typename C>
+<<<<<<< HEAD
     SubColumns<C> column(size_t column_ndx) const
     {
         return SubColumns<C>(Columns<C>(column_ndx, m_link_map.target_table()), m_link_map);
+=======
+    SubColumns<C> column(ColKey column_key) const
+    {
+        return SubColumns<C>(Columns<C>(column_key, m_link_map.get_target_table()), m_link_map);
+>>>>>>> origin/develop12
     }
 
     const LinkMap& link_map() const
@@ -2747,28 +3658,58 @@ public:
         return m_link_map;
     }
 
+<<<<<<< HEAD
     const Table* get_base_table() const override
     {
         return m_link_map.base_table();
     }
     void set_base_table(const Table* table) override
+=======
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_link_map.set_base_table(table);
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_link_map.verify_columns();
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        REALM_ASSERT(m_link_map.has_links());
+        m_link_map.set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     std::string description(util::serializer::SerialisationState& state) const override
     {
+<<<<<<< HEAD
         return state.describe_columns(m_link_map, realm::npos);
     }
 
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches* patches) const override
     {
         return std::unique_ptr<Subexpr>(new Columns<Link>(*this, patches));
+=======
+        return state.describe_columns(m_link_map, ColKey());
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return std::unique_ptr<Subexpr>(new Columns<Link>(*this));
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override;
@@ -2777,6 +3718,7 @@ public:
 private:
     LinkMap m_link_map;
     friend class Table;
+<<<<<<< HEAD
 
     Columns(size_t column_ndx, const Table* table, const std::vector<size_t>& links = {})
         : m_link_map(table, links)
@@ -2787,6 +3729,14 @@ private:
         : Subexpr2<Link>(other)
         , m_link_map(other.m_link_map, patches)
     {
+=======
+    friend class LinkChain;
+
+    Columns(ColKey column_key, ConstTableRef table, const std::vector<ColKey>& links = {})
+        : m_link_map(table, links)
+    {
+        static_cast<void>(column_key);
+>>>>>>> origin/develop12
     }
 };
 
@@ -2805,6 +3755,7 @@ template <typename T>
 class Average;
 }
 
+<<<<<<< HEAD
 template <>
 class Columns<SubTable> : public Subexpr2<SubTable> {
 public:
@@ -2920,10 +3871,86 @@ public:
     void verify_column() const override
     {
         m_subtable_column.verify_column();
+=======
+class ColumnListBase {
+public:
+    ColumnListBase(ColKey column_key, ConstTableRef table, const std::vector<ColKey>& links)
+        : m_column_key(column_key)
+        , m_link_map(table, links)
+    {
+    }
+
+    ColumnListBase(const ColumnListBase& other)
+        : m_column_key(other.m_column_key)
+        , m_link_map(other.m_link_map)
+    {
+    }
+
+    void set_cluster(const Cluster* cluster);
+
+    void get_lists(size_t index, Value<ref_type>& destination, size_t nb_elements);
+
+    std::string description(util::serializer::SerialisationState&) const
+    {
+        throw SerialisationError("Serialisation of query expressions involving subtables is not yet supported.");
+    }
+
+    bool links_exist() const
+    {
+        return m_link_map.has_links();
+    }
+
+    mutable ColKey m_column_key;
+    LinkMap m_link_map;
+    // Leaf cache
+    using LeafCacheStorage = typename std::aligned_storage<sizeof(ArrayList), alignof(Array)>::type;
+    using LeafPtr = std::unique_ptr<ArrayList, PlacementDelete>;
+    LeafCacheStorage m_leaf_cache_storage;
+    LeafPtr m_array_ptr;
+    ArrayList* m_leaf_ptr = nullptr;
+};
+
+template <typename>
+class ColumnListSize;
+
+template <typename T>
+class Columns<Lst<T>> : public Subexpr2<T>, public ColumnListBase {
+public:
+    Columns(const Columns<Lst<T>>& other)
+        : Subexpr2<T>(other)
+        , ColumnListBase(other)
+    {
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<Columns<Lst<T>>>(*this);
+    }
+
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+    {
+        m_link_map.set_base_table(table);
+    }
+
+    void set_cluster(const Cluster* cluster) override
+    {
+        ColumnListBase::set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override
     {
+<<<<<<< HEAD
         Value<ConstTableRef> subtables;
         m_subtable_column.evaluate_internal(index, subtables, 1);
         size_t sz = 0;
@@ -2942,6 +3969,29 @@ public:
                     if (!table->is_null(m_column_ndx, j)) {
                         v.m_storage.set(k++, table->get<T>(m_column_ndx, j));
                     }
+=======
+        Allocator& alloc = get_base_table()->get_alloc();
+        Value<ref_type> list_refs;
+        get_lists(index, list_refs, 1);
+        size_t sz = 0;
+        for (size_t i = 0; i < list_refs.m_values; i++) {
+            ref_type val = list_refs.m_storage[i];
+            if (val) {
+                char* header = alloc.translate(val);
+                sz += Array::get_size_from_header(header);
+            }
+        }
+        auto v = make_value_for_link<typename util::RemoveOptional<T>::type>(false, sz);
+        size_t k = 0;
+        for (size_t i = 0; i < list_refs.m_values; i++) {
+            ref_type list_ref = list_refs.m_storage[i];
+            if (list_ref) {
+                BPlusTree<T> list(alloc);
+                list.init_from_ref(list_ref);
+                size_t s = list.size();
+                for (size_t j = 0; j < s; j++) {
+                    v.m_storage.set(k++, list.get(j));
+>>>>>>> origin/develop12
                 }
             }
         }
@@ -2953,28 +4003,49 @@ public:
         throw SerialisationError("Serialisation of subtable expressions is not yet supported.");
     }
 
+<<<<<<< HEAD
     ListColumnAggregate<T, aggregate_operations::Minimum<T>> min() const
     {
         return {m_column_ndx, m_subtable_column};
+=======
+    SizeOperator<SizeOfList> size();
+
+    ListColumnAggregate<T, aggregate_operations::Minimum<T>> min() const
+    {
+        return {m_column_key, *this};
+>>>>>>> origin/develop12
     }
 
     ListColumnAggregate<T, aggregate_operations::Maximum<T>> max() const
     {
+<<<<<<< HEAD
         return {m_column_ndx, m_subtable_column};
+=======
+        return {m_column_key, *this};
+>>>>>>> origin/develop12
     }
 
     ListColumnAggregate<T, aggregate_operations::Sum<T>> sum() const
     {
+<<<<<<< HEAD
         return {m_column_ndx, m_subtable_column};
+=======
+        return {m_column_key, *this};
+>>>>>>> origin/develop12
     }
 
     ListColumnAggregate<T, aggregate_operations::Average<T>> average() const
     {
+<<<<<<< HEAD
         return {m_column_ndx, m_subtable_column};
+=======
+        return {m_column_key, *this};
+>>>>>>> origin/develop12
     }
 
 
 private:
+<<<<<<< HEAD
     // Storing the column index here could be a potential problem if the column
     // changes id due to insertion/deletion.
     size_t m_column_ndx;
@@ -3006,11 +4077,66 @@ public:
     }
 };
 
+=======
+    friend class Table;
+    friend class LinkChain;
+
+    Columns(ColKey column_key, ConstTableRef table, const std::vector<ColKey>& links = {})
+        : ColumnListBase(column_key, table, links)
+    {
+    }
+};
+
+template <typename T>
+class ColumnListSize : public Columns<Lst<T>> {
+public:
+    ColumnListSize(const Columns<Lst<T>>& other)
+        : Columns<Lst<T>>(other)
+    {
+    }
+    void evaluate(size_t index, ValueBase& destination) override
+    {
+        REALM_ASSERT_DEBUG(dynamic_cast<Value<SizeOfList>*>(&destination) != nullptr);
+        Value<SizeOfList>* d = static_cast<Value<SizeOfList>*>(&destination);
+
+        Allocator& alloc = this->get_base_table()->get_alloc();
+        Value<ref_type> list_refs;
+        this->get_lists(index, list_refs, 1);
+        d->init(list_refs.m_from_link_list, list_refs.m_values);
+
+        for (size_t i = 0; i < list_refs.m_values; i++) {
+            ref_type list_ref = list_refs.m_storage[i];
+            if (list_ref) {
+                BPlusTree<T> list(alloc);
+                list.init_from_ref(list_ref);
+                size_t s = list.size();
+                d->m_storage.set(i, SizeOfList(s));
+            }
+            else {
+                d->m_storage.set_null(i);
+            }
+        }
+    }
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return std::unique_ptr<Subexpr>(new ColumnListSize<T>(*this));
+    }
+};
+
+template <typename T>
+SizeOperator<SizeOfList> Columns<Lst<T>>::size()
+{
+    std::unique_ptr<Subexpr> ptr(new ColumnListSize<T>(*this));
+    return SizeOperator<SizeOfList>(std::move(ptr));
+}
+
+>>>>>>> origin/develop12
 template <typename T, typename Operation>
 class ListColumnAggregate : public Subexpr2<typename Operation::ResultType> {
 public:
     using R = typename Operation::ResultType;
 
+<<<<<<< HEAD
     ListColumnAggregate(size_t column_ndx, Columns<SubTable> column)
         : m_column_ndx(column_ndx)
         , m_subtable_column(std::move(column))
@@ -3041,10 +4167,48 @@ public:
     void verify_column() const override
     {
         m_subtable_column.verify_column();
+=======
+    ListColumnAggregate(ColKey column_key, Columns<Lst<T>> column)
+        : m_column_key(column_key)
+        , m_list(std::move(column))
+    {
+    }
+
+    ListColumnAggregate(const ListColumnAggregate& other)
+        : m_column_key(other.m_column_key)
+        , m_list(other.m_list)
+    {
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<ListColumnAggregate>(*this);
+    }
+
+    ConstTableRef get_base_table() const override
+    {
+        return m_list.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+    {
+        m_list.set_base_table(table);
+    }
+
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_list.set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_list.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override
     {
+<<<<<<< HEAD
         Value<ConstTableRef> subtables;
         m_subtable_column.evaluate_internal(index, subtables, 1);
         REALM_ASSERT_DEBUG(subtables.m_values > 0 || subtables.m_from_link_list);
@@ -3058,6 +4222,24 @@ public:
                 size_t s = table->size();
                 for (unsigned j = 0; j < s; j++) {
                     op.accumulate(table->get<T>(m_column_ndx, j));
+=======
+        Allocator& alloc = get_base_table()->get_alloc();
+        Value<ref_type> list_refs;
+        m_list.get_lists(index, list_refs, 1);
+        REALM_ASSERT_DEBUG(list_refs.m_values > 0 || list_refs.m_from_link_list);
+        size_t sz = list_refs.m_values;
+        // The result is an aggregate value for each table
+        auto v = make_value_for_link<R>(!list_refs.m_from_link_list, sz);
+        for (unsigned i = 0; i < sz; i++) {
+            auto list_ref = list_refs.m_storage[i];
+            Operation op;
+            if (list_ref) {
+                BPlusTree<T> list(alloc);
+                list.init_from_ref(list_ref);
+                size_t s = list.size();
+                for (unsigned j = 0; j < s; j++) {
+                    op.accumulate(list.get(j));
+>>>>>>> origin/develop12
                 }
             }
             if (op.is_null()) {
@@ -3076,39 +4258,64 @@ public:
     }
 
 private:
+<<<<<<< HEAD
     size_t m_column_ndx;
     Columns<SubTable> m_subtable_column;
 };
 
 template <class Operator>
 Query compare(const Subexpr2<Link>& left, const ConstRow& row)
+=======
+    ColKey m_column_key;
+    Columns<Lst<T>> m_list;
+};
+
+template <class Operator>
+Query compare(const Subexpr2<Link>& left, const ConstObj& obj)
+>>>>>>> origin/develop12
 {
     static_assert(std::is_same<Operator, Equal>::value || std::is_same<Operator, NotEqual>::value,
                   "Links can only be compared for equality.");
     const Columns<Link>* column = dynamic_cast<const Columns<Link>*>(&left);
     if (column) {
         const LinkMap& link_map = column->link_map();
+<<<<<<< HEAD
         REALM_ASSERT(link_map.target_table() == row.get_table() || !row.is_attached());
 #ifdef REALM_OLDQUERY_FALLBACK
         if (link_map.m_link_columns.size() == 1) {
+=======
+        REALM_ASSERT(link_map.get_target_table()->get_key() == obj.get_table()->get_key());
+#ifdef REALM_OLDQUERY_FALLBACK
+        if (link_map.get_nb_hops() == 1) {
+>>>>>>> origin/develop12
             // We can fall back to Query::links_to for != and == operations on links, but only
             // for == on link lists. This is because negating query.links_to() is equivalent to
             // to "ALL linklist != row" rather than the "ANY linklist != row" semantics we're after.
             if (link_map.m_link_types[0] == col_type_Link ||
                 (link_map.m_link_types[0] == col_type_LinkList && std::is_same<Operator, Equal>::value)) {
+<<<<<<< HEAD
                 const Table* t = column->get_base_table();
                 Query query(*t);
+=======
+                ConstTableRef t = column->get_base_table();
+                Query query(t);
+>>>>>>> origin/develop12
 
                 if (std::is_same<Operator, NotEqual>::value) {
                     // Negate the following `links_to`.
                     query.Not();
                 }
+<<<<<<< HEAD
                 query.links_to(link_map.m_link_column_indexes[0], row);
+=======
+                query.links_to(link_map.m_link_column_keys[0], obj.get_key());
+>>>>>>> origin/develop12
                 return query;
             }
         }
 #endif
     }
+<<<<<<< HEAD
     return make_expression<Compare<Operator, RowIndex>>(left.clone(), make_subexpr<ConstantRowValue>(row));
 }
 
@@ -3125,6 +4332,24 @@ inline Query operator==(const ConstRow& row, const Subexpr2<Link>& right)
     return compare<Equal>(right, row);
 }
 inline Query operator!=(const ConstRow& row, const Subexpr2<Link>& right)
+=======
+    return make_expression<Compare<Operator, ObjKey>>(left.clone(), make_subexpr<KeyValue>(obj.get_key()));
+}
+
+inline Query operator==(const Subexpr2<Link>& left, const ConstObj& row)
+{
+    return compare<Equal>(left, row);
+}
+inline Query operator!=(const Subexpr2<Link>& left, const ConstObj& row)
+{
+    return compare<NotEqual>(left, row);
+}
+inline Query operator==(const ConstObj& row, const Subexpr2<Link>& right)
+{
+    return compare<Equal>(right, row);
+}
+inline Query operator!=(const ConstObj& row, const Subexpr2<Link>& right)
+>>>>>>> origin/develop12
 {
     return compare<NotEqual>(right, row);
 }
@@ -3134,7 +4359,11 @@ Query compare(const Subexpr2<Link>& left, null)
 {
     static_assert(std::is_same<Operator, Equal>::value || std::is_same<Operator, NotEqual>::value,
                   "Links can only be compared for equality.");
+<<<<<<< HEAD
     return make_expression<Compare<Operator, RowIndex>>(left.clone(), make_subexpr<Value<RowIndex>>());
+=======
+    return make_expression<Compare<Operator, ObjKey>>(left.clone(), make_subexpr<KeyValue>(ObjKey{}));
+>>>>>>> origin/develop12
 }
 
 inline Query operator==(const Subexpr2<Link>& left, null)
@@ -3158,6 +4387,7 @@ inline Query operator!=(null, const Subexpr2<Link>& right)
 template <class T>
 class Columns : public Subexpr2<T> {
 public:
+<<<<<<< HEAD
     using ColType = typename ColumnTypeTraits<T>::column_type;
 
     Columns(size_t column, const Table* table, std::vector<size_t> links = {})
@@ -3186,19 +4416,40 @@ public:
                 init<ColType>(&other.get_column_base());
             }
         }
+=======
+    using LeafType = typename ColumnTypeTraits<T>::cluster_leaf_type;
+
+    Columns(ColKey column, ConstTableRef table, std::vector<ColKey> links = {})
+        : m_link_map(table, std::move(links))
+        , m_column_key(column)
+        , m_nullable(m_link_map.get_target_table()->is_nullable(m_column_key))
+    {
+    }
+
+    Columns(const Columns& other)
+        : m_link_map(other.m_link_map)
+        , m_column_key(other.m_column_key)
+        , m_nullable(other.m_nullable)
+    {
+>>>>>>> origin/develop12
     }
 
     Columns& operator=(const Columns& other)
     {
         if (this != &other) {
             m_link_map = other.m_link_map;
+<<<<<<< HEAD
             m_sg.reset();
             m_column_ndx = other.m_column_ndx;
+=======
+            m_column_key = other.m_column_key;
+>>>>>>> origin/develop12
             m_nullable = other.m_nullable;
         }
         return *this;
     }
 
+<<<<<<< HEAD
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches* patches) const override
     {
         return make_subexpr<Columns<T>>(*this, patches);
@@ -3219,11 +4470,41 @@ public:
         }
         else {
             init<ColType>(c);
+=======
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<Columns<T>>(*this);
+    }
+
+    // See comment in base class
+    void set_base_table(ConstTableRef table) override
+    {
+        if (table == get_base_table())
+            return;
+
+        m_link_map.set_base_table(table);
+        m_nullable = m_link_map.get_target_table()->is_nullable(m_column_key);
+    }
+
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_array_ptr = nullptr;
+        m_leaf_ptr = nullptr;
+        if (links_exist()) {
+            m_link_map.set_cluster(cluster);
+        }
+        else {
+            // Create new Leaf
+            m_array_ptr = LeafPtr(new (&m_leaf_cache_storage) LeafType(get_base_table()->get_alloc()));
+            cluster->init_leaf(m_column_key, m_array_ptr.get());
+            m_leaf_ptr = m_array_ptr.get();
+>>>>>>> origin/develop12
         }
     }
 
     bool has_search_index() const override
     {
+<<<<<<< HEAD
         return m_link_map.target_table()->has_search_index(m_column_ndx);
     }
 
@@ -3256,10 +4537,42 @@ public:
             ret.insert(ret.end(), ndxs.begin(), ndxs.end());
         }
         result.destroy();
+=======
+        return m_link_map.get_target_table()->has_search_index(m_column_key);
+    }
+
+    std::vector<ObjKey> find_all(Mixed value) const override
+    {
+        std::vector<ObjKey> ret;
+        std::vector<ObjKey> result;
+
+        if (m_nullable && std::is_same<T, int64_t>::value) {
+            util::Optional<int64_t> val;
+            if (!value.is_null()) {
+                val = value.get_int();
+            }
+            StringIndex* index = m_link_map.get_target_table()->get_search_index(m_column_key);
+            index->find_all(result, val);
+        }
+        else {
+            T val{};
+            if (!value.is_null()) {
+                val = value.get<T>();
+            }
+            StringIndex* index = m_link_map.get_target_table()->get_search_index(m_column_key);
+            index->find_all(result, val);
+        }
+
+        for (auto k : result) {
+            auto ndxs = m_link_map.get_origin_ndxs(k);
+            ret.insert(ret.end(), ndxs.begin(), ndxs.end());
+        }
+>>>>>>> origin/develop12
 
         return ret;
     }
 
+<<<<<<< HEAD
 
     void verify_column() const override
     {
@@ -3280,10 +4593,16 @@ public:
             m_sg.reset(new SequentialGetter<ActualColType>());
         }
         static_cast<SequentialGetter<ActualColType>&>(*m_sg).init(static_cast<const ActualColType*>(c));
+=======
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     // Recursively fetch tables of columns in expression tree. Used when user first builds a stand-alone expression
     // and binds it to a Query at a later time
+<<<<<<< HEAD
     const Table* get_base_table() const override
     {
         return m_link_map.base_table();
@@ -3303,10 +4622,27 @@ public:
             // LinkList with more than 0 values. Create Value with payload for all fields
 
             std::vector<size_t> links = m_link_map.get_links(index);
+=======
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    template <class LeafType2 = LeafType>
+    void evaluate_internal(size_t index, ValueBase& destination)
+    {
+        using U = typename LeafType2::value_type;
+
+        if (links_exist()) {
+            REALM_ASSERT(m_leaf_ptr == nullptr);
+            // LinkList with more than 0 values. Create Value with payload for all fields
+            std::vector<ObjKey> links = m_link_map.get_links(index);
+>>>>>>> origin/develop12
             auto v = make_value_for_link<typename util::RemoveOptional<U>::type>(m_link_map.only_unary_links(),
                                                                                  links.size());
 
             for (size_t t = 0; t < links.size(); t++) {
+<<<<<<< HEAD
                 size_t link_to = links[t];
                 sgc->cache_next(link_to);
 
@@ -3314,18 +4650,33 @@ public:
                     v.m_storage.set_null(t);
                 else
                     v.m_storage.set(t, sgc->get_next(link_to));
+=======
+                ConstObj obj = m_link_map.get_target_table()->get_object(links[t]);
+                if (obj.is_null(m_column_key))
+                    v.m_storage.set_null(t);
+                else
+                    v.m_storage.set(t, obj.get<U>(m_column_key));
+>>>>>>> origin/develop12
             }
             destination.import(v);
         }
         else {
+<<<<<<< HEAD
             // Not a Link column
             // make sequential getter load the respective leaf to access data at column row 'index'
             sgc->cache_next(index);
             size_t colsize = sgc->m_column->size();
+=======
+            REALM_ASSERT(m_leaf_ptr != nullptr);
+            auto leaf = static_cast<const LeafType2*>(m_leaf_ptr);
+            // Not a Link column
+            size_t colsize = leaf->size();
+>>>>>>> origin/develop12
 
             // Now load `ValueBase::chunk_size` rows from from the leaf into m_storage. If it's an integer
             // leaf, then it contains the method get_chunk() which copies these values in a super fast way (first
             // case of the `if` below. Otherwise, copy the values one by one in a for-loop (the `else` case).
+<<<<<<< HEAD
             if (std::is_same<U, int64_t>::value && index + ValueBase::chunk_size <= sgc->m_leaf_end) {
                 Value<int64_t> v(false, ValueBase::chunk_size);
 
@@ -3334,6 +4685,16 @@ public:
 
                 auto sgc_2 = static_cast<SequentialGetter<ColType>*>(m_sg.get());
                 sgc_2->m_leaf_ptr->get_chunk(index - sgc->m_leaf_start, v.m_storage.m_first);
+=======
+            if (std::is_same<U, int64_t>::value && index + ValueBase::chunk_size <= colsize) {
+                Value<int64_t> v(false, ValueBase::chunk_size);
+
+                // If you want to modify 'chunk_size' then update Array::get_chunk()
+                REALM_ASSERT_3(ValueBase::chunk_size, ==, 8);
+
+                auto leaf_2 = static_cast<const Array*>(leaf);
+                leaf_2->get_chunk(index, v.m_storage.m_first);
+>>>>>>> origin/develop12
 
                 destination.import(v);
             }
@@ -3344,7 +4705,11 @@ public:
                 Value<typename util::RemoveOptional<U>::type> v(false, rows);
 
                 for (size_t t = 0; t < rows; t++)
+<<<<<<< HEAD
                     v.m_storage.set(t, sgc->get_next(index + t));
+=======
+                    v.m_storage.set(t, leaf->get(index + t));
+>>>>>>> origin/develop12
 
                 destination.import(v);
             }
@@ -3353,23 +4718,64 @@ public:
 
     virtual std::string description(util::serializer::SerialisationState& state) const override
     {
+<<<<<<< HEAD
         return state.describe_columns(m_link_map, m_column_ndx);
+=======
+        return state.describe_columns(m_link_map, m_column_key);
+>>>>>>> origin/develop12
     }
 
     // Load values from Column into destination
     void evaluate(size_t index, ValueBase& destination) override
     {
+<<<<<<< HEAD
         if (m_nullable && std::is_same<typename ColType::value_type, int64_t>::value) {
             evaluate_internal<IntNullColumn>(index, destination);
         }
         else {
             evaluate_internal<ColType>(index, destination);
+=======
+        if (m_nullable && std::is_same<typename LeafType::value_type, int64_t>::value) {
+            evaluate_internal<ArrayIntNull>(index, destination);
+        }
+        else if (m_nullable && std::is_same<typename LeafType::value_type, bool>::value) {
+            evaluate_internal<ArrayBoolNull>(index, destination);
+        }
+        else {
+            evaluate_internal<LeafType>(index, destination);
+        }
+    }
+
+    void evaluate(ObjKey key, ValueBase& destination) override
+    {
+        auto table = m_link_map.get_target_table();
+        auto obj = table.unchecked_ptr()->get_object(key);
+        if (m_nullable && std::is_same<typename LeafType::value_type, int64_t>::value) {
+            Value<int64_t> v(false, 1);
+            v.m_storage.set(0, obj.template get<util::Optional<int64_t>>(m_column_key));
+            destination.import(v);
+        }
+        else if (m_nullable && std::is_same<typename LeafType::value_type, bool>::value) {
+            Value<bool> v(false, 1);
+            v.m_storage.set(0, obj.template get<util::Optional<bool>>(m_column_key));
+            destination.import(v);
+        }
+        else {
+            Value<typename util::RemoveOptional<T>::type> v(false, 1);
+            T val = obj.template get<T>(m_column_key);
+            v.m_storage.set(0, val);
+            destination.import(v);
+>>>>>>> origin/develop12
         }
     }
 
     bool links_exist() const
     {
+<<<<<<< HEAD
         return m_link_map.m_link_columns.size() > 0;
+=======
+        return m_link_map.has_links();
+>>>>>>> origin/develop12
     }
 
     bool only_unary_links() const
@@ -3387,23 +4793,42 @@ public:
         return m_link_map;
     }
 
+<<<<<<< HEAD
     size_t column_ndx() const noexcept
     {
         return m_sg ? get_column_base().get_column_index() : m_column_ndx;
+=======
+    ColKey column_key() const noexcept
+    {
+        return m_column_key;
+>>>>>>> origin/develop12
     }
 
 private:
     LinkMap m_link_map;
 
+<<<<<<< HEAD
     // Fast (leaf caching) value getter for payload column (column in table on which query condition is executed)
     std::unique_ptr<SequentialGetterBase> m_sg;
 
     // Column index of payload column of m_table
     size_t m_column_ndx;
+=======
+    // Leaf cache
+    using LeafCacheStorage = typename std::aligned_storage<sizeof(LeafType), alignof(LeafType)>::type;
+    using LeafPtr = std::unique_ptr<ArrayPayload, PlacementDelete>;
+    LeafCacheStorage m_leaf_cache_storage;
+    LeafPtr m_array_ptr;
+    const ArrayPayload* m_leaf_ptr = nullptr;
+
+    // Column index of payload column of m_table
+    mutable ColKey m_column_key;
+>>>>>>> origin/develop12
 
     // set to false by default for stand-alone Columns declaration that are not yet associated with any table
     // or oclumn. Call init() to update it or use a constructor that takes table + column index as argument.
     bool m_nullable = false;
+<<<<<<< HEAD
 
     const ColumnBase& get_column_base() const noexcept
     {
@@ -3412,6 +4837,8 @@ private:
         else
             return *static_cast<SequentialGetter<ColType>&>(*m_sg).m_column;
     }
+=======
+>>>>>>> origin/develop12
 };
 
 template <typename T, typename Operation>
@@ -3420,6 +4847,7 @@ class SubColumnAggregate;
 template <typename T>
 class SubColumns : public Subexpr {
 public:
+<<<<<<< HEAD
     SubColumns(Columns<T> column, LinkMap link_map)
         : m_column(std::move(column))
         , m_link_map(std::move(link_map))
@@ -3427,10 +4855,20 @@ public:
     }
 
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches*) const override
+=======
+    SubColumns(Columns<T>&& column, const LinkMap& link_map)
+        : m_column(std::move(column))
+        , m_link_map(link_map)
+    {
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+>>>>>>> origin/develop12
     {
         return make_subexpr<SubColumns<T>>(*this);
     }
 
+<<<<<<< HEAD
     const Table* get_base_table() const override
     {
         return m_link_map.base_table();
@@ -3446,6 +4884,22 @@ public:
     {
         m_link_map.verify_columns();
         m_column.verify_column();
+=======
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+    {
+        m_link_map.set_base_table(table);
+        m_column.set_base_table(m_link_map.get_target_table());
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t, ValueBase&) override
@@ -3487,6 +4941,7 @@ private:
 template <typename T, typename Operation>
 class SubColumnAggregate : public Subexpr2<typename Operation::ResultType> {
 public:
+<<<<<<< HEAD
     SubColumnAggregate(Columns<T> column, LinkMap link_map)
         : m_column(std::move(column))
         , m_link_map(std::move(link_map))
@@ -3518,10 +4973,48 @@ public:
     {
         m_link_map.verify_columns();
         m_column.verify_column();
+=======
+    SubColumnAggregate(const Columns<T>& column, const LinkMap& link_map)
+        : m_column(column)
+        , m_link_map(link_map)
+    {
+    }
+    SubColumnAggregate(SubColumnAggregate const& other)
+        : m_column(other.m_column)
+        , m_link_map(other.m_link_map)
+    {
+    }
+
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<SubColumnAggregate>(*this);
+    }
+
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+    {
+        m_link_map.set_base_table(table);
+        m_column.set_base_table(m_link_map.get_target_table());
+    }
+
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_link_map.set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override
     {
+<<<<<<< HEAD
         std::vector<size_t> links = m_link_map.get_links(index);
         std::sort(links.begin(), links.end());
 
@@ -3545,6 +5038,19 @@ public:
                 size_t previous_link = link;
                 link = links[link_index];
                 value_index += link - previous_link;
+=======
+        std::vector<ObjKey> keys = m_link_map.get_links(index);
+        std::sort(keys.begin(), keys.end());
+
+        Operation op;
+        for (auto key : keys) {
+            Value<T> value(false, 1);
+            m_column.evaluate(key, value);
+            size_t value_index = 0;
+            const auto& value_storage = value.m_storage;
+            if (!value_storage.is_null(value_index)) {
+                op.accumulate(value_storage[value_index]);
+>>>>>>> origin/develop12
             }
         }
         if (op.is_null()) {
@@ -3558,7 +5064,12 @@ public:
     virtual std::string description(util::serializer::SerialisationState& state) const override
     {
         util::serializer::SerialisationState empty_state;
+<<<<<<< HEAD
         return state.describe_columns(m_link_map, realm::npos) + util::serializer::value_separator + Operation::description() + util::serializer::value_separator + m_column.description(empty_state);
+=======
+        return state.describe_columns(m_link_map, ColKey()) + util::serializer::value_separator +
+               Operation::description() + util::serializer::value_separator + m_column.description(empty_state);
+>>>>>>> origin/develop12
     }
 
 private:
@@ -3566,6 +5077,7 @@ private:
     LinkMap m_link_map;
 };
 
+<<<<<<< HEAD
 struct SubQueryCountHandoverPatch : QueryNodeHandoverPatch {
     QueryHandoverPatch m_query;
 };
@@ -3591,15 +5103,56 @@ public:
     void verify_column() const override
     {
         m_link_map.verify_columns();
+=======
+class SubQueryCount : public Subexpr2<Int> {
+public:
+    SubQueryCount(const Query& q, const LinkMap& link_map)
+        : m_query(q)
+        , m_link_map(link_map)
+    {
+        REALM_ASSERT(q.produces_results_in_table_order());
+        REALM_ASSERT(m_query.get_table() == m_link_map.get_target_table());
+    }
+
+    ConstTableRef get_base_table() const override
+    {
+        return m_link_map.get_base_table();
+    }
+
+    void set_base_table(ConstTableRef table) override
+    {
+        m_link_map.set_base_table(table);
+        m_query.set_table(m_link_map.get_target_table().cast_away_const());
+    }
+
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_link_map.set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_link_map.collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     void evaluate(size_t index, ValueBase& destination) override
     {
+<<<<<<< HEAD
         std::vector<size_t> links = m_link_map.get_links(index);
         std::sort(links.begin(), links.end());
 
         size_t count = std::accumulate(links.begin(), links.end(), size_t(0), [this](size_t running_count, size_t link) {
             return running_count + m_query.count(link, link + 1, 1);
+=======
+        std::vector<ObjKey> links = m_link_map.get_links(index);
+        // std::sort(links.begin(), links.end());
+        m_query.init();
+
+        size_t count = std::accumulate(links.begin(), links.end(), size_t(0), [this](size_t running_count, ObjKey k) {
+            ConstObj obj = m_link_map.get_target_table()->get_object(k);
+            return running_count + m_query.eval_object(obj);
+>>>>>>> origin/develop12
         });
 
         destination.import(Value<Int>(false, 1, size_t(count)));
@@ -3607,16 +5160,26 @@ public:
 
     virtual std::string description(util::serializer::SerialisationState& state) const override
     {
+<<<<<<< HEAD
         REALM_ASSERT(m_link_map.base_table() != nullptr);
         std::string target = state.describe_columns(m_link_map, realm::npos);
         std::string var_name = state.get_variable_name(m_link_map.base_table()->get_table_ref());
         state.subquery_prefix_list.push_back(var_name);
         std::string desc = "SUBQUERY(" + target + ", " + var_name + ", " + m_query.get_description(state) + ")"
             + util::serializer::value_separator + "@count";
+=======
+        REALM_ASSERT(m_link_map.get_base_table() != nullptr);
+        std::string target = state.describe_columns(m_link_map, ColKey());
+        std::string var_name = state.get_variable_name(m_link_map.get_base_table());
+        state.subquery_prefix_list.push_back(var_name);
+        std::string desc = "SUBQUERY(" + target + ", " + var_name + ", " + m_query.get_description(state) + ")" +
+                           util::serializer::value_separator + "@count";
+>>>>>>> origin/develop12
         state.subquery_prefix_list.pop_back();
         return desc;
     }
 
+<<<<<<< HEAD
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches* patches) const override
     {
         if (patches)
@@ -3646,6 +5209,14 @@ private:
         patches->emplace_back(patch.release());
     }
 
+=======
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<SubQueryCount>(*this);
+    }
+
+private:
+>>>>>>> origin/develop12
     Query m_query;
     LinkMap m_link_map;
 };
@@ -3658,7 +5229,11 @@ public:
         : m_query(std::move(query))
         , m_link_map(link_column.link_map())
     {
+<<<<<<< HEAD
         REALM_ASSERT(m_link_map.target_table() == m_query.get_table());
+=======
+        REALM_ASSERT(m_link_map.get_target_table() == m_query.get_table());
+>>>>>>> origin/develop12
     }
 
     SubQueryCount count() const
@@ -3722,7 +5297,11 @@ class Maximum : public BaseAggregateOperation<T, Maximum<T>> {
 public:
     static T initial_value()
     {
+<<<<<<< HEAD
         return std::numeric_limits<T>::min();
+=======
+        return std::numeric_limits<T>::lowest();
+>>>>>>> origin/develop12
     }
     static T apply(T a, T b)
     {
@@ -3776,7 +5355,10 @@ public:
     {
         return "@avg";
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 };
 }
 
@@ -3788,8 +5370,13 @@ public:
     {
     }
 
+<<<<<<< HEAD
     UnaryOperator(const UnaryOperator& other, QueryNodeHandoverPatches* patches)
         : m_left(other.m_left->clone(patches))
+=======
+    UnaryOperator(const UnaryOperator& other)
+        : m_left(other.m_left->clone())
+>>>>>>> origin/develop12
     {
     }
 
@@ -3801,23 +5388,46 @@ public:
         return *this;
     }
 
+<<<<<<< HEAD
     UnaryOperator(UnaryOperator&&) = default;
     UnaryOperator& operator=(UnaryOperator&&) = default;
 
     // See comment in base class
     void set_base_table(const Table* table) override
+=======
+    UnaryOperator(UnaryOperator&&) noexcept = default;
+    UnaryOperator& operator=(UnaryOperator&&) noexcept = default;
+
+    // See comment in base class
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_left->set_base_table(table);
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_left->verify_column();
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_left->set_cluster(cluster);
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_left->collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     // Recursively fetch tables of columns in expression tree. Used when user first builds a stand-alone expression
     // and binds it to a Query at a later time
+<<<<<<< HEAD
     const Table* get_base_table() const override
+=======
+    ConstTableRef get_base_table() const override
+>>>>>>> origin/develop12
     {
         return m_left->get_base_table();
     }
@@ -3840,6 +5450,7 @@ public:
         return "";
     }
 
+<<<<<<< HEAD
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches* patches) const override
     {
         return make_subexpr<UnaryOperator>(*this, patches);
@@ -3848,6 +5459,11 @@ public:
     void apply_handover_patch(QueryNodeHandoverPatches& patches, Group& group) override
     {
         m_left->apply_handover_patch(patches, group);
+=======
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<UnaryOperator>(*this);
+>>>>>>> origin/develop12
     }
 
 private:
@@ -3865,9 +5481,15 @@ public:
     {
     }
 
+<<<<<<< HEAD
     Operator(const Operator& other, QueryNodeHandoverPatches* patches)
         : m_left(other.m_left->clone(patches))
         , m_right(other.m_right->clone(patches))
+=======
+    Operator(const Operator& other)
+        : m_left(other.m_left->clone())
+        , m_right(other.m_right->clone())
+>>>>>>> origin/develop12
     {
     }
 
@@ -3880,35 +5502,61 @@ public:
         return *this;
     }
 
+<<<<<<< HEAD
     Operator(Operator&&) = default;
     Operator& operator=(Operator&&) = default;
 
     // See comment in base class
     void set_base_table(const Table* table) override
+=======
+    Operator(Operator&&) noexcept = default;
+    Operator& operator=(Operator&&) noexcept = default;
+
+    // See comment in base class
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_left->set_base_table(table);
         m_right->set_base_table(table);
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_left->verify_column();
         m_right->verify_column();
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        m_left->set_cluster(cluster);
+        m_right->set_cluster(cluster);
+>>>>>>> origin/develop12
     }
 
     // Recursively fetch tables of columns in expression tree. Used when user first builds a stand-alone expression
     // and
     // binds it to a Query at a later time
+<<<<<<< HEAD
     const Table* get_base_table() const override
     {
         const Table* l = m_left->get_base_table();
         const Table* r = m_right->get_base_table();
+=======
+    ConstTableRef get_base_table() const override
+    {
+        ConstTableRef l = m_left->get_base_table();
+        ConstTableRef r = m_right->get_base_table();
+>>>>>>> origin/develop12
 
         // Queries do not support multiple different tables; all tables must be the same.
         REALM_ASSERT(l == nullptr || r == nullptr || l == r);
 
         // nullptr pointer means expression which isn't yet associated with any table, or is a Value<T>
+<<<<<<< HEAD
         return l ? l : r;
+=======
+        return bool(l) ? l : r;
+>>>>>>> origin/develop12
     }
 
     // destination = operator(left, right)
@@ -3936,6 +5584,7 @@ public:
         return s;
     }
 
+<<<<<<< HEAD
     std::unique_ptr<Subexpr> clone(QueryNodeHandoverPatches* patches) const override
     {
         return make_subexpr<Operator>(*this, patches);
@@ -3945,6 +5594,11 @@ public:
     {
         m_right->apply_handover_patch(patches, group);
         m_left->apply_handover_patch(patches, group);
+=======
+    std::unique_ptr<Subexpr> clone() const override
+    {
+        return make_subexpr<Operator>(*this);
+>>>>>>> origin/develop12
     }
 
 private:
@@ -3961,6 +5615,7 @@ inline Mixed get_mixed(const Value<T>& val)
 }
 
 template <>
+<<<<<<< HEAD
 inline Mixed get_mixed(const Value<RowIndex>&)
 {
     REALM_ASSERT(false);
@@ -3968,6 +5623,8 @@ inline Mixed get_mixed(const Value<RowIndex>&)
 }
 
 template <>
+=======
+>>>>>>> origin/develop12
 inline Mixed get_mixed(const Value<int>& val)
 {
     return Mixed(int64_t(val.m_storage[0]));
@@ -3983,23 +5640,49 @@ public:
     {
         m_left_is_const = m_left->has_constant_evaluation();
         if (m_left_is_const) {
+<<<<<<< HEAD
             m_left->evaluate(-1/*unused*/, m_left_value);
+=======
+            m_left->evaluate(-1 /*unused*/, m_left_value);
+>>>>>>> origin/develop12
         }
     }
 
     // See comment in base class
+<<<<<<< HEAD
     void set_base_table(const Table* table) override
+=======
+    void set_base_table(ConstTableRef table) override
+>>>>>>> origin/develop12
     {
         m_left->set_base_table(table);
         m_right->set_base_table(table);
     }
 
+<<<<<<< HEAD
+=======
+    void set_cluster(const Cluster* cluster) override
+    {
+        if (m_has_matches) {
+            m_cluster = cluster;
+        }
+        else {
+            m_left->set_cluster(cluster);
+            m_right->set_cluster(cluster);
+        }
+    }
+
+>>>>>>> origin/develop12
     double init() override
     {
         double dT = m_left_is_const ? 10.0 : 50.0;
         if (std::is_same<TCond, Equal>::value && m_left_is_const && m_right->has_search_index()) {
             if (m_left_value.m_storage.is_null(0)) {
+<<<<<<< HEAD
                 m_matches = m_right->find_all(util::Optional<Mixed>());
+=======
+                m_matches = m_right->find_all(Mixed());
+>>>>>>> origin/develop12
             }
             else {
                 m_matches = m_right->find_all(get_mixed(m_left_value));
@@ -4018,6 +5701,7 @@ public:
         return dT;
     }
 
+<<<<<<< HEAD
     void verify_column() const override
     {
         m_left->verify_column();
@@ -4030,17 +5714,36 @@ public:
     {
         const Table* l = m_left->get_base_table();
         const Table* r = m_right->get_base_table();
+=======
+    // Recursively fetch tables of columns in expression tree. Used when user first builds a stand-alone expression
+    // and binds it to a Query at a later time
+    ConstTableRef get_base_table() const override
+    {
+        ConstTableRef l = m_left->get_base_table();
+        ConstTableRef r = m_right->get_base_table();
+>>>>>>> origin/develop12
 
         // All main tables in each subexpression of a query (table.columns() or table.link()) must be the same.
         REALM_ASSERT(l == nullptr || r == nullptr || l == r);
 
         // nullptr pointer means expression which isn't yet associated with any table, or is a Value<T>
+<<<<<<< HEAD
         return l ? l : r;
+=======
+        return (l) ? l : r;
+    }
+
+    void collect_dependencies(std::vector<TableKey>& tables) const override
+    {
+        m_left->collect_dependencies(tables);
+        m_right->collect_dependencies(tables);
+>>>>>>> origin/develop12
     }
 
     size_t find_first(size_t start, size_t end) const override
     {
         if (m_has_matches) {
+<<<<<<< HEAD
             if (m_index_end == 0)
                 return not_found;
 
@@ -4060,6 +5763,43 @@ public:
                 }
             }
             return not_found;
+=======
+            if (m_index_end == 0 || start >= end)
+                return not_found;
+
+            ObjKey first_key = m_cluster->get_real_key(start);
+            ObjKey actual_key;
+
+            // Sequential lookup optimization: when the query isn't constrained
+            // to a LnkLst we'll get find_first() requests in ascending order,
+            // so we can do a simple linear scan.
+            if (m_index_get < m_index_end && m_matches[m_index_get] <= first_key) {
+                actual_key = m_matches[m_index_get];
+                // skip through keys which are in "earlier" leafs than the one selected by start..end:
+                while (first_key > actual_key) {
+                    m_index_get++;
+                    if (m_index_get == m_index_end)
+                        return not_found;
+                    actual_key = m_matches[m_index_get];
+                }
+            }
+            // Otherwise if we get requests out of order we have to do a more
+            // expensive binary search
+            else {
+                auto it = std::lower_bound(m_matches.begin(), m_matches.end(), first_key);
+                if (it == m_matches.end())
+                    return not_found;
+                actual_key = *it;
+            }
+
+            // if actual key is bigger than last key, it is not in this leaf
+            ObjKey last_key = start + 1 == end ? first_key : m_cluster->get_real_key(end - 1);
+            if (actual_key > last_key)
+                return not_found;
+
+            // key is known to be in this leaf, so find key whithin leaf keys
+            return m_cluster->lower_bound_key(ObjKey(actual_key.value - m_cluster->get_offset()));
+>>>>>>> origin/develop12
         }
 
         size_t match;
@@ -4091,6 +5831,7 @@ public:
 
     virtual std::string description(util::serializer::SerialisationState& state) const override
     {
+<<<<<<< HEAD
         if (std::is_same<TCond, BeginsWith>::value
             || std::is_same<TCond, BeginsWithIns>::value
             || std::is_same<TCond, EndsWith>::value
@@ -4127,11 +5868,40 @@ private:
     {
         if (m_left_is_const) {
             m_left->evaluate(-1/*unused*/, m_left_value);
+=======
+        if (std::is_same<TCond, BeginsWith>::value || std::is_same<TCond, BeginsWithIns>::value ||
+            std::is_same<TCond, EndsWith>::value || std::is_same<TCond, EndsWithIns>::value ||
+            std::is_same<TCond, Contains>::value || std::is_same<TCond, ContainsIns>::value ||
+            std::is_same<TCond, Like>::value || std::is_same<TCond, LikeIns>::value) {
+            // these string conditions have the arguments reversed but the order is important
+            // operations ==, and != can be reversed because the produce the same results both ways
+            return util::serializer::print_value(m_right->description(state) + " " + TCond::description() + " " +
+                                                 m_left->description(state));
+        }
+        return util::serializer::print_value(m_left->description(state) + " " + TCond::description() + " " +
+                                             m_right->description(state));
+    }
+
+    std::unique_ptr<Expression> clone() const override
+    {
+        return std::unique_ptr<Expression>(new Compare(*this));
+    }
+
+private:
+    Compare(const Compare& other)
+        : m_left(other.m_left->clone())
+        , m_right(other.m_right->clone())
+        , m_left_is_const(other.m_left_is_const)
+    {
+        if (m_left_is_const) {
+            m_left->evaluate(-1 /*unused*/, m_left_value);
+>>>>>>> origin/develop12
         }
     }
 
     std::unique_ptr<TLeft> m_left;
     std::unique_ptr<TRight> m_right;
+<<<<<<< HEAD
     bool m_left_is_const;
     Value<T> m_left_value;
     bool m_has_matches = false;
@@ -4141,5 +5911,15 @@ private:
     size_t m_index_end = 0;
 };
 
+=======
+    const Cluster* m_cluster;
+    bool m_left_is_const;
+    Value<T> m_left_value;
+    bool m_has_matches = false;
+    std::vector<ObjKey> m_matches;
+    mutable size_t m_index_get = 0;
+    size_t m_index_end = 0;
+};
+>>>>>>> origin/develop12
 }
 #endif // REALM_QUERY_EXPRESSION_HPP

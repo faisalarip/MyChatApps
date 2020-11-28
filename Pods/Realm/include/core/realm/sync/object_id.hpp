@@ -25,20 +25,31 @@
 #include <map>
 #include <set>
 
+<<<<<<< HEAD
 #include <stdint.h>
 
 #include <realm/util/optional.hpp>
 #include <realm/string_data.hpp>
 #include <realm/data_type.hpp>
+=======
+#include <realm/global_key.hpp>
+#include <realm/string_data.hpp>
+#include <realm/data_type.hpp>
+#include <realm/keys.hpp>
+#include <realm/db.hpp>
+>>>>>>> origin/develop12
 #include <realm/util/metered/map.hpp>
 #include <realm/util/metered/set.hpp>
 #include <realm/util/metered/string.hpp>
 
+<<<<<<< HEAD
 // Only set this to one when testing the code paths that exercise object ID
 // hash collisions. It artificially limits the "optimistic" local ID to use
 // only the lower 15 bits of the ID rather than the lower 63 bits, making it
 // feasible to generate collisions within reasonable time.
 #define REALM_EXERCISE_OBJECT_ID_COLLISION 0
+=======
+>>>>>>> origin/develop12
 
 namespace realm {
 
@@ -46,6 +57,7 @@ class Group;
 
 namespace sync {
 
+<<<<<<< HEAD
 /// ObjectIDs are globally unique for a given class (table), and up to 128 bits
 /// wide. They are represented as two 64-bit integers, each of which may
 /// frequently be small, for best on-wire compressibility.
@@ -135,10 +147,13 @@ public:
     virtual int_fast64_t get_client_file_ident() const = 0;
 };
 
+=======
+>>>>>>> origin/develop12
 // ObjectIDSet is a set of (table name, object id)
 class ObjectIDSet {
 public:
 
+<<<<<<< HEAD
     void insert(StringData table, ObjectID object_id);
     void erase(StringData table, ObjectID object_id);
     bool contains(StringData table, ObjectID object_id) const noexcept;
@@ -146,6 +161,15 @@ public:
 
     // A map from table name to a set of object ids.
     util::metered::map<std::string, util::metered::set<ObjectID>> m_objects;
+=======
+    void insert(StringData table, GlobalKey object_id);
+    void erase(StringData table, GlobalKey object_id);
+    bool contains(StringData table, GlobalKey object_id) const noexcept;
+    bool empty() const noexcept;
+
+    // A map from table name to a set of object ids.
+    util::metered::map<std::string, util::metered::set<GlobalKey>> m_objects;
+>>>>>>> origin/develop12
 };
 
 // FieldSet is a set of fields in tables. A field is defined by a
@@ -153,29 +177,45 @@ public:
 class FieldSet {
 public:
 
+<<<<<<< HEAD
     void insert(StringData table, StringData column, ObjectID object_id);
     void erase(StringData table, StringData column, ObjectID object_id);
     bool contains(StringData table, ObjectID object_id) const noexcept;
     bool contains(StringData table, StringData column, ObjectID object_id) const noexcept;
+=======
+    void insert(StringData table, StringData column, GlobalKey object_id);
+    void erase(StringData table, StringData column, GlobalKey object_id);
+    bool contains(StringData table, GlobalKey object_id) const noexcept;
+    bool contains(StringData table, StringData column, GlobalKey object_id) const noexcept;
+>>>>>>> origin/develop12
     bool empty() const noexcept;
 
     // A map from table name to a map from column name to a set of
     // object ids.
     util::metered::map<
         std::string,
+<<<<<<< HEAD
         util::metered::map<std::string, util::metered::set<ObjectID>>
+=======
+        util::metered::map<std::string, util::metered::set<GlobalKey>>
+>>>>>>> origin/develop12
     >  m_fields;
 };
 
 struct GlobalID {
     StringData table_name;
+<<<<<<< HEAD
     ObjectID object_id;
+=======
+    GlobalKey object_id;
+>>>>>>> origin/develop12
 
     bool operator==(const GlobalID& other) const;
     bool operator!=(const GlobalID& other) const;
     bool operator<(const GlobalID& other) const;
 };
 
+<<<<<<< HEAD
 
 
 
@@ -209,6 +249,11 @@ constexpr ObjectID::operator bool() const noexcept
     return (*this != ObjectID{});
 }
 
+=======
+/// Implementation:
+
+
+>>>>>>> origin/develop12
 inline bool GlobalID::operator==(const GlobalID& other) const
 {
     return object_id == other.object_id && table_name == other.table_name;
@@ -226,6 +271,7 @@ inline bool GlobalID::operator<(const GlobalID& other) const
     return table_name < other.table_name;
 }
 
+<<<<<<< HEAD
 
 std::ostream& operator<<(std::ostream&, const realm::sync::ObjectID&);
 std::istream& operator>>(std::istream&, realm::sync::ObjectID&);
@@ -283,6 +329,8 @@ ObjectIDProvider::local_to_global_object_id_squeezed(LocalObjectID squeezed)
     return ObjectID{hi, lo};
 }
 
+=======
+>>>>>>> origin/develop12
 inline bool ObjectIDSet::empty() const noexcept
 {
     return m_objects.empty();
@@ -296,6 +344,7 @@ inline bool FieldSet::empty() const noexcept
 } // namespace sync
 } // namespace realm
 
+<<<<<<< HEAD
 namespace std {
 
 template <>
@@ -308,5 +357,7 @@ struct hash<realm::sync::ObjectID> {
 
 } // namespace std
 
+=======
+>>>>>>> origin/develop12
 #endif // REALM_SYNC_OBJECT_ID_HPP
 

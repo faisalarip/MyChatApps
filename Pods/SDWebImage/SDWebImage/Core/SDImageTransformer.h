@@ -59,7 +59,11 @@ FOUNDATION_EXPORT NSString * _Nullable SDThumbnailedKeyForKey(NSString * _Nullab
 
 /**
  Pipeline transformer. Which you can bind multiple transformers together to let the image to be transformed one by one in order and generate the final image.
+<<<<<<< HEAD
  @note Because transformers are lightweight, if you want to append or arrange transfomers, create another pipeline transformer instead. This class is considered as immutable.
+=======
+ @note Because transformers are lightweight, if you want to append or arrange transformers, create another pipeline transformer instead. This class is considered as immutable.
+>>>>>>> origin/develop12
  */
 @interface SDImagePipelineTransformer : NSObject <SDImageTransformer>
 

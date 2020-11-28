@@ -25,7 +25,10 @@ static const size_t kBytesPerPixel = 4;
 static const size_t kBitsPerComponent = 8;
 
 static const CGFloat kBytesPerMB = 1024.0f * 1024.0f;
+<<<<<<< HEAD
 static const CGFloat kPixelsPerMB = kBytesPerMB / kBytesPerPixel;
+=======
+>>>>>>> origin/develop12
 /*
  * Defines the maximum size in MB of the decoded image when the flag `SDWebImageScaleDownLargeImages` is set
  * Suggested value for iPad1 and iPhone 3GS: 60.
@@ -379,8 +382,13 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         // see kDestImageSizeMB, and how it relates to destTotalPixels.
         CGFloat imageScale = sqrt(destTotalPixels / sourceTotalPixels);
         CGSize destResolution = CGSizeZero;
+<<<<<<< HEAD
         destResolution.width = (int)(sourceResolution.width * imageScale);
         destResolution.height = (int)(sourceResolution.height * imageScale);
+=======
+        destResolution.width = MAX(1, (int)(sourceResolution.width * imageScale));
+        destResolution.height = MAX(1, (int)(sourceResolution.height * imageScale));
+>>>>>>> origin/develop12
         
         // device color space
         CGColorSpaceRef colorspaceRef = [self colorSpaceGetDeviceRGB];
@@ -406,20 +414,32 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         CGContextSetInterpolationQuality(destContext, kCGInterpolationHigh);
         
         // Now define the size of the rectangle to be used for the
+<<<<<<< HEAD
         // incremental blits from the input image to the output image.
+=======
+        // incremental bits from the input image to the output image.
+>>>>>>> origin/develop12
         // we use a source tile width equal to the width of the source
         // image due to the way that iOS retrieves image data from disk.
         // iOS must decode an image from disk in full width 'bands', even
         // if current graphics context is clipped to a subrect within that
         // band. Therefore we fully utilize all of the pixel data that results
+<<<<<<< HEAD
         // from a decoding opertion by achnoring our tile size to the full
+=======
+        // from a decoding operation by anchoring our tile size to the full
+>>>>>>> origin/develop12
         // width of the input image.
         CGRect sourceTile = CGRectZero;
         sourceTile.size.width = sourceResolution.width;
         // The source tile height is dynamic. Since we specified the size
         // of the source tile in MB, see how many rows of pixels high it
         // can be given the input image width.
+<<<<<<< HEAD
         sourceTile.size.height = (int)(tileTotalPixels / sourceTile.size.width );
+=======
+        sourceTile.size.height = MAX(1, (int)(tileTotalPixels / sourceTile.size.width));
+>>>>>>> origin/develop12
         sourceTile.origin.x = 0.0f;
         // The output tile is the same proportions as the input tile, but
         // scaled to image scale.
@@ -428,7 +448,11 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         destTile.size.height = sourceTile.size.height * imageScale;
         destTile.origin.x = 0.0f;
         // The source seem overlap is proportionate to the destination seem overlap.
+<<<<<<< HEAD
         // this is the amount of pixels to overlap each tile as we assemble the ouput image.
+=======
+        // this is the amount of pixels to overlap each tile as we assemble the output image.
+>>>>>>> origin/develop12
         float sourceSeemOverlap = (int)((kDestSeemOverlap/destResolution.height)*sourceResolution.height);
         CGImageRef sourceTileImageRef;
         // calculate the number of read/write operations required to assemble the
@@ -485,7 +509,11 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
 }
 
 + (void)setDefaultScaleDownLimitBytes:(NSUInteger)defaultScaleDownLimitBytes {
+<<<<<<< HEAD
     if (defaultScaleDownLimitBytes < kBytesPerMB) {
+=======
+    if (defaultScaleDownLimitBytes < kBytesPerPixel) {
+>>>>>>> origin/develop12
         return;
     }
     kDestImageLimitBytes = defaultScaleDownLimitBytes;
@@ -561,7 +589,11 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
 }
 #endif
 
+<<<<<<< HEAD
 #pragma mark - Helper Fuction
+=======
+#pragma mark - Helper Function
+>>>>>>> origin/develop12
 + (BOOL)shouldDecodeImage:(nullable UIImage *)image {
     // Prevent "CGBitmapContextCreateImage: invalid context 0x0" error
     if (image == nil) {
@@ -596,6 +628,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
     }
     CGFloat destTotalPixels;
     if (bytes == 0) {
+<<<<<<< HEAD
         bytes = kDestImageLimitBytes;
     }
     destTotalPixels = bytes / kBytesPerPixel;
@@ -603,6 +636,12 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         // Too small to scale down
         return NO;
     }
+=======
+        bytes = [self defaultScaleDownLimitBytes];
+    }
+    bytes = MAX(bytes, kBytesPerPixel);
+    destTotalPixels = bytes / kBytesPerPixel;
+>>>>>>> origin/develop12
     float imageScale = destTotalPixels / sourceTotalPixels;
     if (imageScale < 1) {
         shouldScaleDown = YES;

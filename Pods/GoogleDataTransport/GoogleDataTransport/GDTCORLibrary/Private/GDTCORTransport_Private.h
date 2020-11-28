@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <GoogleDataTransport/GDTCORTransport.h>
+=======
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORTransport.h"
+>>>>>>> origin/develop12
 
 @class GDTCORTransformer;
 

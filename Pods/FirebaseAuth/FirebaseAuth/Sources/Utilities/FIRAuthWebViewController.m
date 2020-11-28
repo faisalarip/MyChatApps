@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
+=======
+#import <TargetConditionals.h>
+>>>>>>> origin/develop12
 #if TARGET_OS_IOS
 
 #import "FirebaseAuth/Sources/Utilities/FIRAuthWebView.h"

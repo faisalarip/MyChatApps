@@ -23,6 +23,10 @@
 #include <realm/sync/changeset.hpp>
 #include <realm/sync/object.hpp>
 #include <realm/util/logger.hpp>
+<<<<<<< HEAD
+=======
+#include <realm/list.hpp>
+>>>>>>> origin/develop12
 
 
 namespace realm {
@@ -31,7 +35,11 @@ namespace sync {
 struct Changeset;
 
 struct InstructionApplier {
+<<<<<<< HEAD
     explicit InstructionApplier(Group&, TableInfoCache&) noexcept;
+=======
+    explicit InstructionApplier(Transaction&, TableInfoCache&) noexcept;
+>>>>>>> origin/develop12
 
     /// Throws BadChangesetError if application fails due to a problem with the
     /// changeset.
@@ -59,11 +67,18 @@ protected:
     TableRef table_for_class_name(StringData) const; // Throws
     REALM_NORETURN void bad_transaction_log(const char*) const;
 
+<<<<<<< HEAD
     Group& m_group;
     TableInfoCache& m_table_info_cache;
     LinkViewRef m_selected_link_list;
     TableRef m_selected_table;
     TableRef m_selected_array;
+=======
+    Transaction& m_transaction;
+    TableInfoCache& m_table_info_cache;
+    std::unique_ptr<LstBase> m_selected_array;
+    TableRef m_selected_table;
+>>>>>>> origin/develop12
     TableRef m_link_target_table;
 
     template <class... Args>
@@ -84,8 +99,13 @@ private:
 
 // Implementation
 
+<<<<<<< HEAD
 inline InstructionApplier::InstructionApplier(Group& group, TableInfoCache& table_info_cache) noexcept:
     m_group(group),
+=======
+inline InstructionApplier::InstructionApplier(Transaction& group, TableInfoCache& table_info_cache) noexcept:
+    m_transaction(group),
+>>>>>>> origin/develop12
     m_table_info_cache(table_info_cache)
 {
 }
@@ -101,8 +121,12 @@ inline void InstructionApplier::end_apply() noexcept
     m_log = nullptr;
     m_logger = nullptr;
     m_selected_table = TableRef{};
+<<<<<<< HEAD
     m_selected_array = TableRef{};
     m_selected_link_list = LinkViewRef{};
+=======
+    m_selected_array.reset();
+>>>>>>> origin/develop12
     m_link_target_table = TableRef{};
 }
 

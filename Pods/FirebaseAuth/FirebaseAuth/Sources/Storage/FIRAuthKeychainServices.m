@@ -18,6 +18,11 @@
 
 #import <Security/Security.h>
 
+<<<<<<< HEAD
+=======
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+
+>>>>>>> origin/develop12
 #import "FirebaseAuth/Sources/Storage/FIRAuthUserDefaults.h"
 #import "FirebaseAuth/Sources/Utilities/FIRAuthErrorUtils.h"
 
@@ -129,18 +134,47 @@ NS_ASSUME_NONNULL_BEGIN
 
   if (status == noErr && result != NULL) {
     NSArray *items = (__bridge_transfer NSArray *)result;
+<<<<<<< HEAD
     if (items.count != 1) {
       if (error) {
         *error = [FIRAuthErrorUtils keychainErrorWithFunction:@"SecItemCopyMatching" status:status];
       }
       return nil;
+=======
+    if (items.count == 0) {
+      if (error) {
+        // The keychain query returned no error, but there were no items found.
+        *error = [FIRAuthErrorUtils keychainErrorWithFunction:@"SecItemCopyMatching" status:status];
+      }
+      return nil;
+    } else if (items.count > 1) {
+      // More than one keychain item was found, all but the first will be ignored.
+      FIRLogWarning(
+          kFIRLoggerAuth, @"I-AUT000005",
+          @"Keychain query returned multiple results, all but the first will be ignored: %@",
+          items);
+>>>>>>> origin/develop12
     }
 
     if (error) {
       *error = nil;
     }
+<<<<<<< HEAD
     NSDictionary *item = items[0];
     return item[(__bridge id)kSecValueData];
+=======
+    // Return the non-legacy item.
+    for (NSDictionary *item in items) {
+      if (item[(__bridge NSString *)kSecAttrService] != nil) {
+        return item[(__bridge id)kSecValueData];
+      }
+    }
+
+    // If they were all legacy items, just return the first one.
+    // This should not happen, since only one account should be
+    // stored.
+    return items[0][(__bridge id)kSecValueData];
+>>>>>>> origin/develop12
   }
 
   if (status == errSecItemNotFound) {

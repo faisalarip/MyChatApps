@@ -20,9 +20,16 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelParser.h"
 #import "FBSDKTypeUtility.h"
+=======
+ #import "FBSDKModelParser.h"
+
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKMLMacros.h"
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,7 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
   }
 
   const void *data = weightsData.bytes;
+<<<<<<< HEAD
   NSUInteger totalLength =  weightsData.length;
+=======
+  NSUInteger totalLength = weightsData.length;
+>>>>>>> origin/develop12
 
   if (totalLength < 4) {
     // Make sure data length is valid
@@ -52,9 +63,15 @@ NS_ASSUME_NONNULL_BEGIN
 
     char *json = (char *)data + 4;
     NSDictionary<NSString *, id> *info = [FBSDKTypeUtility JSONObjectWithData:[NSData dataWithBytes:json length:length]
+<<<<<<< HEAD
                                                                          options:0
                                                                            error:nil];
     NSArray<NSString *> *keys = [[info allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *key1, NSString *key2) {
+=======
+                                                                      options:0
+                                                                        error:nil];
+    NSArray<NSString *> *keys = [[info allKeys] sortedArrayUsingComparator:^NSComparisonResult (NSString *key1, NSString *key2) {
+>>>>>>> origin/develop12
       return [key1 compare:key2];
     }];
 
@@ -104,11 +121,16 @@ NS_ASSUME_NONNULL_BEGIN
   return [self checkWeights:weights withExpectedInfo:weightsInfoDict];
 }
 
+<<<<<<< HEAD
 #pragma mark - private methods
+=======
+ #pragma mark - private methods
+>>>>>>> origin/develop12
 
 + (NSDictionary<NSString *, NSString *> *)getKeysMapping
 {
   return @{
+<<<<<<< HEAD
     @"embedding.weight": @"embed.weight",
     @"dense1.weight": @"fc1.weight",
     @"dense2.weight": @"fc2.weight",
@@ -116,6 +138,16 @@ NS_ASSUME_NONNULL_BEGIN
     @"dense1.bias": @"fc1.bias",
     @"dense2.bias": @"fc2.bias",
     @"dense3.bias": @"fc3.bias"};
+=======
+    @"embedding.weight" : @"embed.weight",
+    @"dense1.weight" : @"fc1.weight",
+    @"dense2.weight" : @"fc2.weight",
+    @"dense3.weight" : @"fc3.weight",
+    @"dense1.bias" : @"fc1.bias",
+    @"dense2.bias" : @"fc2.bias",
+    @"dense3.bias" : @"fc3.bias"
+  };
+>>>>>>> origin/develop12
 }
 
 + (NSDictionary<NSString *, NSArray *> *)getMTMLWeightsInfo
@@ -128,6 +160,7 @@ NS_ASSUME_NONNULL_BEGIN
     @"convs.1.bias" : @[@(64)],
     @"convs.2.weight" : @[@(64), @(64), @(3)],
     @"convs.2.bias" : @[@(64)],
+<<<<<<< HEAD
     @"fc1.weight": @[@(128), @(190)],
     @"fc1.bias": @[@(128)],
     @"fc2.weight": @[@(64), @(128)],
@@ -136,6 +169,17 @@ NS_ASSUME_NONNULL_BEGIN
     @"integrity_detect.bias": @[@(3)],
     @"app_event_pred.weight": @[@(5), @(64)],
     @"app_event_pred.bias": @[@(5)]};
+=======
+    @"fc1.weight" : @[@(128), @(190)],
+    @"fc1.bias" : @[@(128)],
+    @"fc2.weight" : @[@(64), @(128)],
+    @"fc2.bias" : @[@(64)],
+    @"integrity_detect.weight" : @[@(3), @(64)],
+    @"integrity_detect.bias" : @[@(3)],
+    @"app_event_pred.weight" : @[@(5), @(64)],
+    @"app_event_pred.bias" : @[@(5)]
+  };
+>>>>>>> origin/develop12
 }
 
 + (bool)checkWeights:(std::unordered_map<std::string, fbsdk::MTensor>)weights
@@ -150,13 +194,21 @@ NS_ASSUME_NONNULL_BEGIN
         return false;
       }
       fbsdk::MTensor tensor = weights[std::string([key UTF8String])];
+<<<<<<< HEAD
       const std::vector<int>& actualSize = tensor.sizes();
+=======
+      const std::vector<int> &actualSize = tensor.sizes();
+>>>>>>> origin/develop12
       NSArray *expectedSize = weightsInfoDict[key];
       if (actualSize.size() != expectedSize.count) {
         return false;
       }
       for (int i = 0; i < expectedSize.count; i++) {
+<<<<<<< HEAD
         if((int)actualSize[i] != (int)[[FBSDKTypeUtility array:expectedSize objectAtIndex:i] intValue]) {
+=======
+        if ((int)actualSize[i] != (int)[[FBSDKTypeUtility array:expectedSize objectAtIndex:i] intValue]) {
+>>>>>>> origin/develop12
           return false;
         }
       }

@@ -35,6 +35,10 @@ public:
     ArrayBigBlobs(const ArrayBigBlobs&) = delete;
 
     BinaryData get(size_t ndx) const noexcept;
+<<<<<<< HEAD
+=======
+    bool is_null(size_t ndx) const;
+>>>>>>> origin/develop12
     BinaryData get_at(size_t ndx, size_t& pos) const noexcept;
     void set(size_t ndx, BinaryData value, bool add_zero_term = false);
     void add(BinaryData value, bool add_zero_term = false);
@@ -55,8 +59,11 @@ public:
     /// slower.
     static BinaryData get(const char* header, size_t ndx, Allocator&) noexcept;
 
+<<<<<<< HEAD
     ref_type bptree_leaf_insert(size_t ndx, BinaryData, bool add_zero_term, TreeInsertBase& state);
 
+=======
+>>>>>>> origin/develop12
     //@{
     /// Those that return a string, discard the terminating zero from
     /// the stored value. Those that accept a string argument, add a
@@ -66,7 +73,10 @@ public:
     void set_string(size_t ndx, StringData value);
     void insert_string(size_t ndx, StringData value);
     static StringData get_string(const char* header, size_t ndx, Allocator&, bool nullable) noexcept;
+<<<<<<< HEAD
     ref_type bptree_leaf_insert_string(size_t ndx, StringData, TreeInsertBase& state);
+=======
+>>>>>>> origin/develop12
     //@}
 
     /// Create a new empty big blobs array and attach this accessor to
@@ -77,10 +87,13 @@ public:
     /// underlying node. It is not owned by the accessor.
     void create();
 
+<<<<<<< HEAD
     /// Construct a copy of the specified slice of this big blobs
     /// array using the specified target allocator.
     MemRef slice(size_t offset, size_t slice_size, Allocator& target_alloc) const;
 
+=======
+>>>>>>> origin/develop12
 #ifdef REALM_DEBUG
     void verify() const;
     void to_dot(std::ostream&, bool is_strings, StringData title = StringData()) const;
@@ -114,6 +127,15 @@ inline BinaryData ArrayBigBlobs::get(size_t ndx) const noexcept
     return {};
 }
 
+<<<<<<< HEAD
+=======
+inline bool ArrayBigBlobs::is_null(size_t ndx) const
+{
+    ref_type ref = get_as_ref(ndx);
+    return ref == 0;
+}
+
+>>>>>>> origin/develop12
 inline BinaryData ArrayBigBlobs::get(const char* header, size_t ndx, Allocator& alloc) noexcept
 {
     ref_type blob_ref = to_ref(Array::get(header, ndx));
@@ -186,7 +208,12 @@ inline void ArrayBigBlobs::insert_string(size_t ndx, StringData value)
     insert(ndx, bin, add_zero_term);
 }
 
+<<<<<<< HEAD
 inline StringData ArrayBigBlobs::get_string(const char* header, size_t ndx, Allocator& alloc, bool nullable) noexcept
+=======
+inline StringData ArrayBigBlobs::get_string(const char* header, size_t ndx, Allocator& alloc,
+                                            bool nullable = true) noexcept
+>>>>>>> origin/develop12
 {
     static_cast<void>(nullable);
     BinaryData bin = get(header, ndx, alloc);
@@ -197,6 +224,7 @@ inline StringData ArrayBigBlobs::get_string(const char* header, size_t ndx, Allo
         return StringData(bin.data(), bin.size() - 1); // Do not include terminating zero
 }
 
+<<<<<<< HEAD
 inline ref_type ArrayBigBlobs::bptree_leaf_insert_string(size_t ndx, StringData value, TreeInsertBase& state)
 {
     REALM_ASSERT_DEBUG(!(!m_nullable && value.is_null()));
@@ -205,18 +233,23 @@ inline ref_type ArrayBigBlobs::bptree_leaf_insert_string(size_t ndx, StringData 
     return bptree_leaf_insert(ndx, bin, add_zero_term, state);
 }
 
+=======
+>>>>>>> origin/develop12
 inline void ArrayBigBlobs::create()
 {
     bool context_flag = true;
     Array::create(type_HasRefs, context_flag); // Throws
 }
 
+<<<<<<< HEAD
 inline MemRef ArrayBigBlobs::slice(size_t offset, size_t slice_size, Allocator& target_alloc) const
 {
     return slice_and_clone_children(offset, slice_size, target_alloc);
 }
 
 
+=======
+>>>>>>> origin/develop12
 } // namespace realm
 
 #endif // REALM_ARRAY_BIG_BLOBS_HPP

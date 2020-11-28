@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "GDTCORLibrary/Public/GDTCOREvent.h"
 
 #import <GoogleDataTransport/GDTCORAssert.h>
@@ -65,6 +66,32 @@
   GDTCORAssert(mappingID.length > 0, @"Please give a valid mapping ID");
   GDTCORAssert(target > 0, @"A target cannot be negative or 0");
   if (mappingID == nil || mappingID.length == 0 || target <= 0) {
+=======
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCOREvent.h"
+
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORAssert.h"
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORClock.h"
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORConsoleLogger.h"
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORPlatform.h"
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORStorageProtocol.h"
+
+#import "GoogleDataTransport/GDTCORLibrary/Private/GDTCOREvent_Private.h"
+
+@implementation GDTCOREvent
+
++ (NSString *)nextEventID {
+  // TODO: Consider a way to make the eventIDs incremental without introducing a storage dependency
+  // to the object.
+  //
+  // Replace special non-alphanumeric characters to avoid potential conflicts with storage logic.
+  return [[NSUUID UUID].UUIDString stringByReplacingOccurrencesOfString:@"-" withString:@""];
+}
+
+- (nullable instancetype)initWithMappingID:(NSString *)mappingID target:(GDTCORTarget)target {
+  GDTCORAssert(mappingID.length > 0, @"Please give a valid mapping ID");
+  GDTCORAssert(target > 0, @"A target cannot be negative or 0");
+  if (mappingID.length == 0 || target <= 0) {
+>>>>>>> origin/develop12
     return nil;
   }
   self = [super init];
@@ -73,8 +100,17 @@
     _mappingID = mappingID;
     _target = target;
     _qosTier = GDTCOREventQosDefault;
+<<<<<<< HEAD
   }
   GDTCORLogDebug(@"Event %@ created. mappingID: %@ target:%ld", self, mappingID, (long)target);
+=======
+    _expirationDate = [NSDate dateWithTimeIntervalSinceNow:604800];  // 7 days.
+
+    GDTCORLogDebug(@"Event %@ created. ID:%@ mappingID: %@ target:%ld", self, _eventID, mappingID,
+                   (long)target);
+  }
+
+>>>>>>> origin/develop12
   return self;
 }
 
@@ -85,7 +121,10 @@
   copy.qosTier = _qosTier;
   copy.clockSnapshot = _clockSnapshot;
   copy.customBytes = _customBytes;
+<<<<<<< HEAD
   copy->_GDTFilePath = _GDTFilePath;
+=======
+>>>>>>> origin/develop12
   GDTCORLogDebug(@"Copying event %@ to event %@", self, copy);
   return copy;
 }
@@ -95,10 +134,16 @@
   NSUInteger eventIDHash = [_eventID hash];
   NSUInteger mappingIDHash = [_mappingID hash];
   NSUInteger timeHash = [_clockSnapshot hash];
+<<<<<<< HEAD
   NSInteger dataObjectHash = [_dataObject hash];
   NSUInteger fileURL = [_GDTFilePath hash];
 
   return eventIDHash ^ mappingIDHash ^ _target ^ _qosTier ^ timeHash ^ dataObjectHash ^ fileURL;
+=======
+  NSInteger serializedBytesHash = [_serializedDataObjectBytes hash];
+
+  return eventIDHash ^ mappingIDHash ^ _target ^ _qosTier ^ timeHash ^ serializedBytesHash;
+>>>>>>> origin/develop12
 }
 
 - (BOOL)isEqual:(id)object {
@@ -114,6 +159,7 @@
   if (dataObject != _dataObject) {
     _dataObject = dataObject;
   }
+<<<<<<< HEAD
 }
 
 - (NSURL *)fileURL {
@@ -143,11 +189,15 @@
   _GDTFilePath = filePath;
   _dataObject = nil;
   return YES;
+=======
+  self->_serializedDataObjectBytes = [dataObject transportBytes];
+>>>>>>> origin/develop12
 }
 
 #pragma mark - NSSecureCoding and NSCoding Protocols
 
 /** NSCoding key for eventID property. */
+<<<<<<< HEAD
 static NSString *eventIDKey = @"_eventID";
 
 /** NSCoding key for mappingID property. */
@@ -182,6 +232,27 @@ static NSString *kStoredEventClockSnapshotKey = @"GDTCORStoredEventClockSnapshot
 
 /** NSCoding key for backwards compatibility of GDTCORStoredEvent dataFuture property.*/
 static NSString *kStoredEventDataFutureKey = @"GDTCORStoredEventDataFutureKey";
+=======
+static NSString *kEventIDKey = @"GDTCOREventEventIDKey";
+
+/** NSCoding key for mappingID property. */
+static NSString *kMappingIDKey = @"GDTCOREventMappingIDKey";
+
+/** NSCoding key for target property. */
+static NSString *kTargetKey = @"GDTCOREventTargetKey";
+
+/** NSCoding key for qosTier property. */
+static NSString *kQoSTierKey = @"GDTCOREventQoSTierKey";
+
+/** NSCoding key for clockSnapshot property. */
+static NSString *kClockSnapshotKey = @"GDTCOREventClockSnapshotKey";
+
+/** NSCoding key for expirationDate property. */
+static NSString *kExpirationDateKey = @"GDTCOREventExpirationDateKey";
+
+/** NSCoding key for serializedDataObjectBytes property. */
+static NSString *kSerializedDataObjectBytes = @"GDTCOREventSerializedDataObjectBytesKey";
+>>>>>>> origin/develop12
 
 /** NSCoding key for customData property. */
 static NSString *kCustomDataKey = @"GDTCOREventCustomDataKey";
@@ -191,6 +262,7 @@ static NSString *kCustomDataKey = @"GDTCOREventCustomDataKey";
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
+<<<<<<< HEAD
   GDTCORDataFuture *dataFuture = [aDecoder decodeObjectOfClass:[GDTCORDataFuture class]
                                                         forKey:kStoredEventDataFutureKey];
   if (dataFuture) {
@@ -240,11 +312,29 @@ static NSString *kCustomDataKey = @"GDTCOREventCustomDataKey";
       _GDTFilePath = [aDecoder decodeObjectOfClass:[NSString class] forKey:kGDTFilePathKey];
     }
     _customBytes = [aDecoder decodeObjectOfClass:[NSData class] forKey:kCustomDataKey];
+=======
+  self = [self init];
+  if (self) {
+    _mappingID = [aDecoder decodeObjectOfClass:[NSString class] forKey:kMappingIDKey];
+    _target = [aDecoder decodeIntegerForKey:kTargetKey];
+    _eventID = [aDecoder decodeObjectOfClass:[NSString class] forKey:kEventIDKey]
+                   ?: [GDTCOREvent nextEventID];
+    _qosTier = [aDecoder decodeIntegerForKey:kQoSTierKey];
+    _clockSnapshot = [aDecoder decodeObjectOfClass:[GDTCORClock class] forKey:kClockSnapshotKey];
+    _customBytes = [aDecoder decodeObjectOfClass:[NSData class] forKey:kCustomDataKey];
+    _expirationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:kExpirationDateKey];
+    _serializedDataObjectBytes = [aDecoder decodeObjectOfClass:[NSData class]
+                                                        forKey:kSerializedDataObjectBytes];
+    if (!_serializedDataObjectBytes) {
+      return nil;
+    }
+>>>>>>> origin/develop12
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+<<<<<<< HEAD
   [aCoder encodeObject:_eventID forKey:eventIDKey];
   [aCoder encodeObject:_mappingID forKey:mappingIDKey];
   [aCoder encodeInteger:_target forKey:targetKey];
@@ -252,6 +342,16 @@ static NSString *kCustomDataKey = @"GDTCOREventCustomDataKey";
   [aCoder encodeObject:_clockSnapshot forKey:clockSnapshotKey];
   [aCoder encodeObject:_GDTFilePath forKey:kGDTFilePathKey];
   [aCoder encodeObject:_customBytes forKey:kCustomDataKey];
+=======
+  [aCoder encodeObject:_eventID forKey:kEventIDKey];
+  [aCoder encodeObject:_mappingID forKey:kMappingIDKey];
+  [aCoder encodeInteger:_target forKey:kTargetKey];
+  [aCoder encodeInteger:_qosTier forKey:kQoSTierKey];
+  [aCoder encodeObject:_clockSnapshot forKey:kClockSnapshotKey];
+  [aCoder encodeObject:_customBytes forKey:kCustomDataKey];
+  [aCoder encodeObject:_expirationDate forKey:kExpirationDateKey];
+  [aCoder encodeObject:self.serializedDataObjectBytes forKey:kSerializedDataObjectBytes];
+>>>>>>> origin/develop12
 }
 
 @end

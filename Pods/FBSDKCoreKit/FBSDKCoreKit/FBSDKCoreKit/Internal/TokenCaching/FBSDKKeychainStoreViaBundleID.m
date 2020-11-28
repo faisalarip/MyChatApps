@@ -33,7 +33,11 @@
   return [self init];
 }
 
+<<<<<<< HEAD
 - (NSMutableDictionary*)queryForKey:(NSString *)key
+=======
+- (NSMutableDictionary *)queryForKey:(NSString *)key
+>>>>>>> origin/develop12
 {
   NSMutableDictionary *query = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:query setObject:(__bridge id)([FBSDKDynamicFrameworkLoader loadkSecClassGenericPassword]) forKey:(__bridge id)[FBSDKDynamicFrameworkLoader loadkSecClass]];

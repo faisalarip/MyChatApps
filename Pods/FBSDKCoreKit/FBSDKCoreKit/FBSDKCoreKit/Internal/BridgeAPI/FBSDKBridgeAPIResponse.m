@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKBridgeAPIResponse.h"
 
 #import "FBSDKBridgeAPIProtocol.h"
@@ -27,18 +28,34 @@
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKTypeUtility.h"
+=======
+ #import "FBSDKBridgeAPIResponse.h"
+
+ #import "FBSDKBridgeAPIProtocol.h"
+ #import "FBSDKBridgeAPIProtocolType.h"
+ #import "FBSDKBridgeAPIRequest+Private.h"
+ #import "FBSDKInternalUtility.h"
+>>>>>>> origin/develop12
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(FBSDKBridgeAPIRequest *)request
              responseParameters:(NSDictionary *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
+<<<<<<< HEAD
 NS_DESIGNATED_INITIALIZER;
+=======
+  NS_DESIGNATED_INITIALIZER;
+>>>>>>> origin/develop12
 @end
 
 @implementation FBSDKBridgeAPIResponse
 
+<<<<<<< HEAD
 #pragma mark - Class Methods
+=======
+ #pragma mark - Class Methods
+>>>>>>> origin/develop12
 
 + (instancetype)bridgeAPIResponseWithRequest:(FBSDKBridgeAPIRequest *)request error:(NSError *)error
 {
@@ -59,13 +76,21 @@ NS_DESIGNATED_INITIALIZER;
     // https://forums.developer.apple.com/thread/119118
   } else {
     switch (protocolType) {
+<<<<<<< HEAD
       case FBSDKBridgeAPIProtocolTypeNative:{
+=======
+      case FBSDKBridgeAPIProtocolTypeNative: {
+>>>>>>> origin/develop12
         if (![FBSDKInternalUtility isFacebookBundleIdentifier:sourceApplication]) {
           return nil;
         }
         break;
       }
+<<<<<<< HEAD
       case FBSDKBridgeAPIProtocolTypeWeb:{
+=======
+      case FBSDKBridgeAPIProtocolTypeWeb: {
+>>>>>>> origin/develop12
         if (![FBSDKInternalUtility isSafariBundleIdentifier:sourceApplication]) {
           return nil;
         }
@@ -104,7 +129,11 @@ NS_DESIGNATED_INITIALIZER;
                                  error:nil];
 }
 
+<<<<<<< HEAD
 #pragma mark - Object Lifecycle
+=======
+ #pragma mark - Object Lifecycle
+>>>>>>> origin/develop12
 
 - (instancetype)initWithRequest:(FBSDKBridgeAPIRequest *)request
              responseParameters:(NSDictionary *)responseParameters
@@ -120,7 +149,11 @@ NS_DESIGNATED_INITIALIZER;
   return self;
 }
 
+<<<<<<< HEAD
 #pragma mark - NSCopying
+=======
+ #pragma mark - NSCopying
+>>>>>>> origin/develop12
 
 - (id)copyWithZone:(NSZone *)zone
 {

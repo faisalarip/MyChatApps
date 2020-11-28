@@ -30,13 +30,21 @@ namespace metrics {
 
 using nanosecond_storage_t = int64_t;
 
+<<<<<<< HEAD
 class MetricTimerResult
 {
+=======
+class MetricTimerResult {
+>>>>>>> origin/develop12
 public:
     MetricTimerResult();
     ~MetricTimerResult();
     nanosecond_storage_t get_elapsed_nanoseconds() const;
     void report_nanoseconds(nanosecond_storage_t time);
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop12
 protected:
     nanosecond_storage_t m_elapsed_nanoseconds;
 };

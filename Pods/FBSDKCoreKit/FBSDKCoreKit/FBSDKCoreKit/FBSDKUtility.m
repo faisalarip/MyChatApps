@@ -46,6 +46,7 @@
 
 + (dispatch_source_t)startGCDTimerWithInterval:(double)interval block:(dispatch_block_t)block
 {
+<<<<<<< HEAD
   dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, // source type
                                                    0, // handle
                                                    0, // mask
@@ -55,6 +56,21 @@
                             dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), // start
                             interval * NSEC_PER_SEC, // interval
                             0 * NSEC_PER_SEC); // leeway
+=======
+  dispatch_source_t timer = dispatch_source_create(
+    DISPATCH_SOURCE_TYPE_TIMER, // source type
+    0, // handle
+    0, // mask
+    dispatch_get_main_queue()
+  ); // queue
+
+  dispatch_source_set_timer(
+    timer, // dispatch source
+    dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), // start
+    interval * NSEC_PER_SEC, // interval
+    0 * NSEC_PER_SEC
+  ); // leeway
+>>>>>>> origin/develop12
 
   dispatch_source_set_event_handler(timer, block);
 
@@ -72,6 +88,7 @@
 
 + (NSString *)SHA256Hash:(NSObject *)input
 {
+<<<<<<< HEAD
   NSData *data = nil;
 
   if ([input isKindOfClass:[NSData class]]) {
@@ -92,6 +109,9 @@
   }
 
   return [hashed copy];
+=======
+  return [FBSDKBasicUtility SHA256Hash:input];
+>>>>>>> origin/develop12
 }
 
 @end

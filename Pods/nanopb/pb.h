@@ -38,6 +38,14 @@
 /* #define PB_OLD_CALLBACK_STYLE */
 
 
+<<<<<<< HEAD
+=======
+/* Don't encode scalar arrays as packed. This is only to be used when
+ * the decoder on the receiving side cannot process packed scalar arrays.
+ * Such example is older protobuf.js. */
+/* #define PB_ENCODE_ARRAYS_UNPACKED 1 */
+
+>>>>>>> origin/develop12
 /******************************************************************
  * You usually don't need to change anything below this line.     *
  * Feel free to look around and use the defined macros, though.   *
@@ -46,7 +54,11 @@
 
 /* Version of the nanopb library. Just in case you want to check it in
  * your own program. */
+<<<<<<< HEAD
 #define NANOPB_VERSION nanopb-0.3.9.1
+=======
+#define NANOPB_VERSION nanopb-0.3.9.6
+>>>>>>> origin/develop12
 
 /* Include all the system headers needed by nanopb. You will need the
  * definitions of the following:
@@ -145,6 +157,7 @@ typedef uint_least8_t pb_type_t;
 /**** Field data types ****/
 
 /* Numeric types */
+<<<<<<< HEAD
 #define PB_LTYPE_VARINT  0x00 /* int32, int64, enum, bool */
 #define PB_LTYPE_UVARINT 0x01 /* uint32, uint64 */
 #define PB_LTYPE_SVARINT 0x02 /* sint32, sint64 */
@@ -169,15 +182,49 @@ typedef uint_least8_t pb_type_t;
 /* Extension pseudo-field
  * The field contains a pointer to pb_extension_t */
 #define PB_LTYPE_EXTENSION 0x08
+=======
+#define PB_LTYPE_BOOL    0x00 /* bool */
+#define PB_LTYPE_VARINT  0x01 /* int32, int64, enum, bool */
+#define PB_LTYPE_UVARINT 0x02 /* uint32, uint64 */
+#define PB_LTYPE_SVARINT 0x03 /* sint32, sint64 */
+#define PB_LTYPE_FIXED32 0x04 /* fixed32, sfixed32, float */
+#define PB_LTYPE_FIXED64 0x05 /* fixed64, sfixed64, double */
+
+/* Marker for last packable field type. */
+#define PB_LTYPE_LAST_PACKABLE 0x05
+
+/* Byte array with pre-allocated buffer.
+ * data_size is the length of the allocated PB_BYTES_ARRAY structure. */
+#define PB_LTYPE_BYTES 0x06
+
+/* String with pre-allocated buffer.
+ * data_size is the maximum length. */
+#define PB_LTYPE_STRING 0x07
+
+/* Submessage
+ * submsg_fields is pointer to field descriptions */
+#define PB_LTYPE_SUBMESSAGE 0x08
+
+/* Extension pseudo-field
+ * The field contains a pointer to pb_extension_t */
+#define PB_LTYPE_EXTENSION 0x09
+>>>>>>> origin/develop12
 
 /* Byte array with inline, pre-allocated byffer.
  * data_size is the length of the inline, allocated buffer.
  * This differs from PB_LTYPE_BYTES by defining the element as
  * pb_byte_t[data_size] rather than pb_bytes_array_t. */
+<<<<<<< HEAD
 #define PB_LTYPE_FIXED_LENGTH_BYTES 0x09
 
 /* Number of declared LTYPES */
 #define PB_LTYPES_COUNT 0x0A
+=======
+#define PB_LTYPE_FIXED_LENGTH_BYTES 0x0A
+
+/* Number of declared LTYPES */
+#define PB_LTYPES_COUNT 0x0B
+>>>>>>> origin/develop12
 #define PB_LTYPE_MASK 0x0F
 
 /**** Field repetition rules ****/
@@ -486,7 +533,11 @@ struct pb_extension_s {
     PB_OPTIONAL_CALLBACK(tag, st, m, fd, ltype, ptr)
 
 /* The mapping from protobuf types to LTYPEs is done using these macros. */
+<<<<<<< HEAD
 #define PB_LTYPE_MAP_BOOL               PB_LTYPE_VARINT
+=======
+#define PB_LTYPE_MAP_BOOL               PB_LTYPE_BOOL
+>>>>>>> origin/develop12
 #define PB_LTYPE_MAP_BYTES              PB_LTYPE_BYTES
 #define PB_LTYPE_MAP_DOUBLE             PB_LTYPE_FIXED64
 #define PB_LTYPE_MAP_ENUM               PB_LTYPE_VARINT

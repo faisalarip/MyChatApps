@@ -22,6 +22,10 @@
 #include <algorithm>
 
 #include <realm/binary_data.hpp>
+<<<<<<< HEAD
+=======
+#include <realm/column_binary.hpp>
+>>>>>>> origin/develop12
 #include <realm/impl/cont_transact_hist.hpp>
 #include <realm/util/buffer.hpp>
 

@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <GoogleDataTransport/GDTCOREvent.h>
 
 #import <GoogleDataTransport/GDTCORClock.h>
+=======
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCOREvent.h"
+
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORClock.h"
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GDTCOREvent ()
 
 /** The unique ID of the event. This property is for testing only. */
+<<<<<<< HEAD
 @property(nonatomic, readwrite) NSNumber *eventID;
 
 /** The GDT relative file path of the event. */
@@ -42,6 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @return An event ID that is incremented based on a number in a file stored in the app cache.
  */
 + (NSNumber *)nextEventID;
+=======
+@property(nonatomic, readwrite) NSString *eventID;
+
+/** Generates a unique event ID. */
++ (NSString *)nextEventID;
+>>>>>>> origin/develop12
 
 @end
 

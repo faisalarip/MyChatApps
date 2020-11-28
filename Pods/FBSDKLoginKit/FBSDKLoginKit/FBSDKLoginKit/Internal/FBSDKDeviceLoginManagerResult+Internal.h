@@ -19,7 +19,11 @@
 #import <Foundation/Foundation.h>
 
 #if defined BUCK || defined FBSDKCOCOAPODS
+<<<<<<< HEAD
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+=======
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+>>>>>>> origin/develop12
 #else
 @import FBSDKCoreKit;
 #endif

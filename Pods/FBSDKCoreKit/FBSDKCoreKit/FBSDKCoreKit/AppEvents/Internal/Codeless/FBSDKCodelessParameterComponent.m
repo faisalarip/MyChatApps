@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKCodelessParameterComponent.h"
 
 #import "FBSDKCodelessPathComponent.h"
@@ -29,6 +30,18 @@
 @implementation FBSDKCodelessParameterComponent
 
 - (instancetype)initWithJSON:(NSDictionary *)dict {
+=======
+ #import "FBSDKCodelessParameterComponent.h"
+
+ #import "FBSDKCodelessPathComponent.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKViewHierarchyMacros.h"
+
+@implementation FBSDKCodelessParameterComponent
+
+- (instancetype)initWithJSON:(NSDictionary *)dict
+{
+>>>>>>> origin/develop12
   if (self = [super init]) {
     _name = [dict[CODELESS_MAPPING_PARAMETER_NAME_KEY] copy];
     _value = [dict[CODELESS_MAPPING_PARAMETER_VALUE_KEY] copy];

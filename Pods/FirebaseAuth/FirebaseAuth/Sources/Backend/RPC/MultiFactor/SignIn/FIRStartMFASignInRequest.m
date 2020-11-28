@@ -18,6 +18,7 @@
 
 static NSString *const kStartMFASignInEndPoint = @"accounts/mfaSignIn:start";
 
+<<<<<<< HEAD
 @implementation FIRStartMFASignInRequest
 
 - (nullable instancetype)initWithMFAProvider:(NSString *)MFAProvider
@@ -25,12 +26,29 @@ static NSString *const kStartMFASignInEndPoint = @"accounts/mfaSignIn:start";
                              MFAEnrollmentID:(NSString *)MFAEnrollmentID
                                   signInInfo:(FIRAuthProtoStartMFAPhoneRequestInfo *)signInInfo
                         requestConfiguration:(FIRAuthRequestConfiguration *)requestConfiguration {
+=======
+/** @var kTenantIDKey
+    @brief The key for the tenant id value in the request.
+ */
+static NSString *const kTenantIDKey = @"tenantId";
+
+@implementation FIRStartMFASignInRequest
+
+- (nullable instancetype)
+    initWithMFAPendingCredential:(NSString *)MFAPendingCredential
+                 MFAEnrollmentID:(NSString *)MFAEnrollmentID
+                      signInInfo:(FIRAuthProtoStartMFAPhoneRequestInfo *)signInInfo
+            requestConfiguration:(FIRAuthRequestConfiguration *)requestConfiguration {
+>>>>>>> origin/develop12
   self = [super initWithEndpoint:kStartMFASignInEndPoint
             requestConfiguration:requestConfiguration
              useIdentityPlatform:YES
                       useStaging:NO];
   if (self) {
+<<<<<<< HEAD
     _MFAProvider = MFAProvider;
+=======
+>>>>>>> origin/develop12
     _MFAPendingCredential = MFAPendingCredential;
     _MFAEnrollmentID = MFAEnrollmentID;
     _signInInfo = signInInfo;
@@ -40,9 +58,12 @@ static NSString *const kStartMFASignInEndPoint = @"accounts/mfaSignIn:start";
 
 - (nullable id)unencodedHTTPRequestBodyWithError:(NSError *__autoreleasing _Nullable *)error {
   NSMutableDictionary *postBody = [NSMutableDictionary dictionary];
+<<<<<<< HEAD
   if (_MFAProvider) {
     postBody[@"mfaProvider"] = _MFAProvider;
   }
+=======
+>>>>>>> origin/develop12
   if (_MFAPendingCredential) {
     postBody[@"mfaPendingCredential"] = _MFAPendingCredential;
   }
@@ -54,6 +75,12 @@ static NSString *const kStartMFASignInEndPoint = @"accounts/mfaSignIn:start";
       postBody[@"phoneSignInInfo"] = [_signInInfo dictionary];
     }
   }
+<<<<<<< HEAD
+=======
+  if (self.tenantID) {
+    postBody[kTenantIDKey] = self.tenantID;
+  }
+>>>>>>> origin/develop12
   return [postBody copy];
 }
 

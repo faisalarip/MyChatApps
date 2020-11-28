@@ -20,7 +20,11 @@
 #ifndef REALM_UTIL_OPTIONAL_HPP
 #define REALM_UTIL_OPTIONAL_HPP
 
+<<<<<<< HEAD
 #include <realm/util/features.h>
+=======
+#include <realm/util/assert.hpp>
+>>>>>>> origin/develop12
 #include <realm/util/backtrace.hpp>
 
 #include <stdexcept>  // std::logic_error
@@ -83,7 +87,11 @@ public:
 
     constexpr Optional();
     constexpr Optional(None);
+<<<<<<< HEAD
     Optional(Optional<T>&& other);
+=======
+    Optional(Optional<T>&& other) noexcept;
+>>>>>>> origin/develop12
     Optional(const Optional<T>& other);
 
     constexpr Optional(T&& value);
@@ -93,9 +101,15 @@ public:
     constexpr Optional(InPlace tag, Args&&...);
     // FIXME: std::optional specifies an std::initializer_list constructor overload as well.
 
+<<<<<<< HEAD
     Optional<T>& operator=(None);
     Optional<T>& operator=(Optional<T>&& other);
     Optional<T>& operator=(const Optional<T>& other);
+=======
+    Optional<T>& operator=(None) noexcept;
+    Optional<T>& operator=(Optional<T>&& other) noexcept(std::is_nothrow_move_assignable<T>::value);
+    Optional<T>& operator=(const Optional<T>& other) noexcept(std::is_nothrow_copy_assignable<T>::value);
+>>>>>>> origin/develop12
 
     template <class U, class = typename std::enable_if<_impl::TypeIsAssignableToOptional<T, U>::value>::type>
     Optional<T>& operator=(U&& value);
@@ -170,23 +184,39 @@ public:
     } // FIXME: Was a delegating constructor, but not fully supported in VS2015
     Optional(const Optional<T&>& other) = default;
     template <class U>
+<<<<<<< HEAD
     Optional(const Optional<U&>& other)
+=======
+    Optional(const Optional<U&>& other) noexcept
+>>>>>>> origin/develop12
         : m_ptr(other.m_ptr)
     {
     }
     template <class U>
+<<<<<<< HEAD
     Optional(std::reference_wrapper<U> ref)
+=======
+    Optional(std::reference_wrapper<U> ref) noexcept
+>>>>>>> origin/develop12
         : m_ptr(&ref.get())
     {
     }
 
+<<<<<<< HEAD
     constexpr Optional(T& init_value)
+=======
+    constexpr Optional(T& init_value) noexcept
+>>>>>>> origin/develop12
         : m_ptr(&init_value)
     {
     }
     Optional(T&& value) = delete; // Catches accidental references to rvalue temporaries.
 
+<<<<<<< HEAD
     Optional<T&>& operator=(None)
+=======
+    Optional<T&>& operator=(None) noexcept
+>>>>>>> origin/develop12
     {
         m_ptr = nullptr;
         return *this;
@@ -198,13 +228,21 @@ public:
     }
 
     template <class U>
+<<<<<<< HEAD
     Optional<T&>& operator=(std::reference_wrapper<U> ref)
+=======
+    Optional<T&>& operator=(std::reference_wrapper<U> ref) noexcept
+>>>>>>> origin/develop12
     {
         m_ptr = &ref.get();
         return *this;
     }
 
+<<<<<<< HEAD
     explicit constexpr operator bool() const
+=======
+    explicit constexpr operator bool() const noexcept
+>>>>>>> origin/develop12
     {
         return m_ptr;
     }
@@ -288,7 +326,11 @@ constexpr Optional<T>::Optional(None)
 }
 
 template <class T>
+<<<<<<< HEAD
 Optional<T>::Optional(Optional<T>&& other)
+=======
+Optional<T>::Optional(Optional<T>&& other) noexcept
+>>>>>>> origin/develop12
     : Storage(none)
 {
     if (other.m_engaged) {
@@ -336,14 +378,22 @@ void Optional<T>::clear()
 }
 
 template <class T>
+<<<<<<< HEAD
 Optional<T>& Optional<T>::operator=(None)
+=======
+Optional<T>& Optional<T>::operator=(None) noexcept
+>>>>>>> origin/develop12
 {
     clear();
     return *this;
 }
 
 template <class T>
+<<<<<<< HEAD
 Optional<T>& Optional<T>::operator=(Optional<T>&& other)
+=======
+Optional<T>& Optional<T>::operator=(Optional<T>&& other) noexcept(std::is_nothrow_move_assignable<T>::value)
+>>>>>>> origin/develop12
 {
     if (m_engaged) {
         if (other.m_engaged) {
@@ -363,7 +413,11 @@ Optional<T>& Optional<T>::operator=(Optional<T>&& other)
 }
 
 template <class T>
+<<<<<<< HEAD
 Optional<T>& Optional<T>::operator=(const Optional<T>& other)
+=======
+Optional<T>& Optional<T>::operator=(const Optional<T>& other) noexcept(std::is_nothrow_copy_assignable<T>::value)
+>>>>>>> origin/develop12
 {
     if (m_engaged) {
         if (other.m_engaged) {
@@ -405,58 +459,86 @@ constexpr Optional<T>::operator bool() const
 template <class T>
 constexpr const T& Optional<T>::value() const
 {
+<<<<<<< HEAD
     return m_engaged ? m_value : (throw BadOptionalAccess{"bad optional access"}, m_value);
+=======
+    return m_value;
+>>>>>>> origin/develop12
 }
 
 template <class T>
 T& Optional<T>::value()
 {
+<<<<<<< HEAD
     if (!m_engaged) {
         throw BadOptionalAccess{"bad optional access"};
     }
+=======
+    REALM_ASSERT(m_engaged);
+>>>>>>> origin/develop12
     return m_value;
 }
 
 template <class T>
 constexpr const typename Optional<T&>::target_type& Optional<T&>::value() const
 {
+<<<<<<< HEAD
     return m_ptr ? *m_ptr : (throw BadOptionalAccess{"bad optional access"}, *m_ptr);
+=======
+    return *m_ptr;
+>>>>>>> origin/develop12
 }
 
 template <class T>
 typename Optional<T&>::target_type& Optional<T&>::value()
 {
+<<<<<<< HEAD
     if (!m_ptr) {
         throw BadOptionalAccess{"bad optional access"};
     }
+=======
+    REALM_ASSERT(m_ptr);
+>>>>>>> origin/develop12
     return *m_ptr;
 }
 
 template <class T>
 constexpr const T& Optional<T>::operator*() const
 {
+<<<<<<< HEAD
     // Note: This differs from std::optional, which doesn't throw.
+=======
+>>>>>>> origin/develop12
     return value();
 }
 
 template <class T>
 T& Optional<T>::operator*()
 {
+<<<<<<< HEAD
     // Note: This differs from std::optional, which doesn't throw.
+=======
+>>>>>>> origin/develop12
     return value();
 }
 
 template <class T>
 constexpr const T* Optional<T>::operator->() const
 {
+<<<<<<< HEAD
     // Note: This differs from std::optional, which doesn't throw.
+=======
+>>>>>>> origin/develop12
     return &value();
 }
 
 template <class T>
 T* Optional<T>::operator->()
 {
+<<<<<<< HEAD
     // Note: This differs from std::optional, which doesn't throw.
+=======
+>>>>>>> origin/develop12
     return &value();
 }
 

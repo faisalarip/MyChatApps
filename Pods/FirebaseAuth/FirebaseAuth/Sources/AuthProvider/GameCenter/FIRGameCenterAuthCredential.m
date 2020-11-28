@@ -16,7 +16,11 @@
 
 #import "FirebaseAuth/Sources/AuthProvider/GameCenter/FIRGameCenterAuthCredential.h"
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRGameCenterAuthProvider.h>
+=======
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRGameCenterAuthProvider.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/AuthProvider/FIRAuthCredential_Internal.h"
 #import "FirebaseAuth/Sources/Backend/RPC/FIRVerifyAssertionRequest.h"

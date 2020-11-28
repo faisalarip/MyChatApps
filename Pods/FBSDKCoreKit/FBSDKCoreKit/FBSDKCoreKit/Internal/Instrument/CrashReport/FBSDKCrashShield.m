@@ -21,9 +21,15 @@
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
+<<<<<<< HEAD
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTypeUtility.h"
+=======
+#import "FBSDKInternalUtility.h"
+#import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
+>>>>>>> origin/develop12
 
 @implementation FBSDKCrashShield
 
@@ -35,6 +41,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
     _featureMapping =
     @{
       @"AAM" : @[
+<<<<<<< HEAD
           @"FBSDKMetadataIndexer",
       ],
       @"CodelessEvents" : @[
@@ -66,6 +73,45 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
       ],
       @"Monitoring" : @[
           @"FBSDKMonitor",
+=======
+        @"FBSDKMetadataIndexer",
+      ],
+      @"CodelessEvents" : @[
+        @"FBSDKCodelessIndexer",
+        @"FBSDKEventBinding",
+        @"FBSDKEventBindingManager",
+        @"FBSDKViewHierarchy",
+        @"FBSDKCodelessPathComponent",
+        @"FBSDKCodelessParameterComponent",
+      ],
+      @"RestrictiveDataFiltering" : @[
+        @"FBSDKRestrictiveDataFilterManager",
+      ],
+      @"ErrorReport" : @[
+        @"FBSDKErrorReport",
+      ],
+      @"PrivacyProtection" : @[
+        @"FBSDKModelManager",
+      ],
+      @"SuggestedEvents" : @[
+        @"FBSDKSuggestedEventsIndexer",
+        @"FBSDKFeatureExtractor",
+      ],
+      @"IntelligentIntegrity" : @[
+        @"FBSDKIntegrityManager",
+      ],
+      @"EventDeactivation" : @[
+        @"FBSDKEventDeactivationManager",
+      ],
+      @"SKAdNetworkConversionValue" : @[
+        @"FBSDKSKAdNetworkReporter",
+        @"FBSDKSKAdNetworkConversionConfiguration",
+        @"FBSDKSKAdNetworkRule",
+        @"FBSDKSKAdNetworkEvent",
+      ],
+      @"Monitoring" : @[
+        @"FBSDKMonitor",
+>>>>>>> origin/develop12
       ],
     };
   }
@@ -77,25 +123,42 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   for (NSDictionary<NSString *, id> *crashLog in crashLogs) {
     NSArray<NSString *> *callstack = crashLog[@"callstack"];
     NSString *featureName = [self getFeature:callstack];
+<<<<<<< HEAD
       if (featureName) {
         [FBSDKFeatureManager disableFeature:featureName];
         [disabledFeatues addObject:featureName];
         continue;
       }
+=======
+    if (featureName) {
+      [FBSDKFeatureManager disableFeature:featureName];
+      [disabledFeatues addObject:featureName];
+      continue;
+    }
+>>>>>>> origin/develop12
   }
   if ([FBSDKSettings isDataProcessingRestricted]) {
     return;
   }
   if (disabledFeatues.count > 0) {
+<<<<<<< HEAD
     NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names":[disabledFeatues allObjects],
                                                          @"timestamp":[NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]],
     };
+=======
+    NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names" : [disabledFeatues allObjects],
+                                                         @"timestamp" : [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]], };
+>>>>>>> origin/develop12
     NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:disabledFeatureLog options:0 error:nil];
     if (jsonData) {
       NSString *disabledFeatureReport = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
       if (disabledFeatureReport) {
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [FBSDKSettings appID]]
+<<<<<<< HEAD
                                                                        parameters:@{@"crash_shield":disabledFeatureReport}
+=======
+                                                                       parameters:@{@"crash_shield" : disabledFeatureReport}
+>>>>>>> origin/develop12
                                                                        HTTPMethod:FBSDKHTTPMethodPOST];
 
         [request startWithCompletionHandler:nil];

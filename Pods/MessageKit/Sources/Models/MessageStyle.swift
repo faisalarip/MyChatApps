@@ -74,6 +74,7 @@ public enum MessageStyle {
     // MARK: - Public
 
     public var image: UIImage? {
+<<<<<<< HEAD
         
         guard let imageCacheKey = imageCacheKey, let path = imagePath else { return nil }
 
@@ -84,6 +85,19 @@ public enum MessageStyle {
         }
         guard var image = UIImage(contentsOfFile: path) else { return nil }
         
+=======
+        if let imageCacheKey = imageCacheKey, let cachedImage = MessageStyle.bubbleImageCache.object(forKey: imageCacheKey as NSString) {
+            return cachedImage
+        }
+
+        guard
+            let imageName = imageName,
+            var image = UIImage(named: imageName, in: Bundle.messageKitAssetBundle, compatibleWith: nil)
+        else {
+            return nil
+        }
+
+>>>>>>> origin/develop12
         switch self {
         case .none, .custom:
             return nil
@@ -95,7 +109,13 @@ public enum MessageStyle {
         }
         
         let stretchedImage = stretch(image)
+<<<<<<< HEAD
         cache.setObject(stretchedImage, forKey: imageCacheKey as NSString)
+=======
+        if let imageCacheKey = imageCacheKey {
+            MessageStyle.bubbleImageCache.setObject(stretchedImage, forKey: imageCacheKey as NSString)
+        }
+>>>>>>> origin/develop12
         return stretchedImage
     }
 
@@ -137,12 +157,15 @@ public enum MessageStyle {
         }
     }
 
+<<<<<<< HEAD
     private var imagePath: String? {
         guard let imageName = imageName else { return nil }
         let assetBundle = Bundle.messageKitAssetBundle()
         return assetBundle.path(forResource: imageName, ofType: "png", inDirectory: "Images")
     }
 
+=======
+>>>>>>> origin/develop12
     private func stretch(_ image: UIImage) -> UIImage {
         let center = CGPoint(x: image.size.width / 2, y: image.size.height / 2)
         let capInsets = UIEdgeInsets(top: center.y, left: center.x, bottom: center.y, right: center.x)

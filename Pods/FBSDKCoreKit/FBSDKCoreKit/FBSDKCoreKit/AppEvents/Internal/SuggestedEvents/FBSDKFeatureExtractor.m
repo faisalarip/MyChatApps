@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKFeatureExtractor.h"
 
 #import "FBSDKCoreKit+Internal.h"
@@ -33,6 +34,22 @@
 @"account.*(open|creation|application)|enroll|join.*now)"
 #define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
 #define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
+=======
+ #import "FBSDKFeatureExtractor.h"
+
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKModelManager.h"
+
+ #define REGEX_CR_PASSWORD_FIELD @"password"
+ #define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
+ #define REGEX_CR_HAS_LOG_IN_KEYWORDS @"(?i)(sign in)|login|signIn"
+ #define REGEX_CR_HAS_SIGN_ON_KEYWORDS \
+  @"(?i)(sign.*(up|now)|registration|" \
+  @"register|(create|apply).*(profile|account)|open.*account|" \
+  @"account.*(open|creation|application)|enroll|join.*now)"
+ #define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
+ #define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
+>>>>>>> origin/develop12
 
 static NSDictionary *_languageInfo;
 static NSDictionary *_eventInfo;
@@ -46,6 +63,7 @@ void sum(float *val0, float *val1);
 + (void)initialize
 {
   _languageInfo = @{
+<<<<<<< HEAD
                     @"ENGLISH" : @"1",
                     @"GERMAN" : @"2",
                     @"SPANISH" : @"3",
@@ -68,6 +86,30 @@ void sum(float *val0, float *val1);
                     @"RESOLVED_DOCUMENT_LINK": @"3",
                     @"BUTTON_ID": @"4"
                     };
+=======
+    @"ENGLISH" : @"1",
+    @"GERMAN" : @"2",
+    @"SPANISH" : @"3",
+    @"JAPANESE" : @"4"
+  };
+  _eventInfo = @{
+    @"VIEW_CONTENT" : @"0",
+    @"SEARCH" : @"1",
+    @"ADD_TO_CART" : @"2",
+    @"ADD_TO_WISHLIST" : @"3",
+    @"INITIATE_CHECKOUT" : @"4",
+    @"ADD_PAYMENT_INFO" : @"5",
+    @"PURCHASE" : @"6",
+    @"LEAD" : @"7",
+    @"COMPLETE_REGISTRATION" : @"8"
+  };
+  _textTypeInfo = @{
+    @"BUTTON_TEXT" : @"1",
+    @"PAGE_TITLE" : @"2",
+    @"RESOLVED_DOCUMENT_LINK" : @"3",
+    @"BUTTON_ID" : @"4"
+  };
+>>>>>>> origin/develop12
 }
 
 + (void)loadRulesForKey:(NSString *)useCaseKey
@@ -96,7 +138,11 @@ void sum(float *val0, float *val1);
 
   [self pruneTree:[[FBSDKTypeUtility array:viewTree objectAtIndex:0] mutableCopy] siblings:siblings];
 
+<<<<<<< HEAD
   float *result =  [self parseFeatures:[FBSDKTypeUtility array:viewTree objectAtIndex:0]];
+=======
+  float *result = [self parseFeatures:[FBSDKTypeUtility array:viewTree objectAtIndex:0]];
+>>>>>>> origin/develop12
 
   NSMutableDictionary<NSString *, id> *interactedNode;
   for (NSMutableDictionary<NSString *, id> *node in siblings) {
@@ -117,7 +163,11 @@ void sum(float *val0, float *val1);
   return result;
 }
 
+<<<<<<< HEAD
 #pragma mark - Helper functions
+=======
+ #pragma mark - Helper functions
+>>>>>>> origin/develop12
 + (BOOL)pruneTree:(NSMutableDictionary *)node siblings:(NSMutableArray *)siblings
 {
   // If it's interacted, don't prune away the children and just return.
@@ -164,11 +214,19 @@ void sum(float *val0, float *val1);
                  screenname:(NSString *)screenname
              viewTreeString:(NSString *)viewTreeString
 {
+<<<<<<< HEAD
   float *densefeat =  (float *)calloc(30, sizeof(float));
 
   densefeat[3] = MAX((float)siblings.count - 1, 0);
 
   densefeat[9] = [siblings filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+=======
+  float *densefeat = (float *)calloc(30, sizeof(float));
+
+  densefeat[3] = MAX((float)siblings.count - 1, 0);
+
+  densefeat[9] = [siblings filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id _Nullable evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {
+>>>>>>> origin/develop12
     return [self isButton:evaluatedObject];
   }]].count;
   if ([self isButton:node]) {
@@ -219,7 +277,11 @@ void sum(float *val0, float *val1);
 
 + (float *)parseFeatures:(NSMutableDictionary *)node
 {
+<<<<<<< HEAD
   float *densefeat =  (float *)calloc(30, sizeof(float));
+=======
+  float *densefeat = (float *)calloc(30, sizeof(float));
+>>>>>>> origin/develop12
 
   NSString *validText = [FBSDKTypeUtility stringValue:node[VIEW_HIERARCHY_TEXT_KEY]];
   NSString *validHint = [FBSDKTypeUtility stringValue:node[VIEW_HIERARCHY_HINT_KEY]];
@@ -289,7 +351,12 @@ void sum(float *val0, float *val1);
   return densefeat;
 }
 
+<<<<<<< HEAD
 void sum(float *val0, float *val1) {
+=======
+void sum(float *val0, float *val1)
+{
+>>>>>>> origin/develop12
   for (int i = 0; i < 30; i++) {
     val0[i] += val1[i];
   }
@@ -308,11 +375,19 @@ void sum(float *val0, float *val1) {
           hint:(NSMutableString *)buttonHintString
 {
   NSString *text = [[FBSDKTypeUtility dictionary:node
+<<<<<<< HEAD
                                          objectForKey:VIEW_HIERARCHY_TEXT_KEY
                                                ofType:NSString.class] lowercaseString];
   NSString *hint = [[FBSDKTypeUtility dictionary:node
                                          objectForKey:VIEW_HIERARCHY_HINT_KEY
                                                ofType:NSString.class] lowercaseString];
+=======
+                                    objectForKey:VIEW_HIERARCHY_TEXT_KEY
+                                          ofType:NSString.class] lowercaseString];
+  NSString *hint = [[FBSDKTypeUtility dictionary:node
+                                    objectForKey:VIEW_HIERARCHY_HINT_KEY
+                                          ofType:NSString.class] lowercaseString];
+>>>>>>> origin/develop12
   if (text.length > 0) {
     [buttonTextString appendFormat:@"%@ ", text];
   }

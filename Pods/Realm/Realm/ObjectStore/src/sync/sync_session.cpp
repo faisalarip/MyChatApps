@@ -25,8 +25,16 @@
 #include "sync/sync_user.hpp"
 
 #include <realm/sync/client.hpp>
+<<<<<<< HEAD
 #include <realm/sync/protocol.hpp>
 
+=======
+#include <realm/db_options.hpp>
+#include <realm/sync/protocol.hpp>
+
+#include "impl/realm_coordinator.hpp"
+
+>>>>>>> origin/develop12
 using namespace realm;
 using namespace realm::_impl;
 using namespace realm::_impl::sync_session_states;
@@ -407,6 +415,7 @@ SyncSession::SyncSession(SyncClient& client, std::string realm_path, SyncConfig 
 , m_realm_path(std::move(realm_path))
 , m_client(client)
 {
+<<<<<<< HEAD
     // Sync history validation ensures that the history within the Realm file is in a format that can be used
     // by the version of realm-sync that we're using. Validation is enabled by default when the binding manually
     // opens a sync session (via `SyncManager::get_session`), but is disabled when the sync session is opened
@@ -430,6 +439,8 @@ SyncSession::SyncSession(SyncClient& client, std::string realm_path, SyncConfig 
         std::unique_ptr<Group> read_only_group;
         Realm::open_with_config(realm_config, history, shared_group, read_only_group, nullptr);
    }
+=======
+>>>>>>> origin/develop12
 }
 
 std::string SyncSession::get_recovery_file_path()
@@ -614,8 +625,13 @@ void SyncSession::handle_error(SyncError error)
             case ClientError::limits_exceeded:
             case ClientError::protocol_mismatch:
             case ClientError::ssl_server_cert_rejected:
+<<<<<<< HEAD
             case ClientError::unknown_message:
             case ClientError::missing_protocol_feature:
+=======
+            case ClientError::missing_protocol_feature:
+            case ClientError::unknown_message:
+>>>>>>> origin/develop12
             case ClientError::bad_serial_transact_status:
             case ClientError::bad_object_id_substitutions:
             case ClientError::http_tunnel_failed:
@@ -636,8 +652,20 @@ void SyncSession::handle_error(SyncError error)
             }
             break;
         case NextStateAfterError::inactive: {
+<<<<<<< HEAD
             std::unique_lock<std::mutex> lock(m_state_mutex);
             advance_state(lock, State::inactive);
+=======
+            if (error.is_client_reset_requested()) {
+                std::unique_lock<std::mutex> lock(m_state_mutex);
+                cancel_pending_waits(lock, error.error_code);
+            }
+
+            {
+                std::unique_lock<std::mutex> lock(m_state_mutex);
+                advance_state(lock, State::inactive);
+            }
+>>>>>>> origin/develop12
             break;
         }
         case NextStateAfterError::error: {

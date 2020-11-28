@@ -18,8 +18,13 @@
 #import "GoogleUtilities/Reachability/Private/GULReachabilityChecker.h"
 #import "GoogleUtilities/Reachability/Private/GULReachabilityMessageCode.h"
 
+<<<<<<< HEAD
 #import <GoogleUtilities/GULLogger.h>
 #import <GoogleUtilities/GULReachabilityChecker.h>
+=======
+#import "GoogleUtilities/Logger/Private/GULLogger.h"
+#import "GoogleUtilities/Reachability/Private/GULReachabilityChecker.h"
+>>>>>>> origin/develop12
 
 static GULLoggerService kGULLoggerReachability = @"[GULReachability]";
 #if !TARGET_OS_WATCH

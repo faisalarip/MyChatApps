@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKMeasurementEventListener.h"
 
 #import "FBSDKAppEvents+Internal.h"
@@ -35,6 +36,13 @@ static NSNotificationName const FBSDKMeasurementEventNotification = @"com.facebo
 static NSString *const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
 
 #endif
+=======
+ #import "FBSDKMeasurementEventListener.h"
+
+ #import "FBSDKAppEvents+Internal.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKTimeSpentData.h"
+>>>>>>> origin/develop12
 
 static NSString *const FBSDKMeasurementEventName = @"event_name";
 static NSString *const FBSDKMeasurementEventArgs = @"event_args";
@@ -44,6 +52,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
 
 + (instancetype)defaultListener
 {
+<<<<<<< HEAD
     static dispatch_once_t dispatchOnceLocker = 0;
     static FBSDKMeasurementEventListener *defaultListener = nil;
     dispatch_once(&dispatchOnceLocker, ^{
@@ -55,10 +64,24 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
                      object:nil];
     });
     return defaultListener;
+=======
+  static dispatch_once_t dispatchOnceLocker = 0;
+  static FBSDKMeasurementEventListener *defaultListener = nil;
+  dispatch_once(&dispatchOnceLocker, ^{
+    defaultListener = [[self alloc] init];
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:defaultListener
+               selector:@selector(logFBAppEventForNotification:)
+                   name:FBSDKMeasurementEventNotification
+                 object:nil];
+  });
+  return defaultListener;
+>>>>>>> origin/develop12
 }
 
 - (void)logFBAppEventForNotification:(NSNotification *)note
 {
+<<<<<<< HEAD
     // when catch al_nav_in event, we set source application for FBAppEvents.
     if ([note.userInfo[FBSDKMeasurementEventName] isEqualToString:@"al_nav_in"]) {
         NSString *sourceApplication = note.userInfo[FBSDKMeasurementEventArgs][@"sourceApplication"];
@@ -81,11 +104,39 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
     [FBSDKAppEvents logInternalEvent:[FBSDKMeasurementEventPrefix stringByAppendingString:note.userInfo[FBSDKMeasurementEventName]]
                           parameters:logData
                   isImplicitlyLogged:YES];
+=======
+  // when catch al_nav_in event, we set source application for FBAppEvents.
+  if ([note.userInfo[FBSDKMeasurementEventName] isEqualToString:@"al_nav_in"]) {
+    NSString *sourceApplication = note.userInfo[FBSDKMeasurementEventArgs][@"sourceApplication"];
+    if (sourceApplication) {
+      [FBSDKTimeSpentData setSourceApplication:sourceApplication isFromAppLink:YES];
+    }
+  }
+  NSDictionary<NSString *, id> *eventArgs = note.userInfo[FBSDKMeasurementEventArgs];
+  NSMutableDictionary<NSString *, id> *logData = [[NSMutableDictionary alloc] init];
+  for (NSString *key in eventArgs.allKeys) {
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^0-9a-zA-Z _-]" options:0 error:&error];
+    NSString *safeKey = [regex stringByReplacingMatchesInString:key
+                                                        options:0
+                                                          range:NSMakeRange(0, key.length)
+                                                   withTemplate:@"-"];
+    safeKey = [safeKey stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" -"]];
+    [FBSDKTypeUtility dictionary:logData setObject:eventArgs[key] forKey:safeKey];
+  }
+  [FBSDKAppEvents logInternalEvent:[FBSDKMeasurementEventPrefix stringByAppendingString:note.userInfo[FBSDKMeasurementEventName]]
+                        parameters:logData
+                isImplicitlyLogged:YES];
+>>>>>>> origin/develop12
 }
 
 - (void)dealloc
 {
+<<<<<<< HEAD
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+=======
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+>>>>>>> origin/develop12
 }
 
 @end

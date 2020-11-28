@@ -21,7 +21,11 @@
 
 #include <string>
 
+<<<<<<< HEAD
 #include <realm/row.hpp>
+=======
+#include <realm/obj.hpp>
+>>>>>>> origin/develop12
 #include <realm/table.hpp>
 #include <realm/util/optional.hpp>
 
@@ -38,6 +42,7 @@ class SyncUserMetadata {
 public:
     struct Schema {
         // The ROS identity of the user. This, plus the auth server URL, uniquely identifies a user.
+<<<<<<< HEAD
         size_t idx_identity;
         // A locally issued UUID for the user. This is used to generate the on-disk user directory.
         size_t idx_local_uuid;
@@ -49,6 +54,19 @@ public:
         size_t idx_auth_server_url;
         // Whether or not the auth server reported that this user is marked as an administrator.
         size_t idx_user_is_admin;
+=======
+        ColKey idx_identity;
+        // A locally issued UUID for the user. This is used to generate the on-disk user directory.
+        ColKey idx_local_uuid;
+        // Whether or not this user has been marked for removal.
+        ColKey idx_marked_for_removal;
+        // The cached refresh token for this user.
+        ColKey idx_user_token;
+        // The URL of the authentication server this user resides upon.
+        ColKey idx_auth_server_url;
+        // Whether or not the auth server reported that this user is marked as an administrator.
+        ColKey idx_user_is_admin;
+>>>>>>> origin/develop12
     };
 
     // Cannot be set after creation.
@@ -78,12 +96,20 @@ public:
     }
 
     // INTERNAL USE ONLY
+<<<<<<< HEAD
     SyncUserMetadata(Schema schema, SharedRealm realm, RowExpr row);
+=======
+    SyncUserMetadata(Schema schema, SharedRealm realm, const Obj& obj);
+>>>>>>> origin/develop12
 private:
     bool m_invalid = false;
     SharedRealm m_realm;
     Schema m_schema;
+<<<<<<< HEAD
     Row m_row;
+=======
+    Obj m_obj;
+>>>>>>> origin/develop12
 };
 
 // A facade for a metadata Realm object representing a pending action to be carried out upon a specific file(s).
@@ -91,6 +117,7 @@ class SyncFileActionMetadata {
 public:
     struct Schema {
         // The original path on disk of the file (generally, the main file for an on-disk Realm).
+<<<<<<< HEAD
         size_t idx_original_name;
         // A new path on disk for a file to be written to. Context-dependent.
         size_t idx_new_name;
@@ -100,6 +127,17 @@ public:
         size_t idx_url;
         // The local UUID of the user to whom the file action applies (despite the internal column name).
         size_t idx_user_identity;
+=======
+        ColKey idx_original_name;
+        // A new path on disk for a file to be written to. Context-dependent.
+        ColKey idx_new_name;
+        // An enum describing the action to take.
+        ColKey idx_action;
+        // The full remote URL of the Realm on the ROS.
+        ColKey idx_url;
+        // The local UUID of the user to whom the file action applies (despite the internal column name).
+        ColKey idx_user_identity;
+>>>>>>> origin/develop12
     };
 
     enum class Action {
@@ -126,18 +164,30 @@ public:
     void remove();
 
     // INTERNAL USE ONLY
+<<<<<<< HEAD
     SyncFileActionMetadata(Schema schema, SharedRealm realm, RowExpr row);
 private:
     SharedRealm m_realm;
     Schema m_schema;
     Row m_row;
+=======
+    SyncFileActionMetadata(Schema schema, SharedRealm realm, const Obj& obj);
+private:
+    SharedRealm m_realm;
+    Schema m_schema;
+    Obj m_obj;
+>>>>>>> origin/develop12
 };
 
 class SyncClientMetadata {
 public:
     struct Schema {
         // A UUID that identifies this client.
+<<<<<<< HEAD
         size_t idx_uuid;
+=======
+        ColKey idx_uuid;
+>>>>>>> origin/develop12
     };
 };
 
@@ -146,12 +196,21 @@ class SyncMetadataResults {
 public:
     size_t size() const
     {
+<<<<<<< HEAD
+=======
+        m_realm->refresh();
+>>>>>>> origin/develop12
         return m_results.size();
     }
 
     T get(size_t idx) const
     {
+<<<<<<< HEAD
         RowExpr row = m_results.get(idx);
+=======
+        m_realm->refresh();
+        auto row = m_results.get(idx);
+>>>>>>> origin/develop12
         return T(m_schema, m_realm, row);
     }
 

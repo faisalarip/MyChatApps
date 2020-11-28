@@ -20,11 +20,19 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #ifdef FBSDKCOCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
 #import "FBSDKCoreKit+Internal.h"
 #endif
+=======
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+>>>>>>> origin/develop12
 
 @interface _FBSDKLoginRecoveryAttempter : FBSDKErrorRecoveryAttempter
 

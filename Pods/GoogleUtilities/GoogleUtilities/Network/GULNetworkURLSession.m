@@ -16,7 +16,11 @@
 
 #import "GoogleUtilities/Network/Private/GULNetworkURLSession.h"
 
+<<<<<<< HEAD
 #import <GoogleUtilities/GULLogger.h>
+=======
+#import "GoogleUtilities/Logger/Private/GULLogger.h"
+>>>>>>> origin/develop12
 #import "GoogleUtilities/Network/Private/GULMutableDictionary.h"
 #import "GoogleUtilities/Network/Private/GULNetworkConstants.h"
 #import "GoogleUtilities/Network/Private/GULNetworkMessageCode.h"

@@ -16,6 +16,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 #ifndef REALM_THREAD_SAFE_REFERENCE_HPP
 #define REALM_THREAD_SAFE_REFERENCE_HPP
 
@@ -129,3 +130,46 @@ public:
 }
 
 #endif /* REALM_THREAD_SAFE_REFERENCE_HPP */
+=======
+#ifndef REALM_OS_THREAD_SAFE_REFERENCE_HPP
+#define REALM_OS_THREAD_SAFE_REFERENCE_HPP
+
+#include <memory>
+
+namespace realm {
+class List;
+class Object;
+class Realm;
+class Results;
+
+// Opaque type-ereased wrapper for a Realm object which can be imported into another Realm
+class ThreadSafeReference {
+public:
+    ThreadSafeReference() noexcept;
+    ~ThreadSafeReference();
+    ThreadSafeReference(const ThreadSafeReference&) = delete;
+    ThreadSafeReference& operator=(const ThreadSafeReference&) = delete;
+    ThreadSafeReference(ThreadSafeReference&&) noexcept;
+    ThreadSafeReference& operator=(ThreadSafeReference&&) noexcept;
+
+    template<typename T>
+    ThreadSafeReference(T const& value);
+
+    // Import the object into the destination Realm
+    template<typename T>
+    T resolve(std::shared_ptr<Realm> const&);
+
+    explicit operator bool() const noexcept { return !!m_payload; }
+
+private:
+    class Payload;
+    template<typename> class PayloadImpl;
+    std::unique_ptr<Payload> m_payload;
+};
+
+template<> ThreadSafeReference::ThreadSafeReference(std::shared_ptr<Realm> const&);
+template<> std::shared_ptr<Realm> ThreadSafeReference::resolve(std::shared_ptr<Realm> const&);
+}
+
+#endif /* REALM_OS_THREAD_SAFE_REFERENCE_HPP */
+>>>>>>> origin/develop12

@@ -19,7 +19,10 @@
 #import "FBSDKErrorConfiguration.h"
 
 #import "FBSDKCoreKit+Internal.h"
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 #import "FBSDKErrorRecoveryConfiguration.h"
 
 static NSString *const kErrorCategoryOther = @"other";
@@ -41,6 +44,7 @@ static NSString *const kErrorCategoryLogin = @"login";
     } else {
       _configurationDictionary = [NSMutableDictionary dictionary];
       NSString *localizedOK =
+<<<<<<< HEAD
       NSLocalizedStringWithDefaultValue(@"ErrorRecovery.OK", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"OK",
                                         @"The title of the label to start attempting error recovery");
@@ -74,6 +78,55 @@ static NSString *const kErrorCategoryLogin = @"login";
                                     @"recovery_options" : @[ localizedOK]
                                     },
                                  ];
+=======
+      NSLocalizedStringWithDefaultValue(
+        @"ErrorRecovery.OK",
+        @"FacebookSDK",
+        [FBSDKInternalUtility bundleForStrings],
+        @"OK",
+        @"The title of the label to start attempting error recovery"
+      );
+      NSString *localizedCancel =
+      NSLocalizedStringWithDefaultValue(
+        @"ErrorRecovery.Cancel",
+        @"FacebookSDK",
+        [FBSDKInternalUtility bundleForStrings],
+        @"Cancel",
+        @"The title of the label to decline attempting error recovery"
+      );
+      NSString *localizedTransientSuggestion =
+      NSLocalizedStringWithDefaultValue(
+        @"ErrorRecovery.Transient.Suggestion",
+        @"FacebookSDK",
+        [FBSDKInternalUtility bundleForStrings],
+        @"The server is temporarily busy, please try again.",
+        @"The fallback message to display to retry transient errors"
+      );
+      NSString *localizedLoginRecoverableSuggestion =
+      NSLocalizedStringWithDefaultValue(
+        @"ErrorRecovery.Login.Suggestion",
+        @"FacebookSDK",
+        [FBSDKInternalUtility bundleForStrings],
+        @"Please log into this app again to reconnect your Facebook account.",
+        @"The fallback message to display to recover invalidated tokens"
+      );
+      NSArray *fallbackArray = @[
+        @{ @"name" : @"login",
+           @"items" : @[@{ @"code" : @102 },
+                        @{ @"code" : @190 }],
+           @"recovery_message" : localizedLoginRecoverableSuggestion,
+           @"recovery_options" : @[localizedOK, localizedCancel]},
+        @{ @"name" : @"transient",
+           @"items" : @[@{ @"code" : @1 },
+                        @{ @"code" : @2 },
+                        @{ @"code" : @4 },
+                        @{ @"code" : @9 },
+                        @{ @"code" : @17 },
+                        @{ @"code" : @341 }],
+           @"recovery_message" : localizedTransientSuggestion,
+           @"recovery_options" : @[localizedOK]},
+      ];
+>>>>>>> origin/develop12
       [self parseArray:fallbackArray];
     }
   }
@@ -84,6 +137,7 @@ static NSString *const kErrorCategoryLogin = @"login";
 {
   code = code ?: @"*";
   subcode = subcode ?: @"*";
+<<<<<<< HEAD
   FBSDKErrorRecoveryConfiguration *configuration = (_configurationDictionary[code][subcode] ?:
                                                     _configurationDictionary[code][@"*"] ?:
                                                     _configurationDictionary[@"*"][subcode] ?:
@@ -91,19 +145,36 @@ static NSString *const kErrorCategoryLogin = @"login";
   if (configuration.errorCategory == FBSDKGraphRequestErrorRecoverable &&
       [FBSDKSettings clientToken] &&
       [request.parameters[@"access_token"] hasSuffix:[FBSDKSettings clientToken]]) {
+=======
+  FBSDKErrorRecoveryConfiguration *configuration = (_configurationDictionary[code][subcode]
+    ?: _configurationDictionary[code][@"*"]
+      ?: _configurationDictionary[@"*"][subcode]
+        ?: _configurationDictionary[@"*"][@"*"]);
+  if (configuration.errorCategory == FBSDKGraphRequestErrorRecoverable
+      && [FBSDKSettings clientToken]
+      && [request.parameters[@"access_token"] hasSuffix:[FBSDKSettings clientToken]]) {
+>>>>>>> origin/develop12
     // do not attempt to recovery client tokens.
     return nil;
   }
   return configuration;
 }
 
+<<<<<<< HEAD
 - (void)parseArray:(NSArray<NSDictionary*> *)array
+=======
+- (void)parseArray:(NSArray<NSDictionary *> *)array
+>>>>>>> origin/develop12
 {
   for (NSDictionary *dictionary in [FBSDKTypeUtility arrayValue:array]) {
     [FBSDKTypeUtility dictionary:dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
       FBSDKGraphRequestError category;
       NSString *action = [FBSDKTypeUtility stringValue:dictionary[@"name"]];
+<<<<<<< HEAD
       if ( [action isEqualToString:kErrorCategoryOther]) {
+=======
+      if ([action isEqualToString:kErrorCategoryOther]) {
+>>>>>>> origin/develop12
         category = FBSDKGraphRequestErrorOther;
       } else if ([action isEqualToString:kErrorCategoryTransient]) {
         category = FBSDKGraphRequestErrorTransient;
@@ -140,6 +211,7 @@ static NSString *const kErrorCategoryLogin = @"login";
               continue;
             }
             [FBSDKTypeUtility dictionary:currentSubcodes setObject:[[FBSDKErrorRecoveryConfiguration alloc]
+<<<<<<< HEAD
                                                           initWithRecoveryDescription:suggestion
                                                           optionDescriptions:options
                                                           category:category
@@ -151,6 +223,19 @@ static NSString *const kErrorCategoryLogin = @"login";
                                    optionDescriptions:options
                                    category:category
                                    recoveryActionName:action] forKey:@"*"];
+=======
+                                                                    initWithRecoveryDescription:suggestion
+                                                                    optionDescriptions:options
+                                                                    category:category
+                                                                    recoveryActionName:action] forKey:validSubcodeNumber.stringValue];
+          }
+        } else {
+          [FBSDKTypeUtility dictionary:currentSubcodes setObject:[[FBSDKErrorRecoveryConfiguration alloc]
+                                                                  initWithRecoveryDescription:suggestion
+                                                                  optionDescriptions:options
+                                                                  category:category
+                                                                  recoveryActionName:action] forKey:@"*"];
+>>>>>>> origin/develop12
         }
       }
     }];

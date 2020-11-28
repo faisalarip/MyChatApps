@@ -22,6 +22,11 @@
 #include "util/tagged_bool.hpp"
 
 #include <realm/util/features.h>
+<<<<<<< HEAD
+=======
+// FIXME: keys.hpp is currently pretty heavyweight
+#include <realm/keys.hpp>
+>>>>>>> origin/develop12
 
 #include <string>
 
@@ -29,6 +34,7 @@ namespace realm {
 namespace util {
     template<typename> class Optional;
 }
+<<<<<<< HEAD
 class StringData;
 class BinaryData;
 class Timestamp;
@@ -36,6 +42,13 @@ class Table;
 
 template<typename> class BasicRowExpr;
 using RowExpr = BasicRowExpr<Table>;
+=======
+class BinaryData;
+class Obj;
+class StringData;
+class Table;
+class Timestamp;
+>>>>>>> origin/develop12
 
 enum class PropertyType : unsigned char {
     Int    = 0,
@@ -86,16 +99,26 @@ struct Property {
     IsPrimary is_primary = false;
     IsIndexed is_indexed = false;
 
+<<<<<<< HEAD
     size_t table_column = -1;
 
     Property() = default;
 
     Property(std::string name, PropertyType type, IsPrimary primary = false, IsIndexed indexed = false, std::string public_name = "");
+=======
+    ColKey column_key;
+
+    Property() = default;
+
+    Property(std::string name, PropertyType type, IsPrimary primary = false,
+             IsIndexed indexed = false, std::string public_name = "");
+>>>>>>> origin/develop12
 
     Property(std::string name, PropertyType type, std::string object_type,
              std::string link_origin_property_name = "", std::string public_name = "");
 
     Property(Property const&) = default;
+<<<<<<< HEAD
     Property(Property&&) = default;
     Property& operator=(Property const&) = default;
     Property& operator=(Property&&) = default;
@@ -104,6 +127,16 @@ struct Property {
 
     bool type_is_indexable() const;
     bool type_is_nullable() const;
+=======
+    Property(Property&&) noexcept = default;
+    Property& operator=(Property const&) = default;
+    Property& operator=(Property&&) noexcept = default;
+
+    bool requires_index() const { return is_primary || is_indexed; }
+
+    bool type_is_indexable() const noexcept;
+    bool type_is_nullable() const noexcept;
+>>>>>>> origin/develop12
 
     std::string type_string() const;
 };
@@ -172,7 +205,24 @@ inline constexpr bool is_nullable(PropertyType a)
     return to_underlying(a & PropertyType::Nullable) == to_underlying(PropertyType::Nullable);
 }
 
+<<<<<<< HEAD
 template<typename Fn>
+=======
+// Some of the places we use switch_on_type() the Obj version isn't instantiatable
+// or reachable, so we want to map it to a valid type to let the unreachable code compile
+template<typename T>
+struct NonObjType {
+    using type = std::remove_reference_t<T>;
+};
+template<>
+struct NonObjType<Obj&> {
+    using type = int64_t;
+};
+template<typename T>
+using NonObjTypeT = typename NonObjType<T>::type;
+
+template<typename ObjType=Obj, typename Fn>
+>>>>>>> origin/develop12
 static auto switch_on_type(PropertyType type, Fn&& fn)
 {
     using PT = PropertyType;
@@ -185,7 +235,11 @@ static auto switch_on_type(PropertyType type, Fn&& fn)
         case PT::String: return fn((StringData*)0);
         case PT::Data:   return fn((BinaryData*)0);
         case PT::Date:   return fn((Timestamp*)0);
+<<<<<<< HEAD
         case PT::Object: return fn((RowExpr*)0);
+=======
+        case PT::Object: return fn((ObjType*)0);
+>>>>>>> origin/develop12
         default: REALM_COMPILER_HINT_UNREACHABLE();
     }
 }
@@ -235,7 +289,11 @@ inline Property::Property(std::string name, PropertyType type,
 {
 }
 
+<<<<<<< HEAD
 inline bool Property::type_is_indexable() const
+=======
+inline bool Property::type_is_indexable() const noexcept
+>>>>>>> origin/develop12
 {
     return type == PropertyType::Int
         || type == PropertyType::Bool
@@ -243,7 +301,11 @@ inline bool Property::type_is_indexable() const
         || type == PropertyType::String;
 }
 
+<<<<<<< HEAD
 inline bool Property::type_is_nullable() const
+=======
+inline bool Property::type_is_nullable() const noexcept
+>>>>>>> origin/develop12
 {
     return !(is_array(type) && type == PropertyType::Object) && type != PropertyType::LinkingObjects;
 }
@@ -269,7 +331,11 @@ inline std::string Property::type_string() const
 
 inline bool operator==(Property const& lft, Property const& rgt)
 {
+<<<<<<< HEAD
     // note: not checking table_column
+=======
+    // note: not checking column_key
+>>>>>>> origin/develop12
     // ordered roughly by the cost of the check
     return to_underlying(lft.type) == to_underlying(rgt.type)
         && lft.is_primary == rgt.is_primary

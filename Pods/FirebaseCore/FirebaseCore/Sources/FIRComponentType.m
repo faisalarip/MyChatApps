@@ -16,7 +16,11 @@
 
 #import "FirebaseCore/Sources/Private/FIRComponentType.h"
 
+<<<<<<< HEAD
 #import "FirebaseCore/Sources/Private/FIRComponentContainerInternal.h"
+=======
+#import "FirebaseCore/Sources/FIRComponentContainerInternal.h"
+>>>>>>> origin/develop12
 
 @implementation FIRComponentType
 

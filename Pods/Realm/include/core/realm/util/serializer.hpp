@@ -29,8 +29,14 @@
 namespace realm {
 
 class BinaryData;
+<<<<<<< HEAD
 struct null;
 struct RowIndex;
+=======
+struct ColKey;
+struct null;
+struct ObjKey;
+>>>>>>> origin/develop12
 class StringData;
 class Timestamp;
 class LinkMap;
@@ -54,7 +60,12 @@ template <> std::string print_value<>(bool);
 template <> std::string print_value<>(realm::null);
 template <> std::string print_value<>(StringData);
 template <> std::string print_value<>(realm::Timestamp);
+<<<<<<< HEAD
 template <> std::string print_value<>(realm::RowIndex);
+=======
+template <>
+std::string print_value<>(realm::ObjKey);
+>>>>>>> origin/develop12
 
 // General implementation for most types
 template <typename T>
@@ -75,12 +86,20 @@ std::string print_value(Optional<T> value)
     }
 }
 
+<<<<<<< HEAD
 struct SerialisationState
 {
     std::string describe_column(ConstTableRef table, size_t col_ndx);
     std::string describe_columns(const LinkMap& link_map, size_t target_col_ndx);
     std::string get_column_name(ConstTableRef table, size_t col_ndx);
     std::string get_backlink_column_name(ConstTableRef from, size_t col_ndx);
+=======
+struct SerialisationState {
+    std::string describe_column(ConstTableRef table, ColKey col_key);
+    std::string describe_columns(const LinkMap& link_map, ColKey target_col_key);
+    std::string get_column_name(ConstTableRef table, ColKey col_key);
+    std::string get_backlink_column_name(ConstTableRef from, ColKey col_key);
+>>>>>>> origin/develop12
     std::string get_variable_name(ConstTableRef table);
     std::vector<std::string> subquery_prefix_list;
 };

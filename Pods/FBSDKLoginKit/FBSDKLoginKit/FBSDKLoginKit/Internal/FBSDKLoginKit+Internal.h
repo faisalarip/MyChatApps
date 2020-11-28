@@ -17,7 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "../FBSDKLoginKit.h"
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 #import "FBSDKLoginCompletion+Internal.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"

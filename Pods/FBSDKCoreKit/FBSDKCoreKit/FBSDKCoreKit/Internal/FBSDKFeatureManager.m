@@ -18,9 +18,14 @@
 
 #import "FBSDKFeatureManager.h"
 
+<<<<<<< HEAD
 #import "ServerConfiguration/FBSDKGateKeeperManager.h"
 
 #import "FBSDKSettings.h"
+=======
+#import "FBSDKSettings.h"
+#import "ServerConfiguration/FBSDKGateKeeperManager.h"
+>>>>>>> origin/develop12
 
 static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature";
 
@@ -33,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock
 {
+<<<<<<< HEAD
   // check locally first
   NSString *version = [[NSUserDefaults standardUserDefaults] valueForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self featureName:feature]]];
   if (version && [version isEqualToString:[FBSDKSettings sdkVersion]]) {
@@ -40,6 +46,18 @@ NS_ASSUME_NONNULL_BEGIN
   }
   // check gk
   [FBSDKGateKeeperManager loadGateKeepers:^(NSError * _Nullable error) {
+=======
+  // check if the feature is locally disabled by Crash Shield first
+  NSString *version = [[NSUserDefaults standardUserDefaults] valueForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self featureName:feature]]];
+  if (version && [version isEqualToString:[FBSDKSettings sdkVersion]]) {
+    if (completionBlock) {
+      completionBlock(false);
+    }
+    return;
+  }
+  // check gk
+  [FBSDKGateKeeperManager loadGateKeepers:^(NSError *_Nullable error) {
+>>>>>>> origin/develop12
     if (completionBlock) {
       completionBlock([FBSDKFeatureManager isEnabled:feature]);
     }
@@ -75,7 +93,13 @@ NS_ASSUME_NONNULL_BEGIN
     return feature & 0xFFFF0000;
   } else if ((feature & 0xFF0000) > 0) {
     return feature & 0xFF000000;
+<<<<<<< HEAD
   } else return 0;
+=======
+  } else {
+    return 0;
+  }
+>>>>>>> origin/develop12
 }
 
 + (BOOL)checkGK:(FBSDKFeature)feature
@@ -101,11 +125,20 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureIntelligentIntegrity: featureName = @"IntelligentIntegrity"; break;
     case FBSDKFeatureModelRequest: featureName = @"ModelRequest"; break;
     case FBSDKFeatureEventDeactivation: featureName = @"EventDeactivation"; break;
+<<<<<<< HEAD
+=======
+    case FBSDKFeatureSKAdNetwork: featureName = @"SKAdNetwork"; break;
+    case FBSDKFeatureSKAdNetworkConversionValue: featureName = @"SKAdNetworkConversionValue"; break;
+>>>>>>> origin/develop12
     case FBSDKFeatureInstrument: featureName = @"Instrument"; break;
     case FBSDKFeatureCrashReport: featureName = @"CrashReport"; break;
     case FBSDKFeatureCrashShield: featureName = @"CrashShield"; break;
     case FBSDKFeatureErrorReport: featureName = @"ErrorReport"; break;
     case FBSDKFeatureMonitoring: featureName = @"Monitoring"; break;
+<<<<<<< HEAD
+=======
+    case FBSDKFeatureATELogging: featureName = @"ATELogging"; break;
+>>>>>>> origin/develop12
 
     case FBSDKFeatureLogin: featureName = @"LoginKit"; break;
 
@@ -132,6 +165,12 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureIntelligentIntegrity:
     case FBSDKFeatureModelRequest:
     case FBSDKFeatureMonitoring:
+<<<<<<< HEAD
+=======
+    case FBSDKFeatureATELogging:
+    case FBSDKFeatureSKAdNetwork:
+    case FBSDKFeatureSKAdNetworkConversionValue:
+>>>>>>> origin/develop12
       return NO;
     case FBSDKFeatureLogin:
     case FBDSDKFeatureShare:

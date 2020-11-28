@@ -26,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, getter=isAttached) BOOL attached;
 
 + (instancetype)emptyDetachedResults;
+<<<<<<< HEAD
+=======
+- (RLMResults *)snapshot;
+>>>>>>> origin/develop12
 
 @end
 

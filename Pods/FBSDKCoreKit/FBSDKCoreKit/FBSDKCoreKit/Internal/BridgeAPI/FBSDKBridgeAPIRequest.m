@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+<<<<<<< HEAD
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIRequest+Private.h"
 
@@ -28,6 +29,16 @@
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
+=======
+ #import "FBSDKBridgeAPIRequest.h"
+ #import "FBSDKBridgeAPIRequest+Private.h"
+
+ #import "FBSDKBridgeAPIProtocolNativeV1.h"
+ #import "FBSDKBridgeAPIProtocolWebV1.h"
+ #import "FBSDKBridgeAPIProtocolWebV2.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKSettings.h"
+>>>>>>> origin/develop12
 
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";
@@ -35,7 +46,11 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
 
 @implementation FBSDKBridgeAPIRequest
 
+<<<<<<< HEAD
 #pragma mark - Class Methods
+=======
+ #pragma mark - Class Methods
+>>>>>>> origin/develop12
 
 + (instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                           scheme:(NSString *)scheme
@@ -59,6 +74,7 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _protocolMap = @{
+<<<<<<< HEAD
                      @(FBSDKBridgeAPIProtocolTypeNative): @{
                          FBSDK_CANOPENURL_FACEBOOK:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
                          FBSDK_CANOPENURL_MESSENGER:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
@@ -69,11 +85,27 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
                          @"web": [[FBSDKBridgeAPIProtocolWebV2 alloc] init]
                          },
                      };
+=======
+      @(FBSDKBridgeAPIProtocolTypeNative) : @{
+        FBSDK_CANOPENURL_FACEBOOK : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
+        FBSDK_CANOPENURL_MESSENGER : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
+        FBSDK_CANOPENURL_MSQRD_PLAYER : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
+      },
+      @(FBSDKBridgeAPIProtocolTypeWeb) : @{
+        @"https" : [[FBSDKBridgeAPIProtocolWebV1 alloc] init],
+        @"web" : [[FBSDKBridgeAPIProtocolWebV2 alloc] init]
+      },
+    };
+>>>>>>> origin/develop12
   });
   return _protocolMap;
 }
 
+<<<<<<< HEAD
 #pragma mark - Object Lifecycle
+=======
+ #pragma mark - Object Lifecycle
+>>>>>>> origin/develop12
 
 - (instancetype)initWithProtocol:(id<FBSDKBridgeAPIProtocol>)protocol
                     protocolType:(FBSDKBridgeAPIProtocolType)protocolType
@@ -100,7 +132,11 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   return self;
 }
 
+<<<<<<< HEAD
 #pragma mark - Public Methods
+=======
+ #pragma mark - Public Methods
+>>>>>>> origin/develop12
 
 - (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef
 {
@@ -120,8 +156,13 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
   [FBSDKTypeUtility dictionary:queryParameters setObject:[FBSDKSettings appID] forKey:FBSDKBridgeAPIAppIDKey];
   [FBSDKTypeUtility dictionary:queryParameters
+<<<<<<< HEAD
                       setObject:[FBSDKSettings appURLSchemeSuffix]
                          forKey:FBSDKBridgeAPISchemeSuffixKey];
+=======
+                     setObject:[FBSDKSettings appURLSchemeSuffix]
+                        forKey:FBSDKBridgeAPISchemeSuffixKey];
+>>>>>>> origin/develop12
   requestURL = [FBSDKInternalUtility URLWithScheme:requestURL.scheme
                                               host:requestURL.host
                                               path:requestURL.path
@@ -130,7 +171,11 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   return requestURL;
 }
 
+<<<<<<< HEAD
 #pragma mark - NSCopying
+=======
+ #pragma mark - NSCopying
+>>>>>>> origin/develop12
 
 - (id)copyWithZone:(NSZone *)zone
 {

@@ -52,6 +52,12 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   FBSDKFeatureIntelligentIntegrity = 0x00010402,
   FBSDKFeatureModelRequest = 0x00010403,
   FBSDKFeatureEventDeactivation = 0x00010500,
+<<<<<<< HEAD
+=======
+  FBSDKFeatureSKAdNetwork = 0x00010600,
+  FBSDKFeatureSKAdNetworkConversionValue = 0x00010601,
+  FBSDKFeatureATELogging = 0x00010700,
+>>>>>>> origin/develop12
   /** Instrument */
   FBSDKFeatureInstrument = 0x00020000,
   FBSDKFeatureCrashReport = 0x00020100,

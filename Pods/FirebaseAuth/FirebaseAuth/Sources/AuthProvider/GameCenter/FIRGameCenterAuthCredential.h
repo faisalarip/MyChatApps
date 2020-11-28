@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import <FirebaseAuth/FIRAuthCredential.h>
 #import <Foundation/Foundation.h>
+=======
+#import <Foundation/Foundation.h>
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthCredential.h"
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -50,7 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly) uint64_t timestamp;
 
 /** @property displayName
+<<<<<<< HEAD
     @brief The date and time that the signature was created.
+=======
+    @brief The display name of the local Game Center player.
+>>>>>>> origin/develop12
  */
 @property(nonatomic, readonly) NSString *displayName;
 
@@ -60,6 +69,10 @@ NS_ASSUME_NONNULL_BEGIN
     @param signature The verification signature generated.
     @param salt A random string used to compute the hash and keep it randomized.
     @param timestamp The date and time that the signature was created.
+<<<<<<< HEAD
+=======
+    @param displayName The display name of the Game Center player.
+>>>>>>> origin/develop12
  */
 - (nullable instancetype)initWithPlayerID:(NSString *)playerID
                              publicKeyURL:(NSURL *)publicKeyURL

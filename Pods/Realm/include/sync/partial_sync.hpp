@@ -120,7 +120,11 @@ private:
 
     // Track the actual underlying subscription object once it is available. This is used to better track
     // unsubscriptions.
+<<<<<<< HEAD
     util::Optional<Row> m_result_sets_object = none;
+=======
+    util::Optional<Obj> m_result_sets_object = none;
+>>>>>>> origin/develop12
 
     struct Notifier;
     _impl::CollectionNotifier::Handle<Notifier> m_notifier;
@@ -149,8 +153,12 @@ Subscription subscribe(Results const&, SubscriptionOptions options);
 // Programming errors, such as attempting to create a subscription outside a write transaction or in
 // a Realm that is not Query-based, or subscribing to an unsupported query, will throw an exception.
 //
+<<<<<<< HEAD
 // The Row that represents the Subscription in the  __ResultsSets table is returned.
 //
+=======
+// The object that represents the Subscription in the  __ResultsSets table is returned.
+>>>>>>> origin/develop12
 // If a subscription with the given name already exists the behaviour depends on `update`. If
 // `update = true` the existing subscription will replace its query and time_to_live with the
 // provided values. If `update = false` an exception is thrown if the new query doesn't match
@@ -159,7 +167,11 @@ Subscription subscribe(Results const&, SubscriptionOptions options);
 // `time_to_live` is expressed in milliseconds and indicates for how long a subscription should
 // be persisted when not used. If no value is provided, the subscription will live until manually
 // deleted.
+<<<<<<< HEAD
 Row subscribe_blocking(Results const&, util::Optional<std::string> name, util::Optional<int64_t> time_to_live_ms = none, bool update = false);
+=======
+Obj subscribe_blocking(Results const&, util::Optional<std::string> name, util::Optional<int64_t> time_to_live_ms = none, bool update = false);
+>>>>>>> origin/develop12
 
 /// Remove a partial sync subscription.
 ///

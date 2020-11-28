@@ -27,7 +27,11 @@
 namespace realm {
 class Realm;
 class SyncSession;
+<<<<<<< HEAD
 template<typename> class ThreadSafeReference;
+=======
+class ThreadSafeReference;
+>>>>>>> origin/develop12
 namespace _impl {
 class RealmCoordinator;
 }
@@ -42,7 +46,11 @@ public:
     //
     // If multiple AsyncOpenTasks all attempt to download the same Realm and one of them is canceled,
     // the other tasks will receive a "Cancelled" exception.
+<<<<<<< HEAD
     void start(std::function<void(ThreadSafeReference<Realm>, std::exception_ptr)> callback);
+=======
+    void start(std::function<void(ThreadSafeReference, std::exception_ptr)> callback);
+>>>>>>> origin/develop12
 
     // Cancels the download and stops the session. No further functions should be called on this class.
     void cancel();

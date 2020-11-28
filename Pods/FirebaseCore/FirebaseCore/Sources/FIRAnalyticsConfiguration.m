@@ -14,7 +14,11 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import "FirebaseCore/Sources/Private/FIRAnalyticsConfiguration.h"
+=======
+#import "FirebaseCore/Sources/FIRAnalyticsConfiguration.h"
+>>>>>>> origin/develop12
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"

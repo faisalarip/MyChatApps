@@ -16,7 +16,11 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import <GoogleDataTransport/GDTCORLifecycle.h>
+=======
+#import "GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORLifecycle.h"
+>>>>>>> origin/develop12
 
 @class GDTCOREvent;
 

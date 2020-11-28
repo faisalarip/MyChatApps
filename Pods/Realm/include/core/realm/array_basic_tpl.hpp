@@ -94,6 +94,7 @@ inline void BasicArray<T>::create(Array::Type type, bool context_flag)
 
 
 template <class T>
+<<<<<<< HEAD
 MemRef BasicArray<T>::slice(size_t offset, size_t slice_size, Allocator& target_alloc) const
 {
     REALM_ASSERT(is_attached());
@@ -122,6 +123,8 @@ MemRef BasicArray<T>::slice_and_clone_children(size_t offset, size_t slice_size,
 
 
 template <class T>
+=======
+>>>>>>> origin/develop12
 inline void BasicArray<T>::add(T value)
 {
     insert(m_size, value);
@@ -136,6 +139,7 @@ inline T BasicArray<T>::get(size_t ndx) const noexcept
 
 
 template <class T>
+<<<<<<< HEAD
 inline bool BasicArray<T>::is_null(size_t ndx) const noexcept
 {
     // FIXME: This assumes BasicArray will only ever be instantiated for float-like T.
@@ -146,6 +150,8 @@ inline bool BasicArray<T>::is_null(size_t ndx) const noexcept
 
 
 template <class T>
+=======
+>>>>>>> origin/develop12
 inline T BasicArray<T>::get(const char* header, size_t ndx) noexcept
 {
     const char* data = get_data_from_header(header);
@@ -171,6 +177,7 @@ inline void BasicArray<T>::set(size_t ndx, T value)
 }
 
 template <class T>
+<<<<<<< HEAD
 inline void BasicArray<T>::set_null(size_t ndx)
 {
     // FIXME: This assumes BasicArray will only ever be instantiated for float-like T.
@@ -178,6 +185,8 @@ inline void BasicArray<T>::set_null(size_t ndx)
 }
 
 template <class T>
+=======
+>>>>>>> origin/develop12
 void BasicArray<T>::insert(size_t ndx, T value)
 {
     REALM_ASSERT_3(ndx, <=, m_size);
@@ -304,6 +313,36 @@ void BasicArray<T>::find_all(IntegerColumn* result, T value, size_t add_offset, 
         Array::add_to_column(result, first + add_offset);
     }
 }
+<<<<<<< HEAD
+=======
+template <class T>
+size_t BasicArrayNull<T>::find_first_null(size_t begin, size_t end) const
+{
+    size_t sz = Array::size();
+    if (end == npos)
+        end = sz;
+    REALM_ASSERT(begin <= sz && end <= sz && begin <= end);
+    while (begin != end) {
+        if (this->is_null(begin))
+            return begin;
+        begin++;
+    }
+    return not_found;
+}
+
+template <class T>
+void BasicArrayNull<T>::find_all_null(IntegerColumn* result, size_t add_offset, size_t begin, size_t end) const
+{
+    size_t first = begin - 1;
+    for (;;) {
+        first = this->find_first_null(first + 1, end);
+        if (first == not_found)
+            break;
+
+        Array::add_to_column(result, first + add_offset);
+    }
+}
+>>>>>>> origin/develop12
 
 template <class T>
 size_t BasicArray<T>::count(T value, size_t begin, size_t end) const
@@ -363,6 +402,7 @@ bool BasicArray<T>::minimum(T& result, size_t begin, size_t end) const
 
 
 template <class T>
+<<<<<<< HEAD
 ref_type BasicArray<T>::bptree_leaf_insert(size_t ndx, T value, TreeInsertBase& state)
 {
     size_t leaf_size = size();
@@ -395,6 +435,8 @@ ref_type BasicArray<T>::bptree_leaf_insert(size_t ndx, T value, TreeInsertBase& 
 }
 
 template <class T>
+=======
+>>>>>>> origin/develop12
 inline size_t BasicArray<T>::lower_bound(T value) const noexcept
 {
     const T* begin = reinterpret_cast<const T*>(m_data);
@@ -423,7 +465,10 @@ inline size_t BasicArray<T>::calc_aligned_byte_size(size_t size)
     return aligned_byte_size;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop12
 #ifdef REALM_DEBUG
 
 // LCOV_EXCL_START

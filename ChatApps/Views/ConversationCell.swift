@@ -30,7 +30,11 @@ class ConversationCell: UITableViewCell {
     private let userMessageLabel: UILabel = {
         let messageLabel = UILabel()
         messageLabel.font = .systemFont(ofSize: 14, weight: .regular)
+<<<<<<< HEAD
         messageLabel.numberOfLines = 0
+=======
+        messageLabel.numberOfLines = 2
+>>>>>>> origin/develop12
         return messageLabel
     }()
     
@@ -52,6 +56,7 @@ class ConversationCell: UITableViewCell {
                                      y: 10,
                                      width: 50,
                                      height: 50)
+<<<<<<< HEAD
         userNameLabel.frame = CGRect(x: userImageView.right + 5,
                                      y: 5,
                                      width: contentView.width - 10 - userImageView.width,
@@ -60,6 +65,16 @@ class ConversationCell: UITableViewCell {
                                         y: userNameLabel.bottom + 5,
                                         width: contentView.width - 10 - userImageView.width,
                                         height: (contentView.height-10)/2)
+=======
+        userNameLabel.frame = CGRect(x: userImageView.right + 15,
+                                     y: 15,
+                                     width: contentView.width - 10 - userImageView.width,
+                                     height: (contentView.height-5)/4)
+        userMessageLabel.frame = CGRect(x: userImageView.right + 15,
+                                        y: userNameLabel.bottom + 5,
+                                        width: contentView.width - 24 - userImageView.width,
+                                        height: (contentView.height-5)/4)
+>>>>>>> origin/develop12
         
     }
     

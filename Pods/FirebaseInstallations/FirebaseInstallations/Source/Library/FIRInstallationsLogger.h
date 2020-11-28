@@ -16,7 +16,11 @@
 
 #import <Foundation/Foundation.h>
 
+<<<<<<< HEAD
 #import <FirebaseCore/FIRLogger.h>
+=======
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+>>>>>>> origin/develop12
 
 extern FIRLoggerService kFIRLoggerInstallations;
 

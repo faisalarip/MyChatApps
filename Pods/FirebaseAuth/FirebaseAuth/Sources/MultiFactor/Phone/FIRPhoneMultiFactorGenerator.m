@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if TARGET_OS_IOS
 
 #import <FirebaseAuth/FIRPhoneMultiFactorAssertion.h>
 #import <FirebaseAuth/FIRPhoneMultiFactorGenerator.h>
+=======
+#import <TargetConditionals.h>
+#if TARGET_OS_IOS
+
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneMultiFactorAssertion.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneMultiFactorGenerator.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/MultiFactor/Phone/FIRPhoneMultiFactorAssertion+Internal.h"
 

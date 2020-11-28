@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #include <TargetConditionals.h>
 #if TARGET_OS_IOS
 
@@ -24,6 +25,16 @@
 #import <FirebaseCore/FIRApp.h>
 #import <FirebaseCore/FIRLogger.h>
 #import <FirebaseCore/FIROptions.h>
+=======
+#import <TargetConditionals.h>
+#if TARGET_OS_IOS
+
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthSettings.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorResolver.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneAuthProvider.h"
+#import "FirebaseAuth/Sources/Public/FirebaseAuth/FirebaseAuthVersion.h"
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+>>>>>>> origin/develop12
 
 #import "FirebaseAuth/Sources/Auth/FIRAuthGlobalWorkQueue.h"
 #import "FirebaseAuth/Sources/Auth/FIRAuth_Internal.h"
@@ -85,6 +96,14 @@ typedef void (^FIRFetchAuthDomainCallback)(NSString *_Nullable authDomain,
  */
 static NSString *const kAuthTypeVerifyApp = @"verifyApp";
 
+<<<<<<< HEAD
+=======
+/** @var kCustomUrlSchemePrefix
+    @brief The prefix to append to the Firebase app ID custom callback scheme..
+ */
+static NSString *const kCustomUrlSchemePrefix = @"app-";
+
+>>>>>>> origin/develop12
 /** @var kReCAPTCHAURLStringFormat
     @brief The format of the URL used to open the reCAPTCHA page during app verification.
  */
@@ -113,8 +132,20 @@ extern NSString *const FIRPhoneMultiFactorID;
   self = [super init];
   if (self) {
     _auth = auth;
+<<<<<<< HEAD
     _callbackScheme = [[[_auth.app.options.clientID componentsSeparatedByString:@"."]
                            reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
+=======
+    if (_auth.app.options.clientID) {
+      _callbackScheme = [[[_auth.app.options.clientID componentsSeparatedByString:@"."]
+                             reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
+    } else {
+      _callbackScheme = [kCustomUrlSchemePrefix
+          stringByAppendingString:[_auth.app.options.googleAppID
+                                      stringByReplacingOccurrencesOfString:@":"
+                                                                withString:@"-"]];
+    }
+>>>>>>> origin/develop12
   }
   return self;
 }
@@ -450,7 +481,10 @@ extern NSString *const FIRPhoneMultiFactorID;
                         }
 
                         NSString *IDToken = session.IDToken;
+<<<<<<< HEAD
                         NSString *multiFactorProvider = FIRPhoneMultiFactorID;
+=======
+>>>>>>> origin/develop12
                         FIRAuthProtoStartMFAPhoneRequestInfo *startMFARequestInfo =
                             [[FIRAuthProtoStartMFAPhoneRequestInfo alloc]
                                 initWithPhoneNumber:phoneNumber
@@ -460,7 +494,10 @@ extern NSString *const FIRPhoneMultiFactorID;
                           FIRStartMFAEnrollmentRequest *request =
                               [[FIRStartMFAEnrollmentRequest alloc]
                                        initWithIDToken:IDToken
+<<<<<<< HEAD
                                    multiFactorProvider:multiFactorProvider
+=======
+>>>>>>> origin/develop12
                                         enrollmentInfo:startMFARequestInfo
                                   requestConfiguration:self->_auth.requestConfiguration];
                           [FIRAuthBackend
@@ -512,11 +549,18 @@ extern NSString *const FIRPhoneMultiFactorID;
                                                 }];
                         } else {
                           FIRStartMFASignInRequest *request = [[FIRStartMFASignInRequest alloc]
+<<<<<<< HEAD
                                initWithMFAProvider:multiFactorProvider
                               MFAPendingCredential:session.MFAPendingCredential
                                    MFAEnrollmentID:session.multiFactorInfo.UID
                                         signInInfo:startMFARequestInfo
                               requestConfiguration:self->_auth.requestConfiguration];
+=======
+                              initWithMFAPendingCredential:session.MFAPendingCredential
+                                           MFAEnrollmentID:session.multiFactorInfo.UID
+                                                signInInfo:startMFARequestInfo
+                                      requestConfiguration:self->_auth.requestConfiguration];
+>>>>>>> origin/develop12
                           [FIRAuthBackend
                               startMultiFactorSignIn:request
                                             callback:^(
@@ -680,6 +724,10 @@ extern NSString *const FIRPhoneMultiFactorID;
                                      }
                                      NSString *bundleID = [NSBundle mainBundle].bundleIdentifier;
                                      NSString *clientID = self->_auth.app.options.clientID;
+<<<<<<< HEAD
+=======
+                                     NSString *appID = self->_auth.app.options.googleAppID;
+>>>>>>> origin/develop12
                                      NSString *apiKey = self->_auth.requestConfiguration.APIKey;
                                      NSMutableArray<NSURLQueryItem *> *queryItems = [@[
                                        [NSURLQueryItem queryItemWithName:@"apiKey" value:apiKey],
@@ -687,13 +735,28 @@ extern NSString *const FIRPhoneMultiFactorID;
                                                                    value:kAuthTypeVerifyApp],
                                        [NSURLQueryItem queryItemWithName:@"ibi"
                                                                    value:bundleID ?: @""],
+<<<<<<< HEAD
                                        [NSURLQueryItem queryItemWithName:@"clientId"
                                                                    value:clientID],
+=======
+>>>>>>> origin/develop12
                                        [NSURLQueryItem
                                            queryItemWithName:@"v"
                                                        value:[FIRAuthBackend authUserAgent]],
                                        [NSURLQueryItem queryItemWithName:@"eventId" value:eventID]
                                      ] mutableCopy];
+<<<<<<< HEAD
+=======
+                                     if (clientID) {
+                                       [queryItems
+                                           addObject:[NSURLQueryItem queryItemWithName:@"clientId"
+                                                                                 value:clientID]];
+                                     } else {
+                                       [queryItems
+                                           addObject:[NSURLQueryItem queryItemWithName:@"appId"
+                                                                                 value:appID]];
+                                     }
+>>>>>>> origin/develop12
 
                                      if (self->_auth.requestConfiguration.languageCode) {
                                        [queryItems

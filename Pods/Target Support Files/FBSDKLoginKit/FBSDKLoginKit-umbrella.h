@@ -20,6 +20,12 @@
 #import "FBSDKLoginManager.h"
 #import "FBSDKLoginManagerLoginResult.h"
 #import "FBSDKLoginTooltipView.h"
+<<<<<<< HEAD
+=======
+#import "FBSDKReferralCode.h"
+#import "FBSDKReferralManager.h"
+#import "FBSDKReferralManagerResult.h"
+>>>>>>> origin/develop12
 #import "FBSDKTooltipView.h"
 
 FOUNDATION_EXPORT double FBSDKLoginKitVersionNumber;

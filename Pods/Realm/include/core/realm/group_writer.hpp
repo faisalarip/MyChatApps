@@ -27,7 +27,11 @@
 #include <realm/alloc.hpp>
 #include <realm/impl/array_writer.hpp>
 #include <realm/array_integer.hpp>
+<<<<<<< HEAD
 #include <realm/group_shared_options.hpp>
+=======
+#include <realm/db_options.hpp>
+>>>>>>> origin/develop12
 
 
 namespace realm {
@@ -52,7 +56,11 @@ public:
     // (Group::m_is_shared), the constructor also adds version tracking
     // information to the group, if it is not already present (6th and 7th entry
     // in Group::m_top).
+<<<<<<< HEAD
     using Durability = SharedGroupOptions::Durability;
+=======
+    using Durability = DBOptions::Durability;
+>>>>>>> origin/develop12
     GroupWriter(Group&, Durability dura = Durability::Full);
     ~GroupWriter();
 
@@ -170,7 +178,10 @@ private:
 
     /// Search only a range of the free list for a block as big as the
     /// specified size. Return a pair with index and size of the found chunk.
+<<<<<<< HEAD
     /// \param found indicates whether a suitable block was found.
+=======
+>>>>>>> origin/develop12
     FreeListElement search_free_space_in_part_of_freelist(size_t size);
 
     /// Extend the file to ensure that a chunk of free space of the

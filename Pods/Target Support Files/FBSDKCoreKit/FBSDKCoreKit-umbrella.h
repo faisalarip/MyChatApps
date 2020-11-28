@@ -10,6 +10,20 @@
 #endif
 #endif
 
+<<<<<<< HEAD
+=======
+#import "FBSDKBasicUtility.h"
+#import "FBSDKCoreKit_Basics.h"
+#import "FBSDKCrashHandler.h"
+#import "FBSDKCrashObserving.h"
+#import "FBSDKJSONValue.h"
+#import "FBSDKLibAnalyzer.h"
+#import "FBSDKSafeCast.h"
+#import "FBSDKTypeUtility.h"
+#import "FBSDKURLSession.h"
+#import "FBSDKURLSessionTask.h"
+#import "FBSDKUserDataStore.h"
+>>>>>>> origin/develop12
 #import "FBSDKAccessToken.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKButton.h"

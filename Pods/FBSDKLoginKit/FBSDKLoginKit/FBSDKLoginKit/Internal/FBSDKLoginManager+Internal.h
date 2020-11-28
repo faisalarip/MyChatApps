@@ -28,10 +28,22 @@
 #import "FBSDKCoreKit+Internal.h"
 #endif
 
+<<<<<<< HEAD
 #import "FBSDKLoginManager.h"
 
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
+=======
+#if SWIFT_PACKAGE
+#import "FBSDKLoginManager.h"
+#else
+#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#endif
+
+@class FBSDKAccessToken;
+@class FBSDKLoginCompletionParameters;
+@class FBSDKLoginManagerLogger;
+>>>>>>> origin/develop12
 
 /**
  Success Block
@@ -39,9 +51,26 @@
 typedef void (^FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)
 NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 
+<<<<<<< HEAD
 @interface FBSDKLoginManager () <FBSDKURLOpening>
 @property (nonatomic, weak) UIViewController *fromViewController;
 @property (nonatomic, readonly) NSSet *requestedPermissions;
+=======
+typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
+  FBSDKLoginManagerStateIdle,
+  // We received a call to start login.
+  FBSDKLoginManagerStateStart,
+  // We're calling out to the Facebook app or Safari to perform a log in
+  FBSDKLoginManagerStatePerformingLogin,
+};
+
+@interface FBSDKLoginManager () <FBSDKURLOpening>
+@property (nonatomic, weak) UIViewController *fromViewController;
+@property (nonatomic, readonly) NSSet *requestedPermissions;
+@property (nonatomic, strong) FBSDKLoginManagerLogger *logger;
+@property (nonatomic) FBSDKLoginManagerState state;
+@property (nonatomic) BOOL usedSFAuthSession;
+>>>>>>> origin/develop12
 
 // for testing only
 @property (nonatomic, readonly, copy) NSString *loadExpectedChallenge;
@@ -64,6 +93,17 @@ NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 // for testing only
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKBrowserLoginSuccessBlock)handler;
 
+<<<<<<< HEAD
+=======
+// available to internal modules
+- (void)handleImplicitCancelOfLogIn;
+- (void)invokeHandler:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error;
+- (BOOL)validateLoginStartState;
+- (BOOL)isPerformingLogin;
++ (NSString *)stringForChallenge;
+- (void)storeExpectedChallenge:(NSString *)expectedChallenge;
+
+>>>>>>> origin/develop12
 @end
 
 #endif

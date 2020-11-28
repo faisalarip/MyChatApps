@@ -28,6 +28,10 @@ open class PlayButtonView: UIView {
 
     // MARK: - Properties
 
+<<<<<<< HEAD
+=======
+    public let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+>>>>>>> origin/develop12
     public let triangleView = UIView()
 
     private var triangleCenterXConstraint: NSLayoutConstraint?
@@ -65,14 +69,23 @@ open class PlayButtonView: UIView {
     }
 
     private func setupSubviews() {
+<<<<<<< HEAD
+=======
+        addSubview(blurView)
+>>>>>>> origin/develop12
         addSubview(triangleView)
     }
     
     private func setupView() {
         triangleView.clipsToBounds = true
         triangleView.backgroundColor = .black
+<<<<<<< HEAD
         
         backgroundColor = .playButtonLightGray
+=======
+        blurView.clipsToBounds = true
+        backgroundColor = .clear
+>>>>>>> origin/develop12
     }
 
     private func setupConstraints() {
@@ -86,6 +99,17 @@ open class PlayButtonView: UIView {
         triangleCenterXConstraint = centerX
 
         NSLayoutConstraint.activate([centerX, centerY, width, height])
+<<<<<<< HEAD
+=======
+        
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            blurView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            blurView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            blurView.heightAnchor.constraint(equalTo: heightAnchor),
+            blurView.widthAnchor.constraint(equalTo: widthAnchor)
+        ])
+>>>>>>> origin/develop12
     }
 
     private func triangleMask(for frame: CGRect) -> CAShapeLayer {
@@ -107,7 +131,11 @@ open class PlayButtonView: UIView {
     }
 
     private func updateTriangleConstraints() {
+<<<<<<< HEAD
         triangleCenterXConstraint?.constant = frame.width/8
+=======
+        triangleCenterXConstraint?.constant = triangleView.frame.width / 8
+>>>>>>> origin/develop12
     }
 
     private func applyTriangleMask() {
@@ -116,7 +144,11 @@ open class PlayButtonView: UIView {
     }
 
     private func applyCornerRadius() {
+<<<<<<< HEAD
         layer.cornerRadius = frame.width / 2
+=======
+        blurView.layer.cornerRadius = frame.width / 2
+>>>>>>> origin/develop12
     }
     
 }

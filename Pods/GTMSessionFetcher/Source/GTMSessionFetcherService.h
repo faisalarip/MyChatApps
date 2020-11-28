@@ -63,6 +63,12 @@ extern NSString *const kGTMSessionFetcherServiceSessionKey;
 @property(atomic, assign) NSTimeInterval maxRetryInterval;
 @property(atomic, assign) NSTimeInterval minRetryInterval;
 @property(atomic, copy, GTM_NULLABLE) GTM_NSDictionaryOf(NSString *, id) *properties;
+<<<<<<< HEAD
+=======
+@property(atomic, copy, GTM_NULLABLE)
+    GTMSessionFetcherMetricsCollectionBlock metricsCollectionBlock API_AVAILABLE(
+        ios(10.0), macosx(10.12), tvos(10.0), watchos(3.0));
+>>>>>>> origin/develop12
 
 #if GTM_BACKGROUND_TASK_FETCHING
 @property(atomic, assign) BOOL skipBackgroundTask;

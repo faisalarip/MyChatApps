@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 #import "FIRInstallations.h"
+=======
+#import "FirebaseInstallations/Source/Library/Public/FirebaseInstallations/FIRInstallations.h"
+>>>>>>> origin/develop12
 
 #if __has_include(<FBLPromises/FBLPromises.h>)
 #import <FBLPromises/FBLPromises.h>
@@ -22,6 +26,7 @@
 #import "FBLPromises.h"
 #endif
 
+<<<<<<< HEAD
 #import <FirebaseCore/FIRAppInternal.h>
 #import <FirebaseCore/FIRComponent.h>
 #import <FirebaseCore/FIRComponentContainer.h>
@@ -37,6 +42,18 @@
 #import "FIRInstallationsLogger.h"
 #import "FIRInstallationsStoredAuthToken.h"
 #import "FIRInstallationsVersion.h"
+=======
+#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+
+#import "FirebaseInstallations/Source/Library/FIRInstallationsAuthTokenResultInternal.h"
+
+#import "FirebaseInstallations/Source/Library/Errors/FIRInstallationsErrorUtil.h"
+#import "FirebaseInstallations/Source/Library/FIRInstallationsItem.h"
+#import "FirebaseInstallations/Source/Library/FIRInstallationsLogger.h"
+#import "FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsIDController.h"
+#import "FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStoredAuthToken.h"
+#import "FirebaseInstallations/Source/Library/Public/FirebaseInstallations/FIRInstallationsVersion.h"
+>>>>>>> origin/develop12
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -89,10 +106,19 @@ NS_ASSUME_NONNULL_BEGIN
                                                       projectID:appOptions.projectID
                                                     GCMSenderID:appOptions.GCMSenderID
                                                     accessGroup:appOptions.appGroupID];
+<<<<<<< HEAD
   return [self initWithAppOptions:appOptions
                           appName:appName
         installationsIDController:IDController
                 prefetchAuthToken:YES];
+=======
+
+  // `prefetchAuthToken` is disabled due to b/156746574.
+  return [self initWithAppOptions:appOptions
+                          appName:appName
+        installationsIDController:IDController
+                prefetchAuthToken:NO];
+>>>>>>> origin/develop12
 }
 
 /// The initializer is supposed to be used by tests to inject `installationsStore`.

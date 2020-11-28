@@ -23,6 +23,7 @@
  */
 
 import Foundation
+<<<<<<< HEAD
 
 internal extension UIColor {
 
@@ -118,3 +119,37 @@ internal extension UIColor {
     }
 }
 
+=======
+import UIKit
+
+internal extension UIColor {
+
+    private static func colorFromAssetBundle(named: String) -> UIColor {
+        guard let color = UIColor(named: named, in: Bundle.messageKitAssetBundle, compatibleWith: nil) else {
+            fatalError(MessageKitError.couldNotFindColorAsset)
+        }
+        return color
+    }
+    
+    static var incomingMessageBackground: UIColor { colorFromAssetBundle(named: "incomingMessageBackground")  }
+
+    static var outgoingMessageBackground: UIColor { colorFromAssetBundle(named: "outgoingMessageBackground") }
+    
+    static var incomingMessageLabel: UIColor { colorFromAssetBundle(named: "incomingMessageLabel") }
+    
+    static var outgoingMessageLabel: UIColor { colorFromAssetBundle(named: "outgoingMessageLabel") }
+    
+    static var incomingAudioMessageTint: UIColor { colorFromAssetBundle(named: "incomingAudioMessageTint") }
+    
+    static var outgoingAudioMessageTint: UIColor { colorFromAssetBundle(named: "outgoingAudioMessageTint") }
+
+    static var collectionViewBackground: UIColor { colorFromAssetBundle(named: "collectionViewBackground") }
+
+    static var typingIndicatorDot: UIColor { colorFromAssetBundle(named: "typingIndicatorDot") }
+    
+    static var label: UIColor { colorFromAssetBundle(named: "label") }
+    
+    static var avatarViewBackground: UIColor { colorFromAssetBundle(named: "avatarViewBackground") }
+
+}
+>>>>>>> origin/develop12

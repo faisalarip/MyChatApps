@@ -62,10 +62,17 @@ class LoginViewController: UIViewController {
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
+<<<<<<< HEAD
         button.backgroundColor = .systemBackground
         button.setTitleColor(.white, for: .normal)
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.white.cgColor
+=======
+        button.backgroundColor = .secondarySystemBackground
+        button.setTitleColor(UIColor.systemOrange, for: .normal)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.systemOrange.cgColor
+>>>>>>> origin/develop12
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 4
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
@@ -156,10 +163,35 @@ class LoginViewController: UIViewController {
             }
             
             guard let result = authResult, error == nil else {
+<<<<<<< HEAD
+=======
+                strongSelf.alertUserLoginError()
+>>>>>>> origin/develop12
                 print("Failed to log in \(email) your email not correct")
                 return
             }
             
+<<<<<<< HEAD
+=======
+            let safeEmail = DatabaseManager.shared.safeEmail(with: email)
+            
+            DatabaseManager.shared.getDatafor(path: safeEmail) { (result) in
+                switch result {
+                case .success(let data):
+                    guard let userData = data as? [String: Any],
+                          let firstName = userData["first_name"] as? String,
+                          let lastName = userData["last_name"] as? String else {
+                        return
+                    }
+                    UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                case .failure(let error):
+                    print("Failed to read user data with \(error)")
+                }
+            }
+            
+            UserDefaults.standard.set(email, forKey: "email")
+            
+>>>>>>> origin/develop12
             _ = result.user
             print("Success to Log in")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
@@ -195,6 +227,14 @@ extension LoginViewController: UITextFieldDelegate {
         return true
     }
     
+<<<<<<< HEAD
+=======
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.placeholder = ""
+    }
+    
+    
+>>>>>>> origin/develop12
 }
 
 extension LoginViewController: LoginButtonDelegate {
@@ -218,7 +258,11 @@ extension LoginViewController: LoginButtonDelegate {
                     print("Failed to make facebook graph request")
                     return
             }
+<<<<<<< HEAD
             print(result)
+=======
+//            print(result)
+>>>>>>> origin/develop12
             
             guard let firstName = result["first_name"] as? String,
                 let lastName = result["last_name"] as? String,

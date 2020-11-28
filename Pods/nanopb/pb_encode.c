@@ -28,6 +28,10 @@ static bool checkreturn encode_field(pb_ostream_t *stream, const pb_field_t *fie
 static bool checkreturn default_extension_encoder(pb_ostream_t *stream, const pb_extension_t *extension);
 static bool checkreturn encode_extension_field(pb_ostream_t *stream, const pb_field_t *field, const void *pData);
 static void *pb_const_cast(const void *p);
+<<<<<<< HEAD
+=======
+static bool checkreturn pb_enc_bool(pb_ostream_t *stream, const pb_field_t *field, const void *src);
+>>>>>>> origin/develop12
 static bool checkreturn pb_enc_varint(pb_ostream_t *stream, const pb_field_t *field, const void *src);
 static bool checkreturn pb_enc_uvarint(pb_ostream_t *stream, const pb_field_t *field, const void *src);
 static bool checkreturn pb_enc_svarint(pb_ostream_t *stream, const pb_field_t *field, const void *src);
@@ -52,6 +56,10 @@ static bool checkreturn pb_encode_negative_varint(pb_ostream_t *stream, pb_uint6
  * Order in the array must match pb_action_t LTYPE numbering.
  */
 static const pb_encoder_t PB_ENCODERS[PB_LTYPES_COUNT] = {
+<<<<<<< HEAD
+=======
+    &pb_enc_bool,
+>>>>>>> origin/develop12
     &pb_enc_varint,
     &pb_enc_uvarint,
     &pb_enc_svarint,
@@ -100,10 +108,20 @@ pb_ostream_t pb_ostream_from_buffer(pb_byte_t *buf, size_t bufsize)
 
 bool checkreturn pb_write(pb_ostream_t *stream, const pb_byte_t *buf, size_t count)
 {
+<<<<<<< HEAD
     if (stream->callback != NULL)
     {
         if (stream->bytes_written + count > stream->max_size)
             PB_RETURN_ERROR(stream, "stream full");
+=======
+    if (count > 0 && stream->callback != NULL)
+    {
+        if (stream->bytes_written + count < stream->bytes_written ||
+            stream->bytes_written + count > stream->max_size)
+        {
+            PB_RETURN_ERROR(stream, "stream full");
+        }
+>>>>>>> origin/develop12
 
 #ifdef PB_BUFFER_ONLY
         if (!buf_write(stream, buf, count))
@@ -122,20 +140,50 @@ bool checkreturn pb_write(pb_ostream_t *stream, const pb_byte_t *buf, size_t cou
  * Encode a single field *
  *************************/
 
+<<<<<<< HEAD
+=======
+/* Read a bool value without causing undefined behavior even if the value
+ * is invalid. See issue #434 and
+ * https://stackoverflow.com/questions/27661768/weird-results-for-conditional
+ */
+static bool safe_read_bool(const void *pSize)
+{
+    const char *p = (const char *)pSize;
+    size_t i;
+    for (i = 0; i < sizeof(bool); i++)
+    {
+        if (p[i] != 0)
+            return true;
+    }
+    return false;
+}
+
+>>>>>>> origin/develop12
 /* Encode a static array. Handles the size calculations and possible packing. */
 static bool checkreturn encode_array(pb_ostream_t *stream, const pb_field_t *field,
                          const void *pData, size_t count, pb_encoder_t func)
 {
     size_t i;
     const void *p;
+<<<<<<< HEAD
     size_t size;
     
+=======
+#ifndef PB_ENCODE_ARRAYS_UNPACKED
+    size_t size;
+#endif
+
+>>>>>>> origin/develop12
     if (count == 0)
         return true;
 
     if (PB_ATYPE(field->type) != PB_ATYPE_POINTER && count > field->array_size)
         PB_RETURN_ERROR(stream, "array max size exceeded");
     
+<<<<<<< HEAD
+=======
+#ifndef PB_ENCODE_ARRAYS_UNPACKED
+>>>>>>> origin/develop12
     /* We always pack arrays if the datatype allows it. */
     if (PB_LTYPE(field->type) <= PB_LTYPE_LAST_PACKABLE)
     {
@@ -180,6 +228,10 @@ static bool checkreturn encode_array(pb_ostream_t *stream, const pb_field_t *fie
         }
     }
     else
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> origin/develop12
     {
         p = pData;
         for (i = 0; i < count; i++)
@@ -225,17 +277,31 @@ static bool pb_check_proto3_default_value(const pb_field_t *field, const void *p
     else if (PB_HTYPE(type) == PB_HTYPE_REPEATED)
     {
         /* Repeated fields inside proto3 submessage: present if count != 0 */
+<<<<<<< HEAD
         return *(const pb_size_t*)pSize == 0;
+=======
+        if (field->size_offset != 0)
+            return *(const pb_size_t*)pSize == 0;
+        else if (PB_ATYPE(type) == PB_ATYPE_STATIC)
+            return false; /* Fixed length array */
+>>>>>>> origin/develop12
     }
     else if (PB_HTYPE(type) == PB_HTYPE_ONEOF)
     {
         /* Oneof fields */
         return *(const pb_size_t*)pSize == 0;
     }
+<<<<<<< HEAD
     else if (PB_HTYPE(type) == PB_HTYPE_OPTIONAL && field->size_offset)
     {
         /* Proto2 optional fields inside proto3 submessage */
         return *(const bool*)pSize == false;
+=======
+    else if (PB_HTYPE(type) == PB_HTYPE_OPTIONAL && field->size_offset != 0)
+    {
+        /* Proto2 optional fields inside proto3 submessage */
+        return safe_read_bool(pSize) == false;
+>>>>>>> origin/develop12
     }
 
     /* Rest is proto3 singular fields */
@@ -279,6 +345,15 @@ static bool pb_check_proto3_default_value(const pb_field_t *field, const void *p
             return true;
         }
     }
+<<<<<<< HEAD
+=======
+
+    /* Compares pointers to NULL in case of FT_POINTER */
+    if (PB_ATYPE(type) == PB_ATYPE_POINTER && PB_LTYPE(type) > PB_LTYPE_LAST_PACKABLE)
+    {
+        return !*(const void**)((uintptr_t)pData);
+    }
+>>>>>>> origin/develop12
     
 	{
 	    /* Catch-all branch that does byte-per-byte comparison for zero value.
@@ -351,7 +426,11 @@ static bool checkreturn encode_basic_field(pb_ostream_t *stream,
             break;
         
         case PB_HTYPE_OPTIONAL:
+<<<<<<< HEAD
             if (*(const bool*)pSize)
+=======
+            if (safe_read_bool(pSize))
+>>>>>>> origin/develop12
             {
                 if (!pb_encode_tag_for_field(stream, field))
                     return false;
@@ -643,6 +722,10 @@ bool checkreturn pb_encode_tag_for_field(pb_ostream_t *stream, const pb_field_t 
     pb_wire_type_t wiretype;
     switch (PB_LTYPE(field->type))
     {
+<<<<<<< HEAD
+=======
+        case PB_LTYPE_BOOL:
+>>>>>>> origin/develop12
         case PB_LTYPE_VARINT:
         case PB_LTYPE_UVARINT:
         case PB_LTYPE_SVARINT:
@@ -731,6 +814,16 @@ bool checkreturn pb_encode_submessage(pb_ostream_t *stream, const pb_field_t fie
 
 /* Field encoders */
 
+<<<<<<< HEAD
+=======
+static bool checkreturn pb_enc_bool(pb_ostream_t *stream, const pb_field_t *field, const void *src)
+{
+    uint32_t value = safe_read_bool(src) ? 1 : 0;
+    PB_UNUSED(field);
+    return pb_encode_varint(stream, value);
+}
+
+>>>>>>> origin/develop12
 static bool checkreturn pb_enc_varint(pb_ostream_t *stream, const pb_field_t *field, const void *src)
 {
     pb_int64_t value = 0;
@@ -810,6 +903,10 @@ static bool checkreturn pb_enc_fixed32(pb_ostream_t *stream, const pb_field_t *f
 static bool checkreturn pb_enc_bytes(pb_ostream_t *stream, const pb_field_t *field, const void *src)
 {
     const pb_bytes_array_t *bytes = NULL;
+<<<<<<< HEAD
+=======
+    size_t allocsize;
+>>>>>>> origin/develop12
 
     bytes = (const pb_bytes_array_t*)src;
     
@@ -819,8 +916,14 @@ static bool checkreturn pb_enc_bytes(pb_ostream_t *stream, const pb_field_t *fie
         return pb_encode_string(stream, NULL, 0);
     }
     
+<<<<<<< HEAD
     if (PB_ATYPE(field->type) == PB_ATYPE_STATIC &&
         PB_BYTES_ARRAY_T_ALLOCSIZE(bytes->size) > field->data_size)
+=======
+    allocsize = PB_BYTES_ARRAY_T_ALLOCSIZE(bytes->size);
+    if (allocsize < bytes->size ||
+        (PB_ATYPE(field->type) == PB_ATYPE_STATIC && allocsize > field->data_size))
+>>>>>>> origin/develop12
     {
         PB_RETURN_ERROR(stream, "bytes size exceeded");
     }

@@ -105,7 +105,11 @@ public:
     util::Any box(util::Optional<double> v) const { return v; }
     util::Any box(util::Optional<float> v) const { return v; }
     util::Any box(util::Optional<int64_t> v) const { return v; }
+<<<<<<< HEAD
     util::Any box(RowExpr) const;
+=======
+    util::Any box(Obj) const;
+>>>>>>> origin/develop12
 
     // Any properties are only supported by the Cocoa binding to enable reading
     // old Realm files that may have used them. Other bindings can safely not
@@ -113,12 +117,21 @@ public:
     util::Any box(Mixed) const { REALM_TERMINATE("not supported"); }
 
     // Convert from the boxed type to core types. This needs to be implemented
+<<<<<<< HEAD
     // for all of the types which `box()` can take, plus `RowExpr` and optional
     // versions of the numeric types, minus `List` and `Results`.
     //
     // `create` and `update` are only applicable to `unbox<RowExpr>`. If
     // `create` is false then when given something which is not a managed Realm
     // object `unbox()` should simply return a detached row expr, while if it's
+=======
+    // for all of the types which `box()` can take, plus `Obj` and optional
+    // versions of the numeric types, minus `List` and `Results`.
+    //
+    // `create` and `update` are only applicable to `unbox<Obj>`. If
+    // `create` is false then when given something which is not a managed Realm
+    // object `unbox()` should simply return a detached obj, while if it's
+>>>>>>> origin/develop12
     // true then `unbox()` should create a new object in the context's Realm
     // using the provided value. If `update` is true then upsert semantics
     // should be used for this.
@@ -127,7 +140,11 @@ public:
     // is true, `current_row` may hold a reference to the object that should
     // be compared against.
     template<typename T>
+<<<<<<< HEAD
     T unbox(util::Any& v, CreatePolicy = CreatePolicy::Skip, size_t /*current_row*/ = realm::npos) const { return any_cast<T>(v); }
+=======
+    T unbox(util::Any& v, CreatePolicy = CreatePolicy::Skip, ObjKey /*current_row*/ = ObjKey()) const { return any_cast<T>(v); }
+>>>>>>> origin/develop12
 
     bool is_null(util::Any const& v) const noexcept { return !v.has_value(); }
     util::Any null_value() const noexcept { return {}; }
@@ -152,6 +169,7 @@ private:
 
 };
 
+<<<<<<< HEAD
 inline util::Any CppContext::box(RowExpr row) const
 {
     REALM_ASSERT(object_schema);
@@ -160,6 +178,16 @@ inline util::Any CppContext::box(RowExpr row) const
 
 template<>
 inline StringData CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
+=======
+inline util::Any CppContext::box(Obj obj) const
+{
+    REALM_ASSERT(object_schema);
+    return Object(realm, *object_schema, obj);
+}
+
+template<>
+inline StringData CppContext::unbox(util::Any& v, CreatePolicy, ObjKey) const
+>>>>>>> origin/develop12
 {
     if (!v.has_value())
         return StringData();
@@ -168,7 +196,11 @@ inline StringData CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
 }
 
 template<>
+<<<<<<< HEAD
 inline BinaryData CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
+=======
+inline BinaryData CppContext::unbox(util::Any& v, CreatePolicy, ObjKey) const
+>>>>>>> origin/develop12
 {
     if (!v.has_value())
         return BinaryData();
@@ -177,6 +209,7 @@ inline BinaryData CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
 }
 
 template<>
+<<<<<<< HEAD
 inline RowExpr CppContext::unbox(util::Any& v, CreatePolicy policy, size_t current_row) const
 {
     if (auto object = any_cast<Object>(&v))
@@ -192,30 +225,63 @@ inline RowExpr CppContext::unbox(util::Any& v, CreatePolicy policy, size_t curre
 
 template<>
 inline util::Optional<bool> CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
+=======
+inline Obj CppContext::unbox(util::Any& v, CreatePolicy policy, ObjKey current_obj) const
+{
+    if (auto object = any_cast<Object>(&v))
+        return object->obj();
+    if (auto obj = any_cast<Obj>(&v))
+        return *obj;
+    if (policy == CreatePolicy::Skip)
+        return Obj();
+
+    REALM_ASSERT(object_schema);
+    return Object::create(const_cast<CppContext&>(*this), realm, *object_schema, v, policy, current_obj).obj();
+}
+
+template<>
+inline util::Optional<bool> CppContext::unbox(util::Any& v, CreatePolicy, ObjKey) const
+>>>>>>> origin/develop12
 {
     return v.has_value() ? util::make_optional(unbox<bool>(v)) : util::none;
 }
 
 template<>
+<<<<<<< HEAD
 inline util::Optional<int64_t> CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
+=======
+inline util::Optional<int64_t> CppContext::unbox(util::Any& v, CreatePolicy, ObjKey) const
+>>>>>>> origin/develop12
 {
     return v.has_value() ? util::make_optional(unbox<int64_t>(v)) : util::none;
 }
 
 template<>
+<<<<<<< HEAD
 inline util::Optional<double> CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
+=======
+inline util::Optional<double> CppContext::unbox(util::Any& v, CreatePolicy, ObjKey) const
+>>>>>>> origin/develop12
 {
     return v.has_value() ? util::make_optional(unbox<double>(v)) : util::none;
 }
 
 template<>
+<<<<<<< HEAD
 inline util::Optional<float> CppContext::unbox(util::Any& v, CreatePolicy, size_t) const
+=======
+inline util::Optional<float> CppContext::unbox(util::Any& v, CreatePolicy, ObjKey) const
+>>>>>>> origin/develop12
 {
     return v.has_value() ? util::make_optional(unbox<float>(v)) : util::none;
 }
 
 template<>
+<<<<<<< HEAD
 inline Mixed CppContext::unbox(util::Any&, CreatePolicy, size_t) const
+=======
+inline Mixed CppContext::unbox(util::Any&, CreatePolicy, ObjKey) const
+>>>>>>> origin/develop12
 {
     throw std::logic_error("'Any' type is unsupported");
 }
