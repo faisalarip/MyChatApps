@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Chatku</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -29,7 +31,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.401233957403-4sfta04qcf49ctqstkpsk260fduh69pe</string>
+				<string>com.googleusercontent.apps.761294934750-gfvtduk2jpjuk23o07j91brueu4bsngt</string>
 			</array>
 		</dict>
 	</array>

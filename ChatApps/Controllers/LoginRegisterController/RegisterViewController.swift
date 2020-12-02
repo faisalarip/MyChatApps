@@ -27,8 +27,6 @@ class RegisterViewController: UIViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.masksToBounds = true
-        //        imageView.layer.borderWidth = 2
-        //        imageView.layer.borderColor = UIColor.lightGray.cgColor
         return imageView
     }()
     
@@ -85,7 +83,6 @@ class RegisterViewController: UIViewController {
         textFeild.placeholder = "Password"
         textFeild.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         textFeild.leftViewMode = .always
-//        textFeild.isSecureTextEntry = true        
         return textFeild
     }()
     
@@ -116,13 +113,6 @@ class RegisterViewController: UIViewController {
         imageView.isUserInteractionEnabled = true
         scrollView.isUserInteractionEnabled = true
         
-//        DispatchQueue.main.async {
-//            self.firstNameField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
-//            self.lastNameField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
-//            self.emailfield.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
-//            self.passwordField.addBottomBorderWithColor(color: UIColor.lightGray, width: 1.5)
-//        }
-        
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         scrollView.addSubview(firstNameField)
@@ -132,14 +122,8 @@ class RegisterViewController: UIViewController {
         scrollView.addSubview(registerButton)
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapChangeProfile))
-        //        gesture.numberOfTouches =
         gesture.numberOfTapsRequired = 1
         imageView.addGestureRecognizer(gesture)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -202,6 +186,9 @@ class RegisterViewController: UIViewController {
                     print("Oppss.. Failed creating account")
                     return
                 }
+                
+                UserDefaults.standard.setValue(email, forKey: "email")
+                UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
                 
                 let chatUser = ChatAppsUser(firstName: firstName,
                                             lastName: lastName,

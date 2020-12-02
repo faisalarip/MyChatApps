@@ -14,12 +14,10 @@ class LocationPickerVC: UIViewController {
     
     public var completion: ((CLLocationCoordinate2D) -> Void)?
     private var coordinates: CLLocationCoordinate2D?
-    private var isPickable = true
-    private let map = MKMapView()
+    private let mapView = MKMapView()
     
     init(coordinates: CLLocationCoordinate2D?) {
         self.coordinates = coordinates
-        self.isPickable  = false
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -30,11 +28,12 @@ class LocationPickerVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.addSubview(map)
+        view.addSubview(mapView)
         
         title = "Pick Location"
-        map.isUserInteractionEnabled = true
-        if isPickable {
+        mapView.isUserInteractionEnabled = true
+        print("coordinates is a \(String(describing: coordinates))")
+        if coordinates == nil {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save",
                                                                 style: .done,
                                                                 target: self, action: #selector(saveButtonTapped))
@@ -42,34 +41,38 @@ class LocationPickerVC: UIViewController {
                                                  action: #selector(didTapMap(_:)))
             gesture.numberOfTouchesRequired = 1
             gesture.numberOfTapsRequired = 1
-            map.addGestureRecognizer(gesture)
+            mapView.addGestureRecognizer(gesture)
         } else {
             guard let coordinate = coordinates else { return }
             let pin = MKPointAnnotation()
             pin.coordinate = coordinate
-            map.addAnnotation(pin)
+            mapView.addAnnotation(pin)
             
+            //configure auto zooming level based on region location
+            let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta:0.01)
+            let region = MKCoordinateRegion(center: coordinate, span: span)
+            mapView.setRegion(region, animated: true)
         }
                 
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        map.frame = view.bounds
+        mapView.frame = view.bounds
     }
     
     @objc private func didTapMap(_ gesture: UITapGestureRecognizer) {
-        let locationInView = gesture.location(in: map)
-        let coordinate = map.convert(locationInView, toCoordinateFrom: map)
+        let locationInView = gesture.location(in: mapView)
+        let coordinate = mapView.convert(locationInView, toCoordinateFrom: mapView)
         self.coordinates = coordinate
         
-        for pinAnnotation in map.annotations {
-            map.removeAnnotation(pinAnnotation)
+        for pinAnnotation in mapView.annotations {
+            mapView.removeAnnotation(pinAnnotation)
         }
         //drop a pin on the location
         let pin = MKPointAnnotation()
         pin.coordinate = coordinate
-        map.addAnnotation(pin)
+        mapView.addAnnotation(pin)
     }
     
     @objc private func saveButtonTapped() {

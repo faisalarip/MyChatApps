@@ -23,12 +23,26 @@ class ConversationViewController: UIViewController {
         return table
     }()
     
-    private let noLabel: UILabel = {
+    private let noConversationFirstLabel: UILabel = {
        let label  = UILabel()
-        label.text = "No Conversations"
+        label.text = "Oppss, you doesn't have any conversation with anyone"
         label.textAlignment = .center
-        label.textColor = .gray
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.textColor = .label
         label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.isHidden = true
+        return label
+    }()
+    
+    private let noConversationSecondLabel: UILabel = {
+       let label  = UILabel()
+        label.text = "Tap here to start a conversation"
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = true
+        label.clipsToBounds = true
+        label.textColor = .link
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.isHidden = true
         return label
     }()
@@ -41,11 +55,16 @@ class ConversationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
         
         view.addSubview(tableView)
-        view.addSubview(noLabel)
-        
-        setupTableView()
-        fetchConversations()
+                
+        tableView.dataSource = self
+        tableView.delegate = self
         startListeningForConversation()
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapComposeButton))
+        gesture.numberOfTapsRequired = 1
+        gesture.numberOfTouchesRequired = 1
+        noConversationSecondLabel.addGestureRecognizer(gesture)
+        
         
         loginObserved = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] ( _ ) in
             guard let strongSelf = self else {
@@ -53,6 +72,16 @@ class ConversationViewController: UIViewController {
             }
             strongSelf.startListeningForConversation()
         })
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        validateLogIn()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
     }
     
     private func startListeningForConversation() {
@@ -69,13 +98,18 @@ class ConversationViewController: UIViewController {
                 case .success(let conversations):
                     print("successfully get conversation model")
                     guard !conversations.isEmpty else { return }
+                    self?.tableView.isHidden = false
+                    self?.noConversationFirstLabel.isHidden = true
+                    self?.noConversationSecondLabel.isHidden = true
                     
                     self?.conversations = conversations
-                    
                     DispatchQueue.main.async {
                         self?.tableView.reloadData()
                     }
                 case .failure(let error):
+                    //Reloading data for deleted conversations interface
+                    self?.tableView.isHidden = true
+                    self?.setUpLayoutNoConversationLabel()
                 print("Failed to get conversations \(error)")
             }
         }
@@ -133,17 +167,6 @@ class ConversationViewController: UIViewController {
             
         }
         
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        validateLogIn()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
     }
     
     private func validateLogIn() {
@@ -156,19 +179,31 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    private func setupTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-    private func fetchConversations() {
-        tableView.isHidden = false
+    private func setUpLayoutNoConversationLabel() {
+        noConversationFirstLabel.isHidden = false
+        noConversationSecondLabel.isHidden = false
+        let stackview = UIStackView()
+        stackview.axis = .vertical
+        stackview.spacing = 8
+        stackview.distribution = .equalSpacing
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        stackview.addArrangedSubview(noConversationFirstLabel)
+        noConversationFirstLabel.widthAnchor.constraint(equalToConstant: 230).isActive = true
+        noConversationFirstLabel.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        
+        stackview.addArrangedSubview(noConversationSecondLabel)
+        noConversationSecondLabel.widthAnchor.constraint(equalToConstant: self.view.frame.width).isActive = true
+        noConversationSecondLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.view.addSubview(stackview)
+        stackview.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        stackview.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
 }
 
 extension ConversationViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
         return conversations.count
     }
     
@@ -185,7 +220,7 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
         tableView.deselectRow(at: indexPath, animated: true)
         
         let model = conversations[indexPath.row]
-        
+
         let vc = ChatViewController(with: model.otherUserEmail, id: model.id)
         vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never

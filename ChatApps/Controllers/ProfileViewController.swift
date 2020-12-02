@@ -50,6 +50,11 @@ class ProfileViewController: UIViewController {
                 // Log out Google account
                 GIDSignIn.sharedInstance()?.signOut()
                 
+                UserDefaults.standard.setValue(nil, forKey: "email")
+                UserDefaults.standard.setValue(nil, forKey: "name")
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
                 do {
                     try FirebaseAuth.Auth.auth().signOut()
                     
@@ -121,6 +126,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         data[indexPath.row].handler?()
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 }
