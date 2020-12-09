@@ -101,7 +101,9 @@ class ConversationViewController: UIViewController {
                     self?.tableView.isHidden = false
                     self?.noConversationFirstLabel.isHidden = true
                     self?.noConversationSecondLabel.isHidden = true
-                    
+                    for conversation in conversations {
+                        conversation.latestMessage.text
+                    }
                     self?.conversations = conversations
                     DispatchQueue.main.async {
                         self?.tableView.reloadData()
