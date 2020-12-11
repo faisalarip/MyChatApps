@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This application requires location services to work</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This application requires location services to work</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -34,10 +38,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 <<<<<<< HEAD
+<<<<<<< HEAD
 				<string>com.googleusercontent.apps.797435623956-avpat8a3u8mh01fsk1o0gtmbm14eil9j</string>
 =======
 				<string>com.googleusercontent.apps.401233957403-4sfta04qcf49ctqstkpsk260fduh69pe</string>
 >>>>>>> origin/develop12
+=======
+				<string>com.googleusercontent.apps.761294934750-gfvtduk2jpjuk23o07j91brueu4bsngt</string>
+>>>>>>> develop18
 			</array>
 		</dict>
 	</array>

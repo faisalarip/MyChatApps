@@ -154,14 +154,16 @@ class LoginViewController: UIViewController {
         
         //Firebase Log in
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
-            guard let strongSelf = self else {
+            guard error == nil, let strongSelf = self else {
+                self?.alertUserLoginError()
+                print("Failed to log in \(email) your email not correct")
                 return
             }
-            
             DispatchQueue.main.async {
                 strongSelf.spinner.dismiss()
             }
             
+<<<<<<< HEAD
             guard let result = authResult, error == nil else {
 <<<<<<< HEAD
 =======
@@ -173,9 +175,10 @@ class LoginViewController: UIViewController {
             
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> develop18
             let safeEmail = DatabaseManager.shared.safeEmail(with: email)
-            
-            DatabaseManager.shared.getDatafor(path: safeEmail) { (result) in
+            DatabaseManager.shared.getDataCurrentUser(safeEmail: safeEmail) { (result) in
                 switch result {
                 case .success(let data):
                     guard let userData = data as? [String: Any],
@@ -187,12 +190,14 @@ class LoginViewController: UIViewController {
                 case .failure(let error):
                     print("Failed to read user data with \(error)")
                 }
-            }
-            
+            }            
             UserDefaults.standard.set(email, forKey: "email")
+<<<<<<< HEAD
             
 >>>>>>> origin/develop12
             _ = result.user
+=======
+>>>>>>> develop18
             print("Success to Log in")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
@@ -259,10 +264,14 @@ extension LoginViewController: LoginButtonDelegate {
                     return
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
             print(result)
 =======
 //            print(result)
 >>>>>>> origin/develop12
+=======
+            print(result)
+>>>>>>> develop18
             
             guard let firstName = result["first_name"] as? String,
                 let lastName = result["last_name"] as? String,
