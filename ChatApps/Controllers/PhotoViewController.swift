@@ -9,7 +9,7 @@
 import UIKit
 import SDWebImage
 
-class PhotoViewController: UIViewController {
+final class PhotoViewController: UIViewController {
     
     private var imageUrl: URL?
     

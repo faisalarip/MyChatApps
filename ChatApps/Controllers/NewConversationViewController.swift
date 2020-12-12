@@ -14,16 +14,13 @@ struct SearchResult {
     let recepientEmail: String
 }
 
-class NewConversationViewController: UIViewController {
+final class NewConversationViewController: UIViewController {
     
     public var completion: ((SearchResult) -> Void)?
     
-    private let spinner = JGProgressHUD(style: .dark)
-    
+    private let spinner = JGProgressHUD(style: .dark)    
     private var users = [[String:String]]()
-    
     private var result = [SearchResult]()
-    
     private var hasFetched = false
     
     private let searchBar: UISearchBar = {

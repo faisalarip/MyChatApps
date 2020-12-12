@@ -14,59 +14,8 @@ import AVFoundation
 import AVKit
 import CoreLocation
 
-struct Message: MessageType {
-    public var sender: SenderType
-    public var messageId: String
-    public var sentDate: Date
-    public var kind: MessageKind
-}
 
-extension MessageKind {
-    var messageKindString: String {
-        switch self {
-            case .text(_):
-            return "text"
-            case .attributedText(_):
-            return "attributed_text"
-            case .photo(_):
-            return "photo"
-            case .video(_):
-            return "video"
-            case .location(_):
-            return "location"
-            case .emoji(_):
-            return "emoji"
-            case .audio(_):
-            return "audio"
-            case .contact(_):
-            return "contact"
-            case .custom(_):
-            return "custom"
-            case .linkPreview(_):
-            return "linkPreview"
-        }
-    }
-}
-
-struct Sender: SenderType {
-    var senderId: String
-    var photoURL: String
-    var displayName: String
-}
-
-struct Location: LocationItem {
-    var location: CLLocation
-    var size: CGSize
-}
-
-struct Media: MediaItem {
-    var url: URL?
-    var image: UIImage?
-    var placeholderImage: UIImage
-    var size: CGSize
-}
-
-class ChatViewController: MessagesViewController {
+final class ChatViewController: MessagesViewController {
     
     public let otherUserEmail: String
     public var isNewConversation = false
@@ -149,7 +98,7 @@ class ChatViewController: MessagesViewController {
             
         }))
         alert.addAction(UIAlertAction(title: "Location", style: .default, handler: { [weak self] (_) in
-            self?.presentMapActionSheet()
+            self?.presentMapController()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
@@ -202,7 +151,7 @@ class ChatViewController: MessagesViewController {
         present(alert, animated: true)
     }
     
-    private func presentMapActionSheet() {
+    private func presentMapController() {
         let locationVC = LocationPickerVC(coordinates: nil)
         locationVC.navigationItem.largeTitleDisplayMode = .never
         locationVC.completion = { [weak self] selectedLocation in
@@ -220,7 +169,7 @@ class ChatViewController: MessagesViewController {
             print("get a coordinate location, long: \(longitude) | lat: \(latitude)")
             
             let location = Location(location: CLLocation(latitude: latitude, longitude: longitude),
-                                 size: .zero)
+                                    size: .zero)
             
             let message = Message(sender: selfSender,
                                   messageId: messageId,
@@ -261,6 +210,8 @@ class ChatViewController: MessagesViewController {
         }
     }
 }
+
+// MARK: - Image Picker and Navigation Controller Delegete
 
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -356,6 +307,8 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     
 }
 
+// MARK: - InputBarAccessoryViewDelegate
+
 extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.isEmpty, let selfSender = self.selfSender, let messageId = createMessageId() else { return }
@@ -404,6 +357,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         return newIdentifier
     }
 }
+
+// MARK: - Message DataSource, LayoutDelegate, DisplayeDelegate
 
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     
@@ -495,6 +450,8 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         
     }
 }
+
+// MARK: - Message Cell Delegete
 
 extension ChatViewController: MessageCellDelegate {
     

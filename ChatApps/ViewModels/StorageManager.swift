@@ -9,6 +9,8 @@
 import Foundation
 import FirebaseStorage
 
+
+/// Manager object to get, fetch and upload files to fireabase database
 final class StorageManager {
     
     static let shared = StorageManager()

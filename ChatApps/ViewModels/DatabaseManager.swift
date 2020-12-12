@@ -11,8 +11,10 @@ import FirebaseDatabase
 import MessageKit
 import CoreLocation
 
+/// Manager object to write and read data to real time firebase database
 final class DatabaseManager {
     
+    /// Shared instance of class
     static let shared = DatabaseManager()
     
     private let database = Database.database().reference()
@@ -32,12 +34,17 @@ final class DatabaseManager {
             completion(.success(value))
         }
     }
+    
 }
 
 // MARK: - Account Management
 
 extension DatabaseManager {
     
+    /// Checks if user exists for given email
+    /// Parameter
+    /// - `email`:                  Target email to be checked
+    /// - `completion`:     Async closure to return with result
     public func validationNewUser(with email: String, completion: @escaping ((Bool) -> Void)) {
         
         var safeEmail: String {

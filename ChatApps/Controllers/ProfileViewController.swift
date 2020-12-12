@@ -12,17 +12,8 @@ import FBSDKLoginKit
 import GoogleSignIn
 import SDWebImage
 
-enum ProfileViewModelType {
-    case profileInfo, logout
-}
 
-struct ProfileViewModel {
-    let viewModel: ProfileViewModelType
-    let title: String
-    let handler: (() -> Void)?
-}
-
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
 
     @IBOutlet var tableView: UITableView!
     

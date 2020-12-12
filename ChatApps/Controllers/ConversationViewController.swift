@@ -10,7 +10,8 @@ import UIKit
 import FirebaseAuth
 import JGProgressHUD
 
-class ConversationViewController: UIViewController {
+/// Controller class for showing list conversation
+final class ConversationViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
     
@@ -101,9 +102,6 @@ class ConversationViewController: UIViewController {
                     self?.tableView.isHidden = false
                     self?.noConversationFirstLabel.isHidden = true
                     self?.noConversationSecondLabel.isHidden = true
-                    for conversation in conversations {
-                        conversation.latestMessage.text
-                    }
                     self?.conversations = conversations
                     DispatchQueue.main.async {
                         self?.tableView.reloadData()
@@ -112,7 +110,7 @@ class ConversationViewController: UIViewController {
                     //Reloading data for deleted conversations interface
                     self?.tableView.isHidden = true
                     self?.setUpLayoutNoConversationLabel()
-                print("Failed to get conversations \(error)")
+                    print("Failed to get conversations \(error)")
             }
         }
         
@@ -204,6 +202,8 @@ class ConversationViewController: UIViewController {
     
 }
 
+// MARK: - Table View Delegate and Data Source
+
 extension ConversationViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
         return conversations.count
@@ -242,11 +242,12 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
             tableView.beginUpdates()
             
             let conversationId = conversations[indexPath.row].id
+            self.conversations.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
             
             DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] (success) in
-                if success {
-                    self?.conversations.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .left)
+                if !success {
+                    // add model and row back and show error
                 }
             }
 

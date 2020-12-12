@@ -192,6 +192,8 @@ class LoginViewController: UIViewController {
     
 }
 
+// MARK: - Text Field Delegete
+
 extension LoginViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -211,6 +213,8 @@ extension LoginViewController: UITextFieldDelegate {
     
     
 }
+
+// MARK: - Logion Button Delegete
 
 extension LoginViewController: LoginButtonDelegate {
     

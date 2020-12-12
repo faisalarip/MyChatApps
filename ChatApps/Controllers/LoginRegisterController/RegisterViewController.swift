@@ -10,7 +10,7 @@ import UIKit
 import FirebaseAuth
 import JGProgressHUD
 
-class RegisterViewController: UIViewController {
+final class RegisterViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
     
@@ -228,6 +228,8 @@ class RegisterViewController: UIViewController {
     
 }
 
+// MARK: - Text Field Delegete
+
 extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -247,6 +249,8 @@ extension RegisterViewController: UITextFieldDelegate {
     }
     
 }
+
+// MARK: - Image Picker and Navigation Controller Delegate
 
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     

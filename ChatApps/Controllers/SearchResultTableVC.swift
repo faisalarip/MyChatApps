@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class SearchResultTableVC: UITableViewController {
+final class SearchResultTableVC: UITableViewController {
     
     public var mapView: MKMapView? = nil
     public var handleMapSearchDelegate:HandleMapSearch? = nil
@@ -37,7 +37,7 @@ class SearchResultTableVC: UITableViewController {
     private func startProvidingCompletions() {
         searchCompleter = MKLocalSearchCompleter()
         searchCompleter?.delegate = self
-        searchCompleter?.resultTypes = .pointOfInterest
+        searchCompleter?.resultTypes = .query
         searchCompleter?.region = searchRegion
     }
     
@@ -50,19 +50,20 @@ class SearchResultTableVC: UITableViewController {
         searchRequest(using: suggested)
     }
     
-    func searchByText(for queryString: String?) {
+    public func searchByText(for queryString: String?) {
         let searchQuery = MKLocalSearch.Request()
         searchQuery.naturalLanguageQuery = queryString
         searchRequest(using: searchQuery)
     }
     
     /// - Tag: SearchRequest
+    /// Search request to find out of a some place
     private func searchRequest(using searchRequest: MKLocalSearch.Request) {
         // Confine the map search area to an area around the user's current location.
         searchRequest.region = searchRegion
         
-        // Include only point of interest results. This excludes results based on address matches.
-        searchRequest.resultTypes = .pointOfInterest
+        // Search results will be displayed in the form ofn Address
+        searchRequest.resultTypes = .address
                 
         let localSearch = MKLocalSearch(request: searchRequest)
         localSearch.start { [unowned self] (response, error) in
@@ -70,9 +71,9 @@ class SearchResultTableVC: UITableViewController {
                 self.displaySearchError(error)
                 return
             }
-            
-            self.places = response.mapItems
+
             print("This results of response item \(response.mapItems)")
+            self.places = response.mapItems
             
             let selectedItem = places[0].placemark
             handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem)
@@ -91,6 +92,8 @@ class SearchResultTableVC: UITableViewController {
         }
     }
 }
+
+// MARK: - Tableview Data Source and Delegete
 
 extension SearchResultTableVC {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -136,14 +139,19 @@ extension SearchResultTableVC {
     }
 }
 
+// MARK: - Search Results Updating
+
 extension SearchResultTableVC: UISearchResultsUpdating {
     /// - Tag: UpdateQuery
     func updateSearchResults(for searchController: UISearchController) {
         // Ask `MKLocalSearchCompleter` for new completion suggestions based on the change in the text entered in `UISearchBar`.
         searchCompleter?.queryFragment = searchController.searchBar.text ?? ""
+        
     }
     
 }
+
+// MARK: - Search Completer Delegete
 
 extension SearchResultTableVC: MKLocalSearchCompleterDelegate {
     /// - Tag: QueryResults
@@ -160,6 +168,8 @@ extension SearchResultTableVC: MKLocalSearchCompleterDelegate {
             print("MKLocalSearchCompleter encountered an error: \(error.localizedDescription). The query fragment is: \"\(completer.queryFragment)\"")
         }
     }}
+
+// MARK: Private Class of SuggestionCompletionTableViewCell
 
 private class SuggestionCompletionTableViewCell: UITableViewCell {
     

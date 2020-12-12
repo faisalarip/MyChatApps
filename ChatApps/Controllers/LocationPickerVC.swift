@@ -17,6 +17,7 @@ protocol HandleMapSearch {
 class LocationPickerVC: UIViewController {
     
     public var completion: ((CLLocationCoordinate2D) -> Void)?
+    
     private var coordinates: CLLocationCoordinate2D?
     private let mapView = MKMapView()
     private let locationManager = CLLocationManager()
@@ -161,6 +162,8 @@ class LocationPickerVC: UIViewController {
     
 }
 
+// MARK: - Location Manager Delegete
+
 extension LocationPickerVC: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
@@ -183,6 +186,8 @@ extension LocationPickerVC: CLLocationManagerDelegate {
     }
 }
 
+// MARK: - Search Bar Delegete
+
 extension LocationPickerVC: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
@@ -202,9 +207,12 @@ extension LocationPickerVC: UISearchBarDelegate {
         
         // The user tapped search on the `UISearchBar` or on the keyboard. Since they didn't
         // select a row with a suggested completion, run the search with the query text in the search field.
+        print("THIS IS SEARCH RESULTS \(searchBar.text ?? "")")
         searchResultTable.searchByText(for: searchBar.text)
     }
 }
+
+// MARK: - Handle Map Search
 
 extension LocationPickerVC: HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark){
