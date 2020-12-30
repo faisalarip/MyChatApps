@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This application requires location services to work</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This application requires location services to work</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -33,7 +29,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.761294934750-gfvtduk2jpjuk23o07j91brueu4bsngt</string>
+				<string>com.googleusercontent.apps.773113325245-fm236hp3rjii5v9osb6hd0ni7fk6kvl5</string>
 			</array>
 		</dict>
 	</array>
@@ -67,6 +63,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Please allow access to take a profile picture</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This application requires location services to work</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This application requires location services to work</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Please allow access to send audio for video message</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

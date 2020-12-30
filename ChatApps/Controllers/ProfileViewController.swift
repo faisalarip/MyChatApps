@@ -23,53 +23,16 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
-        
-        data.append(ProfileViewModel(viewModel: .profileInfo,
-                                     title: "Name: \(UserDefaults.standard.value(forKey: "name") as? String ?? "No Name")",
-                                     handler: nil))
-        data.append(ProfileViewModel(viewModel: .profileInfo,
-                                     title: "Email: \(UserDefaults.standard.value(forKey: "email") as? String ?? "No Email")",
-                                     handler: nil))
-        data.append(ProfileViewModel(viewModel: .logout, title: "Log out", handler: { [weak self] in
-            guard let strongSelf = self else { return }
-            
-            let actionSheet = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
-            actionSheet.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: { [weak self] ( _ ) in
-                guard let strongSelf = self else { return }
-                // Log out Facebook account
-                FBSDKLoginKit.LoginManager().logOut()
-                // Log out Google account
-                GIDSignIn.sharedInstance()?.signOut()
-                
-                UserDefaults.standard.setValue(nil, forKey: "email")
-                UserDefaults.standard.setValue(nil, forKey: "name")
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-                do {
-                    try FirebaseAuth.Auth.auth().signOut()
-                    
-                    let loginVC = LoginViewController()
-                    let nav = UINavigationController(rootViewController: loginVC)
-                    nav.modalPresentationStyle = .fullScreen
-                    strongSelf.present(nav, animated: true)
-                } catch {
-                    print("Failed to log out")
-                }
-                
-            }))
-            
-            actionSheet.addAction(UIAlertAction(title: "", style: .cancel, handler: nil))
-            strongSelf.present(actionSheet, animated: true)
-            
-        }))
-        
+
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.tableHeaderView = createTableHeader()
+        self.setUpProfileInfo()
     }
     
-    func createTableHeader() -> UIView? {
+    private func createTableHeader() -> UIView? {
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.width, height: 150))
         headerView.backgroundColor = .systemBackground
@@ -98,6 +61,57 @@ final class ProfileViewController: UIViewController {
         
         return headerView
     }
+    
+    private func setUpProfileInfo() {
+        // Returns the value associate with the specified key in the recevier's information property list (info.plist)
+        let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        
+        data.append(ProfileViewModel(viewModelType: .profileInfo,
+                                     title: "Name:\n\n\(UserDefaults.standard.value(forKey: "name") as? String ?? "No Name")",
+                                     handler: nil))
+        data.append(ProfileViewModel(viewModelType: .profileInfo,
+                                     title: "Email:\n\n\(UserDefaults.standard.value(forKey: "email") as? String ?? "No Email")", handler: nil))
+        data.append(ProfileViewModel(viewModelType: .profileInfo,
+                                     title: "App version v\(appVersion)",
+                                     handler: nil))
+        
+        data.append(ProfileViewModel(viewModelType: .logout, title: "Log out", handler: { [weak self] in
+            guard let strongSelf = self else { return }
+            
+            let actionSheet = UIAlertController(title: "Confirm", message: "Are you sure you want to log out of this account?", preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: { [weak self] ( _ ) in
+                guard let strongSelf = self else { return }
+                // Log out Facebook account
+                FBSDKLoginKit.LoginManager().logOut()
+                // Log out Google account
+                GIDSignIn.sharedInstance()?.signOut()
+                
+                UserDefaults.standard.setValue(nil, forKey: "email")
+                UserDefaults.standard.setValue(nil, forKey: "name")
+                DispatchQueue.main.async {
+                    strongSelf.tableView.reloadData()
+                }
+                do {
+                    try FirebaseAuth.Auth.auth().signOut()
+                    
+                    let loginVC = LoginViewController()
+                    let nav = UINavigationController(rootViewController: loginVC)
+                    nav.modalPresentationStyle = .fullScreen
+                    strongSelf.present(nav, animated: true)
+                } catch {
+                    print("Failed to log out")
+                }
+                
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            strongSelf.present(actionSheet, animated: true)
+            
+        }))
+    }
+    
 }
 
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -120,19 +134,33 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+        
 }
 
 class ProfileTableViewCell: UITableViewCell {
     static let identifier = "ProfileTableViewCell"
     
     public func setUpProfileCell(with viewModel: ProfileViewModel) {
-        switch viewModel.viewModel {
+        switch viewModel.viewModelType {
         case .profileInfo:
             self.textLabel?.text = viewModel.title
-            self.textLabel?.textAlignment = .natural
-            self.selectionStyle = .none
+            self.textLabel?.numberOfLines = 0
+            
+            if viewModel.title.contains("version") {
+                self.textLabel?.textAlignment = .center
+                self.textLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
+                self.textLabel?.textColor = .secondaryLabel
+            } else {
+                self.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+                self.textLabel?.textAlignment = .natural
+                self.selectionStyle = .none
+            }
         case .logout:
             self.textLabel?.text = viewModel.title
+            self.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
             self.textLabel?.textColor = .red
             self.textLabel?.textAlignment = .center
         }

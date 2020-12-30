@@ -12,11 +12,11 @@
 		1A1660DA24D7C0020070145A /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1660D924D7C0010070145A /* ConversationCell.swift */; };
 		1A1660DC24D7C5930070145A /* ConversationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1660DB24D7C5930070145A /* ConversationModels.swift */; };
 		1A1FA6082567FCAA007C7229 /* NewConversationsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1FA6072567FCA9007C7229 /* NewConversationsCell.swift */; };
-		1A229812257251260003DA64 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A229811257251250003DA64 /* GoogleService-Info.plist */; };
 		1A3BA7C5257E6F51001D6ADE /* SearchResultTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3BA7C4257E6F51001D6ADE /* SearchResultTableVC.swift */; };
 		1A3BA7C9257F2F4A001D6ADE /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3BA7C8257F2F4A001D6ADE /* Extension.swift */; };
 		1A3BA80A2583A859001D6ADE /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3BA8092583A859001D6ADE /* ChatModels.swift */; };
 		1A3BA80D2583AF49001D6ADE /* ProfileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3BA80C2583AF49001D6ADE /* ProfileModels.swift */; };
+		1A5BF5C9259AD51B00C068C3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A5BF5C8259AD51B00C068C3 /* GoogleService-Info.plist */; };
 		1A8F0949249DC57E00BC2A5D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F0948249DC57E00BC2A5D /* AppDelegate.swift */; };
 		1A8F094B249DC57E00BC2A5D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F094A249DC57E00BC2A5D /* SceneDelegate.swift */; };
 		1A8F094D249DC57E00BC2A5D /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F094C249DC57E00BC2A5D /* ConversationViewController.swift */; };
@@ -40,11 +40,11 @@
 		1A1660D924D7C0010070145A /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		1A1660DB24D7C5930070145A /* ConversationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModels.swift; sourceTree = "<group>"; };
 		1A1FA6072567FCA9007C7229 /* NewConversationsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationsCell.swift; sourceTree = "<group>"; };
-		1A229811257251250003DA64 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1A3BA7C4257E6F51001D6ADE /* SearchResultTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableVC.swift; sourceTree = "<group>"; };
 		1A3BA7C8257F2F4A001D6ADE /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		1A3BA8092583A859001D6ADE /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		1A3BA80C2583AF49001D6ADE /* ProfileModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModels.swift; sourceTree = "<group>"; };
+		1A5BF5C8259AD51B00C068C3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1A8F0945249DC57E00BC2A5D /* ChatApps1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApps1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A8F0948249DC57E00BC2A5D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A8F094A249DC57E00BC2A5D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 				1A8F095D249DC84800BC2A5D /* Views */,
 				1A8F095C249DC83F00BC2A5D /* Controllers */,
 				1A8F0956249DC58100BC2A5D /* Info.plist */,
-				1A229811257251250003DA64 /* GoogleService-Info.plist */,
+				1A5BF5C8259AD51B00C068C3 /* GoogleService-Info.plist */,
 			);
 			path = ChatApps;
 			sourceTree = "<group>";
@@ -266,7 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A8F0955249DC58000BC2A5D /* LaunchScreen.storyboard in Resources */,
-				1A229812257251260003DA64 /* GoogleService-Info.plist in Resources */,
+				1A5BF5C9259AD51B00C068C3 /* GoogleService-Info.plist in Resources */,
 				1A8F0952249DC58000BC2A5D /* Assets.xcassets in Resources */,
 				1A8F0950249DC57E00BC2A5D /* Main.storyboard in Resources */,
 			);

@@ -36,10 +36,10 @@ class LocationPickerVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(mapView)
-        
         title = "Pick Location"
         
         configureMapUI()
+        configureUIButton()
     }
     
     override func viewDidLayoutSubviews() {
@@ -58,10 +58,12 @@ class LocationPickerVC: UIViewController {
         
         //drop a pin on the location
         self.setUpPinAnnotation(coordinate: coordinate)
+        
     }
     
     @objc private func didTapShareButton() {
         guard let coordinates = coordinates else { return }
+        print("recently coordinates \(coordinates)")
         navigationController?.popViewController(animated: true)
         completion?(coordinates)
     }
@@ -71,6 +73,21 @@ class LocationPickerVC: UIViewController {
         mapView.isZoomEnabled = true
         mapView.isScrollEnabled = true
         mapView.isUserInteractionEnabled = true
+                
+        resultSearchController?.searchBar.delegate = self
+        resultSearchController = UISearchController(searchResultsController: searchResultTable)
+        resultSearchController?.searchResultsUpdater = searchResultTable
+        
+        let searchBar = resultSearchController?.searchBar
+        searchBar?.sizeToFit()
+        searchBar?.placeholder = "Search for places"
+        navigationItem.searchController = resultSearchController
+        
+        resultSearchController?.hidesNavigationBarDuringPresentation = false
+        definesPresentationContext = true
+        
+        searchResultTable.mapView = mapView
+        searchResultTable.handleMapSearchDelegate = self
         
         if coordinates == nil {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share",
@@ -81,23 +98,6 @@ class LocationPickerVC: UIViewController {
             gesture.numberOfTouchesRequired = 1
             gesture.numberOfTapsRequired = 1
             mapView.addGestureRecognizer(gesture)
-            
-            resultSearchController?.searchBar.delegate = self
-            resultSearchController = UISearchController(searchResultsController: searchResultTable)
-            resultSearchController?.searchResultsUpdater = searchResultTable
-            
-            let searchBar = resultSearchController?.searchBar
-            searchBar?.sizeToFit()
-            searchBar?.placeholder = "Search for places"
-            navigationItem.searchController = resultSearchController
-            
-            resultSearchController?.hidesNavigationBarDuringPresentation = false
-            definesPresentationContext = true
-            
-            searchResultTable.mapView = mapView
-            searchResultTable.handleMapSearchDelegate = self
-            
-            presentActionSheet()
         } else {
             guard let coordinate = coordinates else { return }
             self.setUpPinAnnotation(coordinate: coordinate)
@@ -107,29 +107,43 @@ class LocationPickerVC: UIViewController {
         }
     }
     
-    private func presentActionSheet() {
+    private func configureUIButton() {
+        let locationImage = UIImage(systemName: "location", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))?.withTintColor(.systemTeal, renderingMode: .alwaysOriginal)
+        let iconTextButtonViewModel = IconTextViewModel(title: "Get current location", icon: locationImage, backgroundColor: nil)
+        let currentLocationButton = CustomButton(frame: CGRect(x: 22.5, y: view.frame.height/6, width: view.frame.width-45, height: 50))
         
-        let alertController = UIAlertController(title: "Share Location", message: "Would you like to share your current location?", preferredStyle: .alert)
-        let searchAction = UIAlertAction(title: "OK", style: .default) { [weak self] (_) in
-            guard let strongSelf = self else { return }
-            // Ask for permission thats will be always authorization
-            strongSelf.locationManager.requestAlwaysAuthorization()
-            // Ask for permission when user in foreground
-            strongSelf.locationManager.requestWhenInUseAuthorization()
-            strongSelf.locationManager.delegate = self
-            strongSelf.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            
-            if CLLocationManager.locationServicesEnabled() {
-                strongSelf.locationManager.startUpdatingLocation()
-            }
-        }
-        let currentLocation = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] (_) in            
-            self?.dismiss(animated: true, completion: nil)
-        }
-        alertController.addAction(searchAction)
-        alertController.addAction(currentLocation)        
-        self.present(alertController, animated: true, completion: nil)        
+        currentLocationButton.configure(with: iconTextButtonViewModel)
+        currentLocationButton.addTarget(self, action: #selector(self.didTapCurrentLocationButton(_:)), for: .touchUpInside)
+        
+        mapView.addSubview(currentLocationButton)
     }
+    
+    @objc private func didTapCurrentLocationButton(_ sender: UIButton) {
+        // Ask for permission thats will be always authorization
+        locationManager.requestAlwaysAuthorization()
+        // Ask for permission when user in foreground
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+        }
+        
+        sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+
+        UIView.animate(withDuration: 2.5,
+                       delay: 0,
+                       usingSpringWithDamping: CGFloat(0.20),
+                       initialSpringVelocity: CGFloat(9.0),
+                       options: UIView.AnimationOptions.allowUserInteraction,
+                       animations: {
+                        sender.transform = CGAffineTransform.identity
+                       },
+                       completion: { Void in()  }
+        )
+    }
+    
     
     private func setUpPinAnnotation(coordinate: CLLocationCoordinate2D) {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -138,14 +152,16 @@ class LocationPickerVC: UIViewController {
                 print("Error", error ?? "error")
                 return
             }
-            print("Success to get a place names \(String(describing: placemark.name))")
-            print("Success to get a place Address \(String(describing: placemark.postalAddressFormatted))")
+            print("Got the place of names \(String(describing: placemark.name))")
+            print("Got the place of Address \(String(describing: placemark.postalAddressFormatted))")
+            print(location)
             
             let pinAnnotation = MKPointAnnotation()
             pinAnnotation.coordinate = location.coordinate
             pinAnnotation.title = placemark.name
             pinAnnotation.subtitle = placemark.postalAddressFormatted
             
+            self?.coordinates = location.coordinate
             strongSelf.mapView.addAnnotation(pinAnnotation)
         }
                 
@@ -184,6 +200,7 @@ extension LocationPickerVC: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Error: \(error)")
     }
+    
 }
 
 // MARK: - Search Bar Delegete

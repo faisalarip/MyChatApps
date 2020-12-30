@@ -56,23 +56,14 @@ final class ConversationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
         
         view.addSubview(tableView)
-                
         tableView.dataSource = self
         tableView.delegate = self
-        startListeningForConversation()
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapComposeButton))
         gesture.numberOfTapsRequired = 1
         gesture.numberOfTouchesRequired = 1
         noConversationSecondLabel.addGestureRecognizer(gesture)
         
-        
-        loginObserved = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] ( _ ) in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.startListeningForConversation()
-        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -176,6 +167,14 @@ final class ConversationViewController: UIViewController {
             let nav = UINavigationController(rootViewController: loginVC)
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: true)
+        } else {
+            startListeningForConversation()
+            loginObserved = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] ( _ ) in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.startListeningForConversation()
+            })
         }
     }
     
@@ -245,9 +244,9 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
             self.conversations.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .left)
             
-            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] (success) in
-                if !success {
-                    // add model and row back and show error
+            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { (success) in
+                if success {
+                    print("Successfull deleted conversations")
                 }
             }
 

@@ -8,12 +8,12 @@
 
 import UIKit
 import SDWebImage
+import JGProgressHUD
 
 final class PhotoViewController: UIViewController {
     
-    private var photoMessage: UIImage?
     private var imageUrl: URL?
-    private var dataImage: Data?
+    private let spinner = JGProgressHUD(style: .dark)
     
     init(with url: URL) {
         imageUrl = url
@@ -44,17 +44,6 @@ final class PhotoViewController: UIViewController {
         imageView.sd_setImage(with: imageUrl, completed: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        guard let imageURL = imageUrl else { return }
-        dataImage = try? Data(contentsOf: imageURL)
-        if let data = dataImage {
-            self.photoMessage = UIImage(data: data)
-        }
-        
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         imageView.frame = view.bounds
@@ -62,7 +51,7 @@ final class PhotoViewController: UIViewController {
     
     @objc private func didTapShareButton(_ sender: UIButton) {
         
-        if let imageURL = imageUrl, let photo = photoMessage {
+        if let imageURL = imageUrl, let photo = imageView.image {
             let actionVC = UIActivityViewController(activityItems: [
                 photo,
                 imageURL

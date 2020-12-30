@@ -510,7 +510,8 @@ extension DatabaseManager {
             case .location(let locationData):
                 let longitude = locationData.location.coordinate.longitude
                 let latitude = locationData.location.coordinate.latitude
-                message = "\(latitude),\(longitude)"                    
+                
+                message = "\(latitude),\(longitude)"
                 break
             case .emoji(_):
                 break

@@ -3,34 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>761294934750-gfvtduk2jpjuk23o07j91brueu4bsngt.apps.googleusercontent.com</string>
+	<string>773113325245-fm236hp3rjii5v9osb6hd0ni7fk6kvl5.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.761294934750-gfvtduk2jpjuk23o07j91brueu4bsngt</string>
+	<string>com.googleusercontent.apps.773113325245-fm236hp3rjii5v9osb6hd0ni7fk6kvl5</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDvhbSPBoiiG8_rES8NOZu79NkKdikuSiM</string>
+	<string>AIzaSyAIlpezQZvuHnil8tRcs-CEVUWheyjO23E</string>
 	<key>GCM_SENDER_ID</key>
-	<string>761294934750</string>
+	<string>773113325245</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.faisalarip.chatku</string>
+	<string>com.faisalarip</string>
 	<key>PROJECT_ID</key>
-	<string>chatku-617a6</string>
+	<string>chatku2-91541</string>
 	<key>STORAGE_BUCKET</key>
-	<string>chatku-617a6.appspot.com</string>
+	<string>chatku2-91541.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:761294934750:ios:486121bb0cefb2bdc2684f</string>
-	<key>DATABASE_URL</key>
-	<string>https://chatku-617a6.firebaseio.com</string>
+	<string>1:773113325245:ios:f393f4edaeddfc1ebfb9d4</string>
 </dict>
 </plist>

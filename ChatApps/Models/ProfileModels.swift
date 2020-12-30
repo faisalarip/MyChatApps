@@ -13,7 +13,7 @@ enum ProfileViewModelType {
 }
 
 struct ProfileViewModel {
-    let viewModel: ProfileViewModelType
+    let viewModelType: ProfileViewModelType
     let title: String
     let handler: (() -> Void)?
 }
