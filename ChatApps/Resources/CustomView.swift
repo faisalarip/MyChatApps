@@ -8,36 +8,68 @@
 
 import UIKit
 
-extension UIView {
+class CustomView: UIView {
     
-    public var width: CGFloat {
-        return self.frame.size.width
+    let placeImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.backgroundColor = .systemBackground
+        return imageView
+    }()
+    
+    let titleTextField: UITextField = {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.placeholder = "Search place or address"
+        textField.keyboardType = UIKeyboardType.default
+        textField.returnKeyType = UIReturnKeyType.done
+        textField.autocorrectionType = UITextAutocorrectionType.no
+        textField.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        textField.borderStyle = UITextField.BorderStyle.roundedRect
+        textField.clearButtonMode = UITextField.ViewMode.whileEditing;
+        textField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+        return textField
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        let stackView = UIStackView(arrangedSubviews: [placeImageView, titleTextField])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 15
+        
+        addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            titleTextField.heightAnchor.constraint(equalToConstant: 40),
+
+            placeImageView.widthAnchor.constraint(equalToConstant: 22),
+            placeImageView.heightAnchor.constraint(equalToConstant: 22),
+
+            stackView.topAnchor.constraint(equalTo: self.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+
+        ])
+        
     }
     
-    public var height: CGFloat {
-        return self.frame.size.height
+    public func configureCustomView(with image: UIImage, placeName: String) {
+        self.placeImageView.image = image
+        self.titleTextField.text = placeName
     }
     
-    public var top: CGFloat {
-        return self.frame.origin.y
-    }
-    
-    public var bottom: CGFloat {
-        return self.frame.size.height + self.frame.origin.y
-    }
-    
-    public var right: CGFloat {
-        return self.frame.size.width + self.frame.origin.x
-    }
-    
-    public var left: CGFloat {
-        return self.frame.origin.x
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension Notification.Name {
-    static let didLogInNotification = Notification.Name("didLogInNotification")
-}
+
 
 struct IconTextViewModel {
     let title: String?
@@ -71,11 +103,9 @@ final class CustomButton: UIButton {
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         layer.shadowRadius = 8
-        layer.shadowOpacity = 0.4
+        layer.shadowOpacity = 0.3
         layer.masksToBounds = false
-        layer.cornerRadius = 8
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.tertiarySystemBackground.cgColor
+        layer.cornerRadius = 8        
     }
     
     required init?(coder: NSCoder) {

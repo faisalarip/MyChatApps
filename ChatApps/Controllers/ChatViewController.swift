@@ -151,7 +151,7 @@ final class ChatViewController: MessagesViewController {
     }
     
     private func presentMapController() {
-        let locationVC = LocationPickerVC(coordinates: nil)
+        let locationVC = LocationPickerVC(coordinate: nil)
         locationVC.navigationItem.largeTitleDisplayMode = .never
         locationVC.completion = { [weak self] selectedLocation in
             
@@ -454,7 +454,7 @@ extension ChatViewController: MessageCellDelegate {
         switch message.kind {
         case .location(let locationData):
             let coordinates = locationData.location.coordinate
-            let locationVC = LocationPickerVC(coordinates: coordinates)
+            let locationVC = LocationPickerVC(coordinate: coordinates)
             locationVC.title = "Location"
             
             self.navigationController?.pushViewController(locationVC, animated: true)

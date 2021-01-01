@@ -13,7 +13,7 @@ final class SearchResultTableVC: UITableViewController {
     
     public var mapView: MKMapView? = nil
     public var handleMapSearchDelegate:HandleMapSearch? = nil
-    private var places:[MKMapItem] = []
+    private var places: [MKMapItem] = []
     private var searchCompleter: MKLocalSearchCompleter?
     private var searchRegion: MKCoordinateRegion = MKCoordinateRegion(MKMapRect.world)
     
