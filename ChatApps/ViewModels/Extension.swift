@@ -133,6 +133,19 @@ extension UIView {
         return tan(𝜽 * CGFloat.pi / 180)
     }
     
+    public func buttonAnimationPopUp(_ view: UIView) {
+        
+        UIView.animate(withDuration: 2.5,
+                       delay: 0,
+                       usingSpringWithDamping: CGFloat(0.20),
+                       initialSpringVelocity: CGFloat(9.0),
+                       options: UIView.AnimationOptions.allowUserInteraction,
+                       animations: {
+                        view.transform = CGAffineTransform.identity
+                       },
+                       completion: { Void in()  })
+    }
+    
     public var width: CGFloat {
         return self.frame.size.width
     }
@@ -163,7 +176,7 @@ extension Notification.Name {
 }
 
 extension UIButton {
-    @IBInspectable
+//    @IBInspectable
     var letterSpacing: CGFloat {
         set {
             let attributedString: NSMutableAttributedString
@@ -197,6 +210,14 @@ extension UILabel {
         let lineHeight = font.lineHeight
         return Int(ceil(textHeight / lineHeight))
     }
+    
+    func setTextSpacingBy(value: Double) {
+        if let textString = self.text {
+          let attributedString = NSMutableAttributedString(string: textString)
+            attributedString.addAttribute(NSAttributedString.Key.kern, value: value, range: NSRange(location: 0, length: attributedString.length - 1))
+          attributedText = attributedString
+        }
+      }
 }
 
 extension UIImage {
@@ -231,3 +252,28 @@ extension UIImage {
     public var imageMapPointEllipse: UIImage {
         return (UIImage(systemName: "mappin.and.ellipse", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))?.withTintColor(.systemTeal, renderingMode: .alwaysOriginal))! }
 }
+
+extension UIColor {
+    public func hexStringToUIColor (hex:String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }
+}
+

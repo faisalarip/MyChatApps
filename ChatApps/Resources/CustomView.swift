@@ -59,7 +59,7 @@ class CustomView: UIView {
         
     }
     
-    public func configureCustomView(with image: UIImage, placeName: String) {
+    public func configureCustomView(with image: UIImage, placeName: String?) {
         self.placeImageView.image = image
         self.titleTextField.text = placeName
     }
@@ -67,6 +67,8 @@ class CustomView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
 }
 
 
