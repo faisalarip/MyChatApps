@@ -512,25 +512,61 @@ extension LocationPickerVC: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard annotation is MKPointAnnotation else { return nil }
-
-            let identifier = "Annotation"
+        
+        let identifier = "Annotation"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        annotationView = nil
+        
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            
+        } else {
+            annotationView?.annotation = annotation
+        }
 
-            if annotationView == nil {
-                annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-                annotationView?.canShowCallout = true
-                
-                annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-                annotationView?.leftCalloutAccessoryView = UIButton(type: .detailDisclosure)
-            } else {
-                annotationView?.annotation = annotation
-            }
-
-            return annotationView
+        return annotationView
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         print("Tapped")
+        guard let coord = coordinate else { return }
+        let rect = CGRect(origin: .zero, size: CGSize(width: 250, height: 200))
+
+        let snapshotView = UIView()
+        snapshotView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let mapCamera = MKMapCamera()
+        mapCamera.centerCoordinate = coord
+        mapCamera.altitude = 500
+        mapCamera.heading = 45
+        mapCamera.pitch = 45
+        
+        let options = MKMapSnapshotter.Options()
+        options.size = rect.size
+        options.mapType = .hybridFlyover
+        options.showsBuildings = true
+        options.camera = mapCamera
+
+        let snapshotter = MKMapSnapshotter(options: options)
+        snapshotter.start { snapshot, error in
+            guard let snapshot = snapshot, error == nil else {
+                print(error ?? "Unknown error")
+                return
+            }
+
+            let imageView = UIImageView(frame: rect)
+            imageView.image = snapshot.image
+            snapshotView.addSubview(imageView)
+        }
+        
+        view.detailCalloutAccessoryView = snapshotView
+        
+        NSLayoutConstraint.activate([
+            snapshotView.widthAnchor.constraint(equalToConstant: rect.width),
+            snapshotView.heightAnchor.constraint(equalToConstant: rect.height)
+        ])
     }
 }
 
