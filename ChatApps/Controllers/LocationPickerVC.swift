@@ -90,7 +90,7 @@ class LocationPickerVC: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(mapView)
         title = "Pick Location"
-
+        
         setupMapUI()
         setupCurrentLocationButton()
         
@@ -170,7 +170,7 @@ class LocationPickerVC: UIViewController {
         if !navigationStarted {
             navigationStarted = true
             guard let currentLocationCoordinate = coordinates.first else { return }
-            self.centerViewToUserLocation(with: currentLocationCoordinate)
+            self.setupCenterViewToAnnotation(coordinate: currentLocationCoordinate)
             self.getRouteSteps(with: primaryRouteNavigate)
             
             /// Change button view's
@@ -212,11 +212,12 @@ class LocationPickerVC: UIViewController {
     
     private func setupMapUI() {
         mapView.mapType = .standard
+        mapView.showsTraffic = true
         mapView.delegate = self
         mapView.isZoomEnabled = true
         mapView.isScrollEnabled = true
         mapView.isUserInteractionEnabled = true
-                
+        
         resultSearchController?.searchBar.delegate = self
         resultSearchController = UISearchController(searchResultsController: searchResultTable)
         resultSearchController?.searchResultsUpdater = searchResultTable
@@ -238,16 +239,16 @@ class LocationPickerVC: UIViewController {
         gesture.numberOfTapsRequired = 1
         mapView.addGestureRecognizer(gesture)
         
-        if coordinate == nil {
+        if forSharingLocation == true {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share",
                                                                 style: .done,
                                                                 target: self, action: #selector(didTapShareButton))
         } else {
             guard let coordinate = coordinate else { return }
+            
+            ///configure pin annotation and auto zooming level based on region location
             self.setupPinAnnotation(coordinate: coordinate)
-
-            //configure auto zooming level based on region location
-            self.setupCoordinateSpan(coordinate: coordinate)
+            self.setupCenterViewToAnnotation(coordinate: coordinate)
         }
     }
     
@@ -266,7 +267,7 @@ class LocationPickerVC: UIViewController {
         currentLocationAddressField.frame = CGRect(x: 20, y: navigationCardView.top + 10 , width: 250, height: 50)
         lineImageView.frame = CGRect(x: 30, y: currentLocationAddressField.bottom - 2, width: 2, height: 15)
         destinationAddressField.frame = CGRect(x: 20, y: lineImageView.bottom - 2, width: 250, height: 50)
-
+        
         getRouteDirectionButton.frame = CGRect(x: currentLocationAddressField.right + 10, y: navigationCardView.top + 18 , width: 80, height: 35)
         startNavigationButton.frame = CGRect(x: destinationAddressField.right + 10, y: getRouteDirectionButton.bottom + 25 , width: 80, height: 35)
         
@@ -293,7 +294,7 @@ class LocationPickerVC: UIViewController {
         navigationCardView.addSubview(getRouteDirectionButton)
         
         self.view.addSubview(navigationCardView)
-                
+        
         if #available(iOS 11.0, *) {
             let guide = self.view.safeAreaLayoutGuide
             NSLayoutConstraint.activate([
@@ -310,7 +311,7 @@ class LocationPickerVC: UIViewController {
             NSLayoutConstraint(item: navigationCardView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
             NSLayoutConstraint(item: navigationCardView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
             NSLayoutConstraint(item: navigationCardView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
-
+            
             navigationCardView.heightAnchor.constraint(equalToConstant: 130).isActive = true
         }
     }
@@ -365,7 +366,6 @@ class LocationPickerVC: UIViewController {
         }
         
         self.routeSteps = route.steps
-        
         for i in 0..<routeSteps.count {
             let step = routeSteps[i]
             
@@ -380,17 +380,12 @@ class LocationPickerVC: UIViewController {
         speechSynthesizer.speak(speechUtterance)
     }
     
-    private func centerViewToUserLocation(with center: CLLocationCoordinate2D) {
-        let region = MKCoordinateRegion(center: center, latitudinalMeters: locationDistance, longitudinalMeters: locationDistance)
-        mapView.setRegion(region, animated: true)
-    }
-    
     private func setupPinAnnotation(coordinate: CLLocationCoordinate2D) {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         location.placemark { [weak self] (place, error) in
             guard let placemark = place,
                   let strongSelf = self,
-                    error == nil else {
+                  error == nil else {
                 print("Error", error ?? "error")
                 return
             }
@@ -410,13 +405,11 @@ class LocationPickerVC: UIViewController {
                 strongSelf.destinationAddressField.configureCustomView(with: UIImage().imageMapPointEllipse, placeName: placemark.name)
                 strongSelf.getRouteDirectionButton.alpha = 1.0
             }
-                        
-            
         }
-                
+        
     }
     
-    private func setupCoordinateSpan(coordinate: CLLocationCoordinate2D) {
+    private func setupCenterViewToAnnotation(coordinate: CLLocationCoordinate2D) {
         let zoomRect = MKMapRect.null
         let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         let region = MKCoordinateRegion(center: coordinate, span: span)
@@ -430,15 +423,13 @@ class LocationPickerVC: UIViewController {
 // MARK: - Location Manager Delegete
 
 extension LocationPickerVC: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("location has updated")
-        
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {                
         guard let location = locations.last else { return }
         self.coordinate = location.coordinate
-        self.setupPinAnnotation(coordinate: location.coordinate)
         
-        ///configure auto zooming level based on region location
-        self.setupCoordinateSpan(coordinate: location.coordinate)
+        ///configure pin annotation and auto zooming level based on region location
+        self.setupPinAnnotation(coordinate: location.coordinate)
+        self.setupCenterViewToAnnotation(coordinate: location.coordinate)
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -480,34 +471,20 @@ extension LocationPickerVC: CLLocationManagerDelegate {
 extension LocationPickerVC: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if overlay is MKCircle {
-            let renderer = MKCircleRenderer(overlay: overlay)
-            renderer.fillColor = UIColor.black.withAlphaComponent(0.1)
-            renderer.strokeColor = UIColor.systemGray
-            renderer.lineWidth = 2
-            renderer.lineJoin = .round
-            return renderer
-            
-        } else if overlay is MKPolyline {
-            let renderer = MKPolylineRenderer(overlay: overlay)
-            renderer.lineWidth = 5
-            renderer.lineJoin = .round
-            if routes.last == primaryRouteNavigate {
-                renderer.strokeColor = UIColor.systemBlue
-            } else {
-                renderer.strokeColor = UIColor.systemGray3
-            }
-            return renderer
-        } else if overlay is MKPolygon {
-            let renderer = MKPolygonRenderer(polygon: overlay as! MKPolygon)
-            renderer.fillColor = UIColor.black.withAlphaComponent(0.5)
-            renderer.strokeColor = UIColor.systemGray
-            renderer.lineWidth = 2
-            renderer.lineJoin = .round
-            return renderer
+        guard overlay is MKPolyline else {
+            return MKOverlayRenderer()
         }
         
-        return MKOverlayRenderer()
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.lineWidth = 5
+        renderer.lineJoin = .round
+        if routes.last == primaryRouteNavigate {
+            renderer.strokeColor = UIColor.systemBlue
+        } else {
+            renderer.strokeColor = UIColor.systemGray3
+        }
+        
+        return renderer
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -522,10 +499,8 @@ extension LocationPickerVC: MKMapViewDelegate {
             annotationView?.canShowCallout = true
             annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
             
-        } else {
-            annotationView?.annotation = annotation
         }
-
+        
         return annotationView
     }
     
@@ -533,7 +508,7 @@ extension LocationPickerVC: MKMapViewDelegate {
         print("Tapped")
         guard let coord = coordinate else { return }
         let rect = CGRect(origin: .zero, size: CGSize(width: 250, height: 200))
-
+        
         let snapshotView = UIView()
         snapshotView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -548,14 +523,14 @@ extension LocationPickerVC: MKMapViewDelegate {
         options.mapType = .hybridFlyover
         options.showsBuildings = true
         options.camera = mapCamera
-
+        
         let snapshotter = MKMapSnapshotter(options: options)
         snapshotter.start { snapshot, error in
             guard let snapshot = snapshot, error == nil else {
                 print(error ?? "Unknown error")
                 return
             }
-
+            
             let imageView = UIImageView(frame: rect)
             imageView.image = snapshot.image
             snapshotView.addSubview(imageView)
@@ -614,7 +589,8 @@ extension LocationPickerVC: HandleMapSearch {
             }
         }
         
+        ///configure pin annotation and auto zooming level based on region location
         self.setupPinAnnotation(coordinate: placemark.coordinate)
-        self.setupCoordinateSpan(coordinate: placemark.coordinate)        
+        self.setupCenterViewToAnnotation(coordinate: placemark.coordinate)
     }
 }
