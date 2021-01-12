@@ -61,7 +61,7 @@
 		1A8F0973249E3B0F00BC2A5D /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		1A8F097824A2CF0800BC2A5D /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		1A8F097A24A2E25C00BC2A5D /* FBLPromises.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBLPromises.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1AC55F9A256E58E30077FC02 /* LocationPickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerVC.swift; sourceTree = "<group>"; };
+		1AC55F9A256E58E30077FC02 /* LocationPickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationPickerVC.swift; path = ChatApps/Controllers/LocationPickerVC.swift; sourceTree = SOURCE_ROOT; };
 		22AC2A28E869ACAEB92B84F7 /* Pods-ChatApps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApps.release.xcconfig"; path = "Target Support Files/Pods-ChatApps/Pods-ChatApps.release.xcconfig"; sourceTree = "<group>"; };
 		5EEC2A5DDB04A14D5132B418 /* Pods_ChatApps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatApps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		831894C9A61B0205A6A8E8C8 /* Pods-ChatApps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApps.debug.xcconfig"; path = "Target Support Files/Pods-ChatApps/Pods-ChatApps.debug.xcconfig"; sourceTree = "<group>"; };

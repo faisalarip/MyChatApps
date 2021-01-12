@@ -14,7 +14,7 @@ import CoreLocation
 /// Manager object to write and read data to real time firebase database
 final class DatabaseManager {
     
-    /// Shared instance of class
+    /// Shared instance of class (Singleton Object)
     static let shared = DatabaseManager()
     
     private let database = Database.database().reference()
